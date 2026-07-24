@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packaged Snack Budget Simulator — Pink Tools</title>
+  <meta name="description" content="Calculate how packaged snacks impact your daily target for calories, sodium (FSSAI 2000mg limit), and added sugars (WHO 25g limit).">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+
+  <div id="site-header-container"></div>
+
+  <main>
+    <section class="hero" style="padding: 3.5rem 0 2rem 0;">
+      <div class="container hero-content" style="text-align: center;">
+        <h1 class="hero-title">Packaged Snack Budget Simulator</h1>
+        <p class="hero-subtitle">
+          Test how common packaged snacks impact your daily targets for calories, sodium, and WHO added sugar limits.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container" id="snack-budget-app">
+        <!-- Injected dynamically via snack-budget.js -->
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-container"></div>
+
+  <script type="module" src="./js/components.js"></script>
+  <script type="module" src="./js/snack-budget.js"></script>
+</body>
+</html>

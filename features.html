@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features — Pink Food Scanner & Nutrition App</title>
+  <meta name="description" content="Explore Pink's core capabilities: Barcode scanning, plain language ingredient decoding, independent Health & Goal Fit scores, and additive tracking.">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+
+  <div id="site-header-container"></div>
+
+  <main>
+    <section class="hero" style="padding: 3.5rem 0 2.5rem 0;">
+      <div class="container hero-content" style="text-align: center;">
+        <h1 class="hero-title">App Features</h1>
+        <p class="hero-subtitle">
+          Designed to bring full transparency to Indian packaged food labels through plain-language decoding and dual scoring.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid-2">
+          
+          <!-- Feature 1 -->
+          <div class="card" id="scan">
+            <div class="icon-badge">
+              <i data-lucide="scan-line"></i>
+            </div>
+            <h2>Barcode & Label Scanning</h2>
+            <p>
+              Point your camera at any packaged food item in India. Pink supports rapid barcode lookup as well as Optical Character Recognition (OCR) to photograph and parse back-of-pack ingredient lists directly from the package.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="card" id="decode">
+            <div class="icon-badge">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <h2>Plain-Language Ingredient Decoding</h2>
+            <p>
+              No more deciphering cryptic INS additive numbers (like INS 621 or INS 211) or technical chemical names. Pink automatically translates functional classes, thickeners, and preservatives into clear, everyday English explanations.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="card" id="health-score">
+            <div class="icon-badge">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <h2>Health Score</h2>
+            <p>
+              An informational heuristic score based on processing level (informed by the NOVA framework) and nutrient thresholds (saturated fat, added sugar, and sodium). This score provides a quick view of processing quality. Note: This is a transparent heuristic, not an official or medical rating.
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="card" id="goal-score">
+            <div class="icon-badge">
+              <i data-lucide="target"></i>
+            </div>
+            <h2>Goal Fit Score</h2>
+            <p>
+              Evaluates how well a product aligns with your personal macro and fitness goals (weight loss, muscle gain, or maintenance). Crucially, Pink presents this score separately from the Health Score—they are never merged—so you can easily spot foods that fit a protein target yet remain ultra-processed.
+            </p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="card" id="additive-flagging">
+            <div class="icon-badge">
+              <i data-lucide="flask-conical"></i>
+            </div>
+            <h2>Additive Flagging</h2>
+            <p>
+              Identifies additives present in scanned foods and highlights their functional purpose alongside regulatory context. Every flag is explicitly tied to disclosed regulatory guidelines or published scientific sources.
+            </p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div class="card" id="dashboard">
+            <div class="icon-badge">
+              <i data-lucide="database"></i>
+            </div>
+            <h2>Nutritional Dashboard</h2>
+            <p>
+              A clean, centralized overview displaying calories, protein, carbohydrates, fats, and active additive flags for all scanned items. Keeps your daily intake organized without clutter.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimers Banner -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="callout-box">
+          <h3 style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="info" style="color: var(--color-primary);"></i> Dual Scoring Principle
+          </h3>
+          <p style="margin-top: 0.5rem;">
+            Pink deliberately keeps the <strong>Health Score</strong> (processing & nutrient quality) distinct from the <strong>Goal Fit Score</strong> (macronutrient alignment). Merging them into a single score can obscure important trade-offs—for instance, a protein bar might score high on your muscle-building goal while scoring lower on processing level.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-container"></div>
+
+  <script type="module" src="./js/components.js"></script>
+</body>
+</html>

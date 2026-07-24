@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI Calculator — Pink Health Heuristics</title>
+  <meta name="description" content="Calculate your Body Mass Index (BMI) with metric/imperial support and South Asian specific cutoffs.">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+
+  <div id="site-header-container"></div>
+
+  <main>
+    <section class="hero" style="padding: 3.5rem 0 2rem 0;">
+      <div class="container hero-content" style="text-align: center;">
+        <h1 class="hero-title">BMI Calculator</h1>
+        <p class="hero-subtitle">
+          Calculate your Body Mass Index using standard WHO thresholds or South Asian specific action points.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="calculator-card">
+          
+          <form id="bmi-form" onsubmit="return false;">
+            
+            <!-- Unit Toggles -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+              <div>
+                <label class="form-label">Weight Unit</label>
+                <div class="toggle-group" id="weight-unit-toggle">
+                  <button type="button" class="toggle-btn active" data-unit="kg">Metric (kg)</button>
+                  <button type="button" class="toggle-btn" data-unit="lb">Imperial (lb)</button>
+                </div>
+              </div>
+
+              <div>
+                <label class="form-label">Height Unit</label>
+                <div class="toggle-group" id="height-unit-toggle">
+                  <button type="button" class="toggle-btn active" data-unit="cm">Centimeters (cm)</button>
+                  <button type="button" class="toggle-btn" data-unit="ftin">Feet & Inches</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weight Input -->
+            <div class="form-group">
+              <label class="form-label" for="bmi-weight">Weight (<span id="weight-unit-label">KG</span>)</label>
+              <input type="number" id="bmi-weight" class="form-input" placeholder="e.g. 70" step="0.1" min="1" max="500" required>
+            </div>
+
+            <!-- Height Inputs -->
+            <div class="form-group" id="height-cm-group">
+              <label class="form-label" for="bmi-height-cm">Height (cm)</label>
+              <input type="number" id="bmi-height-cm" class="form-input" placeholder="e.g. 175" step="0.1" min="30" max="300">
+            </div>
+
+            <div class="form-group" id="height-ftin-group" style="display: none; gap: 1rem;">
+              <div style="flex: 1;">
+                <label class="form-label" for="bmi-height-ft">Feet</label>
+                <input type="number" id="bmi-height-ft" class="form-input" placeholder="5" min="1" max="8">
+              </div>
+              <div style="flex: 1;">
+                <label class="form-label" for="bmi-height-in">Inches</label>
+                <input type="number" id="bmi-height-in" class="form-input" placeholder="9" min="0" max="11.9" step="0.1">
+              </div>
+            </div>
+
+            <!-- Asian Cutoffs Toggle -->
+            <div class="form-group" style="margin-top: 1.5rem; background: var(--color-surface-alt); padding: 1rem; border-radius: var(--radius-sm);">
+              <label class="switch-label">
+                <input type="checkbox" id="asian-cutoff-toggle" class="switch-input">
+                <span>Use Asian-specific BMI cutoffs</span>
+              </label>
+              <p style="font-size: 0.83rem; margin-top: 0.4rem; color: var(--color-text-muted);">
+                WHO Expert Consultations indicate that standard cutoffs may underestimate health risks for South Asian body compositions. Toggling this applies lower risk thresholds (e.g. Overweight from 23.0).
+              </p>
+            </div>
+
+          </form>
+
+          <!-- Inline Error -->
+          <div id="bmi-error" class="error-message"></div>
+
+          <!-- Result Display -->
+          <div id="bmi-result" class="result-box" style="display: none;">
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Your Calculated BMI</div>
+            <div class="result-val" id="bmi-value">--</div>
+            <div class="badge" id="bmi-category-badge">Category</div>
+            <p id="bmi-explanation" style="font-size: 0.95rem; color: var(--color-text-main); font-weight: 500;"></p>
+          </div>
+
+          <!-- Screening Disclaimer -->
+          <div class="disclaimer-box">
+            <strong>Disclaimer:</strong> BMI is a general population screening measure, not a diagnostic medical tool. It does not directly differentiate between muscle mass, bone density, or fat distribution, nor does it account for age or gender variations.
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-container"></div>
+
+  <script type="module" src="./js/components.js"></script>
+  <script type="module" src="./js/calculators.js"></script>
+</body>
+</html>
