@@ -2,13 +2,14 @@
    BiteLens Web Application - Master Stylesheet
    Theme: Clean Elevated Apple Health / Cal AI Wellness Design System
    Features:
+   - Polished Toggle Buttons & Card Surface Controls (.toggle-group, .toggle-btn)
+   - Clean Elevated Phone Mockup Score Badges (.score-box-health, .score-box-goal)
    - Interactive Telemetry Walkthrough Laboratory (.telemetry-step-btn, .token-pill)
    - Futuristic HUD Telemetry Workbench (.hud-telemetry-workbench)
    - Phone Mockup Interactive Scanner Frame (.phone-mockup)
    - Animated BiteLens Splash Loading Screen (#bitelens-splash-screen)
    - Uniform Navigation Bar Header Styling
    - Android Touch & Mobile View Optimization
-   - Solid Pure White Elevated Cards (#FFFFFF)
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
@@ -80,6 +81,18 @@ body {
   position: relative;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Base Button Reset to Override Browser Defaults */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* ==========================================================================
@@ -208,7 +221,6 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
-/* Uniform Navigation Row */
 .main-nav {
   display: flex;
   align-items: center;
@@ -299,7 +311,7 @@ body {
   justify-content: center;
 }
 
-/* Buttons */
+/* Buttons System */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -355,6 +367,52 @@ body {
   color: var(--color-primary);
   background: rgba(59, 122, 87, 0.05);
   transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   POLISHED TOGGLE GROUPS & TOGGLE BUTTONS (.toggle-group, .toggle-btn)
+   ========================================================================== */
+.toggle-group {
+  display: inline-flex;
+  width: 100%;
+  background: #F1F5F9;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  gap: 4px;
+}
+
+.toggle-btn, button.toggle-btn {
+  flex: 1;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: var(--font-family-display);
+  border: 1px solid transparent;
+  outline: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.toggle-btn:hover {
+  color: var(--color-text-main);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.toggle-btn.active, button.toggle-btn.active {
+  background: #FFFFFF !important;
+  color: var(--color-primary) !important;
+  box-shadow: var(--shadow-sm) !important;
+  border: 1px solid rgba(59, 122, 87, 0.3) !important;
 }
 
 /* Typography Elements */
@@ -598,6 +656,7 @@ a:hover {
   overflow: hidden;
 }
 
+/* Elevated Dual Score Badges inside Phone Mockup */
 .score-badge-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -606,25 +665,29 @@ a:hover {
 }
 
 .score-box {
-  padding: 0.75rem;
-  border-radius: var(--radius-sm);
+  padding: 0.85rem 0.75rem;
+  border-radius: var(--radius-md);
   text-align: center;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
 }
 
 .score-box-health {
-  background: rgba(59, 122, 87, 0.1);
-  border: 1px solid rgba(59, 122, 87, 0.25);
+  background: #FEF2F2;
+  border-color: #FCA5A5;
 }
 
 .score-box-goal {
-  background: rgba(2, 132, 199, 0.1);
-  border: 1px solid rgba(2, 132, 199, 0.25);
+  background: #F0F9FF;
+  border-color: #7DD3FC;
 }
 
 .score-number {
   font-size: 1.5rem;
   font-weight: 800;
   font-family: var(--font-family-display);
+  margin: 0.15rem 0;
 }
 
 /* ==========================================================================
