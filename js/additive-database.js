@@ -1,12 +1,14 @@
 /* ==========================================================================
    BiteLens Web Application - INS Additive Search & Decoder Database
-   Features:
+   Accelerated with High-Performance Data Structures:
+   - Trie for O(L) prefix indexing & autocompletion
+   - LRUCache for O(1) instant search memory caching
+   - FuzzyMatcher (Levenshtein) for typo-tolerant OCR search
    - Security Hardening (XSS & SQL Injection Sanitization)
-   - Auto-inputs URL search parameters
-   - Futuristic HUD Telemetry Laboratory Layout
    ========================================================================== */
 
 import { sanitizeInput, sanitizeSQL } from './security.js';
+import { Trie, LRUCache, FuzzyMatcher } from './data-structures.js';
 
 export const ADDITIVE_DATABASE = [
   {
@@ -101,104 +103,123 @@ export const ADDITIVE_DATABASE = [
   },
   {
     code: "INS 150d",
-    name: "Sulfite Ammonia Caramel Color",
+    name: "Caramel IV (Sulphite Ammonia Caramel)",
     category: "Food Colorant",
-    plainText: "Dark brown coloring synthesized through chemical treatment of carbohydrates.",
-    fssaiStatus: "Permitted in cola drinks and dark sauces with maximum limits.",
+    plainText: "Dark brown food coloring manufactured with ammonia to give colas and dark sauces their rich color.",
+    fssaiStatus: "Permitted in colas, dark beers, and seasonings under strict limit.",
     novaGroup: "NOVA Group 4 (Ultra-Processed)",
-    commonFoods: "Cola drinks, soy sauce, dark beers, chocolate syrups.",
-    healthNote: "Synthetic caramel variant; indicates heavy industrial processing."
+    commonFoods: "Cola sodas, barbecue sauces, gravies, confectioneries.",
+    healthNote: "Synthesized colorant containing 4-MEI byproduct; signals heavy industrial formulation."
+  },
+  {
+    code: "INS 223",
+    name: "Sodium Metabisulphite",
+    category: "Preservative / Antioxidant",
+    plainText: "Preservative powder used to stop potato chips and dried fruits from turning dark.",
+    fssaiStatus: "Permitted in dried fruits and biscuits with allergen declaration.",
+    novaGroup: "NOVA Group 4 (Ultra-Processed)",
+    commonFoods: "Dried fruits, potato flakes, wine, packaged fruit juices.",
+    healthNote: "Sulphite compound; can trigger respiratory sensitivity in individuals with asthma."
   },
   {
     code: "INS 471",
     name: "Mono- and Diglycerides of Fatty Acids",
     category: "Emulsifier",
-    plainText: "Industrial fat ingredient added to commercial breads and cakes to keep them soft.",
-    fssaiStatus: "Permitted food additive under GMP.",
+    plainText: "Industrial oil stabilizer that keeps packaged bread soft and stops peanut butter from separating.",
+    fssaiStatus: "Permitted under Good Manufacturing Practice.",
     novaGroup: "NOVA Group 4 (Ultra-Processed)",
-    commonFoods: "Commercial packaged bread, cakes, peanut butter, ice creams.",
-    healthNote: "Synthesized fat emulsifier used to maintain freshness in commercial baking."
-  },
-  {
-    code: "INS 202",
-    name: "Potassium Sorbate",
-    category: "Preservative",
-    plainText: "Inhibits mold and yeast growth to extend shelf life of baked goods and sauces.",
-    fssaiStatus: "Permitted under maximum numerical concentration limits.",
-    novaGroup: "NOVA Group 4 (Ultra-Processed)",
-    commonFoods: "Packaged cheese, fruit spreads, baked goods, wine.",
-    healthNote: "Widely tested food preservative with low toxicity profile."
+    commonFoods: "Packaged sliced bread, ice creams, margarines, packaged cakes.",
+    healthNote: "Processed fat derivative; hallmark indicator of ultra-processed bakery goods."
   }
 ];
 
+// --- Data Structure Initialization ---
+const additiveTrie = new Trie();
+const searchLRUCache = new LRUCache(80);
+
+// Populate Trie with code, name, and alias tokens
+ADDITIVE_DATABASE.forEach(item => {
+  additiveTrie.insert(item.code, item);
+  additiveTrie.insert(item.name, item);
+  additiveTrie.insert(item.code.replace(/\s+/g, ''), item); // e.g. "INS621"
+  additiveTrie.insert(item.code.replace(/INS\s*/i, ''), item); // e.g. "621"
+  if (item.name.includes("MSG")) additiveTrie.insert("MSG", item);
+});
+
 export function initAdditiveDecoder() {
-  const container = document.getElementById('additive-decoder-app');
+  const container = document.getElementById('additive-decoder-container');
   if (!container) return;
 
-  renderHUDStudioHTML(container);
+  renderDecoderHTML(container);
   bindDecoderEvents();
+  handleUrlQueryParams();
+}
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const rawCode = urlParams.get('code');
-  if (rawCode) {
-    const cleanCode = sanitizeInput(sanitizeSQL(rawCode));
+function handleUrlQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  const codeParam = params.get('code');
+  if (codeParam) {
     const searchInput = document.getElementById('ins-search-input');
     if (searchInput) {
-      searchInput.value = cleanCode;
+      searchInput.value = codeParam;
       searchInput.dispatchEvent(new Event('input'));
-
       setTimeout(() => {
-        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 200);
+        const grid = document.getElementById('additive-results-grid');
+        if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
     }
   }
 }
 
-function renderHUDStudioHTML(container) {
+function renderDecoderHTML(container) {
   container.innerHTML = `
     <div class="hud-telemetry-workbench">
-      
       <div class="hud-status-bar">
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span class="hud-pulse-dot"></span>
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <div class="hud-pulse-dot"></div>
           <span style="font-family: var(--font-family-display); font-weight: 800; font-size: 0.85rem; letter-spacing: 0.05em; color: var(--color-primary);">
-            🔬 BITELENS ADDITIVE DECODER LAB // ONLINE
+            TRIE-INDEXED FSSAI ADDITIVE DECODER
           </span>
         </div>
-        <div style="font-size: 0.78rem; font-family: monospace; color: var(--color-text-muted);">
-          SEC.STATUS: SANITIZED_XSS_PREVENTED
+        <div style="font-family: monospace; font-size: 0.78rem; color: var(--color-text-muted);">
+          STATUS: <span style="color: #2D6A4F; font-weight: 700;">LIVE O(L) TRIE & LRU CACHE ACTIVE</span>
         </div>
       </div>
 
       <div class="hud-controls-grid">
         <div>
-          <label class="form-label" for="ins-search-input" style="display: flex; justify-content: space-between;">
-            <span>Search INS / E-Number Code or Ingredient</span>
-            <span style="font-size: 0.78rem; color: var(--color-primary); font-weight: 600;">Sanitized Live Input</span>
+          <label for="ins-search-input" class="form-label" style="font-size: 0.85rem; text-transform: uppercase;">
+            Search by INS Code, Name or Keyword
           </label>
-          <div style="position: relative;">
-            <input type="text" id="ins-search-input" class="form-input hud-input" placeholder="Type e.g. INS 621, Lecithin, INS 330, Preservative...">
-          </div>
+          <input 
+            type="text" 
+            id="ins-search-input" 
+            class="form-input hud-input" 
+            placeholder="e.g. INS 621, MSG, Lecithin, Preservative..."
+            autocomplete="off"
+          >
         </div>
 
         <div>
-          <label class="form-label" for="ins-category-filter">Filter by Purpose</label>
+          <label for="ins-category-filter" class="form-label" style="font-size: 0.85rem; text-transform: uppercase;">
+            Filter by Additive Class
+          </label>
           <select id="ins-category-filter" class="form-select hud-select">
             <option value="all">All Functional Classes</option>
-            <option value="Emulsifier">Emulsifiers (Smoothers)</option>
-            <option value="Preservative">Preservatives (Shelf Life)</option>
-            <option value="Acidity Regulator">Acidity Regulators (Sour Taste)</option>
-            <option value="Food Colorant">Colorants (Food Dyes)</option>
-            <option value="Thickener">Thickeners (Texture Gels)</option>
-            <option value="Flavor Enhancer">Flavor Enhancers (Savory)</option>
-            <option value="Artificial Sweetener">Sweeteners (Zero Sugar)</option>
+            <option value="Flavor Enhancer">Flavor Enhancers</option>
+            <option value="Emulsifier">Emulsifiers</option>
+            <option value="Preservative">Preservatives</option>
+            <option value="Colorant">Food Colorants</option>
+            <option value="Sweetener">Artificial Sweeteners</option>
+            <option value="Thickener">Thickeners / Stabilizers</option>
+            <option value="Acidity Regulator">Acidity Regulators</option>
           </select>
         </div>
       </div>
 
-      <div style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
-        <div>Displaying <strong id="ins-count-badge" style="color: var(--color-primary);">12</strong> validated food additive entries.</div>
-        <div style="font-size: 0.78rem; font-family: monospace; color: var(--color-primary);">[ REAL-TIME SANITIZED MATCH ENGINE ]</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; font-size: 0.85rem; color: var(--color-text-muted);">
+        <div>Displaying <strong id="ins-count-badge" style="color: var(--color-primary);">${ADDITIVE_DATABASE.length}</strong> validated food additive entries.</div>
+        <div style="font-size: 0.78rem; font-family: monospace; color: var(--color-primary);">[ REAL-TIME TRIE & LEVENSHTEIN FUZZY MATCH ]</div>
       </div>
 
       <div class="grid-2" id="additive-results-grid"></div>
@@ -264,21 +285,61 @@ function bindDecoderEvents() {
     const rawQuery = searchInput.value || '';
     const cleanQuery = sanitizeInput(sanitizeSQL(rawQuery)).toLowerCase().trim();
     const cat = categoryFilter.value;
+    const cacheKey = `${cleanQuery}__${cat}`;
 
-    const filtered = ADDITIVE_DATABASE.filter(item => {
+    // 1. Check LRU Cache
+    if (searchLRUCache.has(cacheKey)) {
+      renderCards(searchLRUCache.get(cacheKey));
+      return;
+    }
+
+    if (!cleanQuery && cat === 'all') {
+      searchLRUCache.put(cacheKey, ADDITIVE_DATABASE);
+      renderCards(ADDITIVE_DATABASE);
+      return;
+    }
+
+    // 2. Perform Hybrid Trie + Filter Search
+    let matchedItems = [];
+    
+    // Check Trie for exact prefix
+    const trieMatches = additiveTrie.autocomplete(cleanQuery, 10);
+    const seenCodes = new Set();
+
+    trieMatches.forEach(item => {
+      if (!seenCodes.has(item.code)) {
+        seenCodes.add(item.code);
+        matchedItems.push(item);
+      }
+    });
+
+    // Fallback general filter
+    ADDITIVE_DATABASE.forEach(item => {
+      if (seenCodes.has(item.code)) return;
       const matchesSearch = item.code.toLowerCase().includes(cleanQuery) ||
                             item.name.toLowerCase().includes(cleanQuery) ||
                             item.plainText.toLowerCase().includes(cleanQuery) ||
-                            item.category.toLowerCase().includes(cleanQuery);
-      const matchesCat = cat === 'all' || item.category.toLowerCase().includes(cat.toLowerCase());
-      return matchesSearch && matchesCat;
+                            item.category.toLowerCase().includes(cleanQuery) ||
+                            FuzzyMatcher.similarity(item.name, cleanQuery) > 0.65;
+      if (matchesSearch) {
+        seenCodes.add(item.code);
+        matchedItems.push(item);
+      }
     });
 
-    renderCards(filtered);
+    // Apply Category Filter
+    if (cat !== 'all') {
+      matchedItems = matchedItems.filter(item => item.category.toLowerCase().includes(cat.toLowerCase()));
+    }
+
+    searchLRUCache.put(cacheKey, matchedItems);
+    renderCards(matchedItems);
   }
 
   if (searchInput) searchInput.addEventListener('input', filterList);
   if (categoryFilter) categoryFilter.addEventListener('change', filterList);
 }
 
-document.addEventListener('DOMContentLoaded', initAdditiveDecoder);
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', initAdditiveDecoder);
+}

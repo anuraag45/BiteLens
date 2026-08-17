@@ -190,4 +190,6 @@ export function initAuthForms() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', initAuthForms);
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', initAuthForms);
+}
