@@ -31,7 +31,7 @@ export function clearUserSession() {
   window.dispatchEvent(new CustomEvent('bitelens_auth_change', { detail: null }));
 }
 
-export async function loginUser(email, password) {
+export async function loginUser(email, password, goal = 'Fat Loss Deficit') {
   const cleanEmail = sanitizeInput(email);
   if (!validateEmail(cleanEmail)) {
     throw new Error("Please enter a valid email address.");
@@ -43,8 +43,12 @@ export async function loginUser(email, password) {
   // Attempt Go REST API Login
   const res = await authAPI.login(cleanEmail, password);
   if (res.success && res.data && res.data.user) {
-    setUserSession(res.data.user);
-    return res.data.user;
+    const user = {
+      ...res.data.user,
+      weightGoal: goal
+    };
+    setUserSession(user);
+    return user;
   }
 
   // Fallback local session if backend is offline
@@ -52,9 +56,8 @@ export async function loginUser(email, password) {
     id: "user-" + Date.now(),
     email: cleanEmail,
     fullName: cleanEmail.split('@')[0],
-    primaryGoal: "weight_loss",
-    weightGoal: "lose",
-    muscleGoal: "maintain",
+    weightGoal: goal,
+    muscleGoal: "High Protein",
     isMinor: false,
     authProvider: "email",
     createdAt: new Date().toISOString()
@@ -82,8 +85,8 @@ export async function registerUser(data) {
     password: data.password,
     full_name: cleanName,
     birth_date: birthDate,
-    weight_goal: data.weightGoal || "lose",
-    muscle_goal: data.muscleGoal || "maintain",
+    weight_goal: data.weightGoal || "Fat Loss Deficit",
+    muscle_goal: data.muscleGoal || "Hypertrophy (High Protein)",
     parental_email: data.parentalEmail || ""
   };
 
@@ -117,18 +120,23 @@ export async function logoutUser() {
 export function initAuthForms() {
   const loginForm = document.getElementById('login-form');
   const signupForm = document.getElementById('signup-form');
-  const googleBtn = document.getElementById('google-auth-btn');
+  const googleBtn = document.getElementById('google-login-btn') || document.getElementById('google-auth-btn');
 
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const pass = document.getElementById('password').value;
+      const emailInput = document.getElementById('login-email') || document.getElementById('email');
+      const passInput = document.getElementById('login-password') || document.getElementById('password');
+      const goalInput = document.getElementById('login-goal');
       const errBox = document.getElementById('auth-error');
 
       try {
         if (errBox) errBox.style.display = 'none';
-        await loginUser(email, pass);
+        const email = emailInput ? emailInput.value : '';
+        const pass = passInput ? passInput.value : '';
+        const goal = goalInput ? goalInput.value : 'Fat Loss Deficit';
+
+        await loginUser(email, pass, goal);
         window.location.href = 'dashboard.html';
       } catch (err) {
         if (errBox) {
@@ -142,23 +150,25 @@ export function initAuthForms() {
   if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const pass = document.getElementById('password').value;
-      const birthDate = document.getElementById('birthdate')?.value;
-      const weightGoal = document.getElementById('weight-goal')?.value || 'lose';
-      const muscleGoal = document.getElementById('muscle-goal')?.value || 'maintain';
+      const nameInput = document.getElementById('signup-name') || document.getElementById('name');
+      const emailInput = document.getElementById('signup-email') || document.getElementById('email');
+      const passInput = document.getElementById('signup-password') || document.getElementById('password');
+      const goalInput = document.getElementById('signup-goal');
       const errBox = document.getElementById('auth-error');
 
       try {
         if (errBox) errBox.style.display = 'none';
+        const name = nameInput ? nameInput.value : '';
+        const email = emailInput ? emailInput.value : '';
+        const pass = passInput ? passInput.value : '';
+        const goal = goalInput ? goalInput.value : 'Fat Loss Deficit';
+
         await registerUser({
           fullName: name,
           email: email,
           password: pass,
-          birthDate: birthDate,
-          weightGoal: weightGoal,
-          muscleGoal: muscleGoal
+          weightGoal: goal,
+          muscleGoal: "High Protein"
         });
         window.location.href = 'dashboard.html';
       } catch (err) {
@@ -172,15 +182,14 @@ export function initAuthForms() {
 
   if (googleBtn) {
     googleBtn.addEventListener('click', async () => {
-      // Simulated Google OAuth Flow
       const mockGoogleUser = {
         id: "g-user-" + Date.now(),
         email: "google.user@example.com",
         fullName: "Google Health Member",
         avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=bitelens",
         authProvider: "google",
-        weightGoal: "maintain",
-        muscleGoal: "maintain",
+        weightGoal: "Fat Loss Deficit",
+        muscleGoal: "High Protein",
         isMinor: false,
         createdAt: new Date().toISOString()
       };

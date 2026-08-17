@@ -1,3 +1,12 @@
+/* ==========================================================================
+   BiteLens Web Application - Shared Components & Global Navigation
+   Features:
+   - Streamlined, clean navbar with organized multi-tier dropdowns
+   - Responsive slide-out mobile drawer with 48px touch targets
+   - Dynamic user authentication state integration
+   - Animated BiteLens splash loading screen
+   ========================================================================== */
+
 import { CONFIG } from './config.js';
 import { initCyberBackground } from './cyber-background.js';
 import { getUserSession, logoutUser } from './auth.js';
@@ -37,7 +46,9 @@ import {
   History,
   Barcode,
   AlertTriangle,
-  UserCheck
+  UserCheck,
+  BookOpen,
+  FileText
 } from 'lucide';
 
 export function renderComponents() {
@@ -53,29 +64,37 @@ export function renderComponents() {
   if (headerContainer) {
     const authNavHTML = currentUser ? `
       <!-- Logged-In User Profile Chip -->
-      <a href="dashboard.html" style="display: inline-flex; align-items: center; gap: 0.55rem; background: rgba(59, 122, 87, 0.1); border: 1px solid rgba(59, 122, 87, 0.3); padding: 0.3rem 0.85rem; border-radius: var(--radius-pill); height: 38px; text-decoration: none;">
-        <span style="font-size: 0.95rem;">👤</span>
-        <div style="display: flex; flex-direction: column;">
-          <span style="font-size: 0.8rem; font-weight: 800; color: var(--color-primary); line-height: 1.1;">${currentUser.fullName || currentUser.email?.split('@')[0]}</span>
-          <span style="font-size: 0.65rem; color: var(--color-text-muted); font-weight: 600;">Dashboard</span>
-        </div>
-      </a>
-      <button id="logout-btn" style="background: none; border: none; color: #E11D48; cursor: pointer; padding: 0 0.25rem;" title="Logout">
-        <i data-lucide="log-out" style="width: 1.1rem; height: 1.1rem;"></i>
-      </button>
+      <div style="display: inline-flex; align-items: center; gap: 0.55rem; background: #FFFFFF; border: 1.5px solid rgba(59, 122, 87, 0.35); padding: 0.3rem 0.85rem; border-radius: var(--radius-pill); height: 40px; box-shadow: var(--shadow-sm);">
+        <span style="font-size: 1.05rem;">👤</span>
+        <a href="dashboard.html" style="display: flex; flex-direction: column; text-decoration: none;">
+          <span style="font-size: 0.82rem; font-weight: 800; color: var(--color-primary); line-height: 1.1;">
+            ${currentUser.fullName || currentUser.email?.split('@')[0]}
+          </span>
+          <span style="font-size: 0.65rem; color: var(--color-text-muted); font-weight: 600;">
+            ${currentUser.weightGoal || 'Dashboard'}
+          </span>
+        </a>
+        <button id="logout-btn" style="background: none; border: none; color: #E11D48; cursor: pointer; padding: 0 0.2rem; margin-left: 0.25rem; display: flex; align-items: center;" title="Logout">
+          <i data-lucide="log-out" style="width: 1rem; height: 1rem;"></i>
+        </button>
+      </div>
     ` : `
       <!-- Logged-Out Auth Buttons -->
-      <a href="login.html" class="nav-link ${currentPath === 'login.html' ? 'active' : ''}">
-        <i data-lucide="log-in" style="width: 0.9rem; height: 0.9rem;"></i> Login
-      </a>
-      <a href="signup.html" class="btn btn-outline" style="height: 38px; padding: 0 0.9rem; font-size: 0.85rem;">
-        <i data-lucide="user-plus" style="width: 0.85rem; height: 0.85rem;"></i> Sign Up
-      </a>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <a href="login.html" class="nav-link ${currentPath === 'login.html' ? 'active' : ''}" style="height: 38px;">
+          <i data-lucide="log-in" style="width: 0.95rem; height: 0.95rem;"></i> Login
+        </a>
+        <a href="signup.html" class="btn btn-primary" style="height: 38px; padding: 0 1.1rem; font-size: 0.88rem;">
+          <i data-lucide="user-plus" style="width: 0.95rem; height: 0.95rem;"></i> Sign Up
+        </a>
+      </div>
     `;
 
     headerContainer.innerHTML = `
       <header class="site-header">
         <div class="container header-inner">
+          
+          <!-- Brand Logo -->
           <a href="index.html" class="brand-logo">
             <div class="brand-logo-icon">
               <i data-lucide="eye"></i>
@@ -83,61 +102,130 @@ export function renderComponents() {
             <span>${CONFIG.BRAND_NAME}</span>
           </a>
 
+          <!-- Mobile Toggle Button -->
           <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle navigation">
             <i data-lucide="menu"></i>
           </button>
 
+          <!-- Main Desktop Navigation Bar -->
           <nav class="main-nav" id="main-nav">
-            <a href="index.html" class="nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">Home</a>
+            
+            <a href="index.html" class="nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
+              Home
+            </a>
+
+            <!-- Dropdown 1: Scan & Analysis Studio -->
+            <div class="nav-dropdown-wrapper">
+              <span class="nav-link dropdown-trigger ${currentPath.includes('scanner') || currentPath.includes('decoder') || currentPath.includes('compare') || currentPath.includes('budget') ? 'active' : ''}">
+                <i data-lucide="scan" style="width: 0.95rem; height: 0.95rem;"></i> Scan & Tools <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
+              </span>
+              <div class="dropdown-menu">
+                <a href="scanner-demo.html" class="dropdown-item ${currentPath === 'scanner-demo.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="camera"></i></div>
+                  <div>
+                    <div class="dropdown-title">Live Camera Scanner</div>
+                    <div class="dropdown-desc">Optical label OCR & instant scoring</div>
+                  </div>
+                </a>
+                <a href="additive-decoder.html" class="dropdown-item ${currentPath === 'additive-decoder.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="search"></i></div>
+                  <div>
+                    <div class="dropdown-title">INS Additive Decoder</div>
+                    <div class="dropdown-desc">Trie-indexed FSSAI chemical dictionary</div>
+                  </div>
+                </a>
+                <a href="compare.html" class="dropdown-item ${currentPath === 'compare.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="columns"></i></div>
+                  <div>
+                    <div class="dropdown-title">Food Comparison</div>
+                    <div class="dropdown-desc">Side-by-side processing & goal breakdown</div>
+                  </div>
+                </a>
+                <a href="snack-budget.html" class="dropdown-item ${currentPath === 'snack-budget.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="pie-chart"></i></div>
+                  <div>
+                    <div class="dropdown-title">Snack Budget Simulator</div>
+                    <div class="dropdown-desc">Plan daily calories & UPF limits</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- Dropdown 2: Calculators -->
+            <div class="nav-dropdown-wrapper">
+              <span class="nav-link dropdown-trigger ${currentPath.includes('calculator') ? 'active' : ''}">
+                <i data-lucide="activity" style="width: 0.95rem; height: 0.95rem;"></i> Calculators <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
+              </span>
+              <div class="dropdown-menu">
+                <a href="bmi-calculator.html" class="dropdown-item ${currentPath === 'bmi-calculator.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="activity"></i></div>
+                  <div>
+                    <div class="dropdown-title">BMI Calculator</div>
+                    <div class="dropdown-desc">Standard WHO & Asian-specific criteria</div>
+                  </div>
+                </a>
+                <a href="calorie-calculator.html" class="dropdown-item ${currentPath === 'calorie-calculator.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="flame"></i></div>
+                  <div>
+                    <div class="dropdown-title">Calorie & TDEE Calculator</div>
+                    <div class="dropdown-desc">Mifflin-St Jeor metabolic expenditure</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- Dropdown 3: Learn & Science -->
+            <div class="nav-dropdown-wrapper">
+              <span class="nav-link dropdown-trigger ${currentPath === 'how-it-works.html' || currentPath === 'science.html' || currentPath === 'faq.html' || currentPath === 'about.html' ? 'active' : ''}">
+                <i data-lucide="book-open" style="width: 0.95rem; height: 0.95rem;"></i> Explore <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
+              </span>
+              <div class="dropdown-menu">
+                <a href="how-it-works.html" class="dropdown-item ${currentPath === 'how-it-works.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="sparkles"></i></div>
+                  <div>
+                    <div class="dropdown-title">How BiteLens Works</div>
+                    <div class="dropdown-desc">Interactive 4-step telemetry laboratory</div>
+                  </div>
+                </a>
+                <a href="science.html" class="dropdown-item ${currentPath === 'science.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="flask-conical"></i></div>
+                  <div>
+                    <div class="dropdown-title">NOVA & FSSAI Science</div>
+                    <div class="dropdown-desc">Scientific thresholds & nutrient matrix</div>
+                  </div>
+                </a>
+                <a href="faq.html" class="dropdown-item ${currentPath === 'faq.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="help-circle"></i></div>
+                  <div>
+                    <div class="dropdown-title">Food Labeling FAQ</div>
+                    <div class="dropdown-desc">Consumer myth busting & additive safety</div>
+                  </div>
+                </a>
+                <a href="about.html" class="dropdown-item ${currentPath === 'about.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="user"></i></div>
+                  <div>
+                    <div class="dropdown-title">About Team</div>
+                    <div class="dropdown-desc">Student researchers & project mission</div>
+                  </div>
+                </a>
+                <a href="sgp_report.html" target="_blank" class="dropdown-item">
+                  <div class="dropdown-icon-box"><i data-lucide="file-text"></i></div>
+                  <div>
+                    <div class="dropdown-title">Indus SGP Report</div>
+                    <div class="dropdown-desc">Academic report & printable PDF format</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- Direct Link: Dashboard -->
             <a href="dashboard.html" class="nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
-              <i data-lucide="layout-dashboard" style="width: 0.9rem; height: 0.9rem;"></i> Dashboard
+              <i data-lucide="layout-dashboard" style="width: 0.95rem; height: 0.95rem;"></i> Dashboard
             </a>
-            <a href="compare.html" class="nav-link ${currentPath === 'compare.html' ? 'active' : ''}">
-              <i data-lucide="columns" style="width: 0.9rem; height: 0.9rem;"></i> Compare
-            </a>
-            <a href="how-it-works.html" class="nav-link ${currentPath === 'how-it-works.html' ? 'active' : ''}">How It Works</a>
-            
-            <!-- Calculators Dropdown -->
-            <div class="nav-dropdown-wrapper">
-              <span class="nav-link dropdown-trigger ${currentPath.includes('calculator') || currentPath.includes('budget') ? 'active' : ''}">
-                Calculators <i data-lucide="chevron-down" style="width: 0.9rem; height: 0.9rem;"></i>
-              </span>
-              <div class="dropdown-menu">
-                <a href="bmi-calculator.html" class="dropdown-item">
-                  <i data-lucide="activity"></i> BMI Calculator
-                </a>
-                <a href="calorie-calculator.html" class="dropdown-item">
-                  <i data-lucide="flame"></i> Calorie Calculator
-                </a>
-                <a href="snack-budget.html" class="dropdown-item">
-                  <i data-lucide="pie-chart"></i> Snack Budget Simulator
-                </a>
-              </div>
-            </div>
 
-            <!-- Tools & Studio Dropdown -->
-            <div class="nav-dropdown-wrapper">
-              <span class="nav-link dropdown-trigger ${currentPath.includes('decoder') || currentPath.includes('scanner-demo') || currentPath.includes('faq') ? 'active' : ''}">
-                Tools & Studio <i data-lucide="chevron-down" style="width: 0.9rem; height: 0.9rem;"></i>
-              </span>
-              <div class="dropdown-menu">
-                <a href="scanner-demo.html" class="dropdown-item">
-                  <i data-lucide="scan-line"></i> Live Camera Scanner
-                </a>
-                <a href="additive-decoder.html" class="dropdown-item">
-                  <i data-lucide="search"></i> INS Additive Decoder
-                </a>
-                <a href="faq.html" class="dropdown-item">
-                  <i data-lucide="help-circle"></i> Labeling FAQ
-                </a>
-              </div>
-            </div>
-
-            <a href="science.html" class="nav-link ${currentPath === 'science.html' ? 'active' : ''}">Science</a>
-            <a href="about.html" class="nav-link ${currentPath === 'about.html' ? 'active' : ''}">About</a>
-            <a href="contact.html" class="nav-link ${currentPath === 'contact.html' ? 'active' : ''}">Contact</a>
-            
+            <!-- Authentication Controls -->
             ${authNavHTML}
+
           </nav>
         </div>
       </header>
@@ -243,7 +331,8 @@ export function renderComponents() {
       Database, User, Mail, ChevronDown, Menu, Info, CheckCircle2, Cpu,
       Search, PieChart, HelpCircle, ArrowRight, ShieldAlert, LogOut, LogIn,
       UserPlus, Eye, Columns, LayoutDashboard, Camera, View, UploadCloud,
-      RefreshCw, Scan, History, Barcode, AlertTriangle, UserCheck
+      RefreshCw, Scan, History, Barcode, AlertTriangle, UserCheck, BookOpen,
+      FileText
     }
   });
 
@@ -323,4 +412,6 @@ function renderBiteLensSplashScreen() {
   }, 70);
 }
 
-document.addEventListener('DOMContentLoaded', renderComponents);
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', renderComponents);
+}
