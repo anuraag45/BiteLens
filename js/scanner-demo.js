@@ -1,11 +1,11 @@
 /* ==========================================================================
-   BiteLens Web Application - Live Optical Scanner Studio Logic
-   Supports: Live Camera Stream, Photo File Upload, OCR Simulation & API Wire
+   BiteLens Web Application - Food Scanner Showcase & Live Camera Studio
+   Supports:
+   1. Interactive Smartphone Scanner Frame on Hero Landing Page (#hero-scanner-container)
+   2. Live Camera Viewfinder & File Upload Studio on scanner-demo.html (#camera-viewport-container)
    ========================================================================== */
 
-import { scanAPI } from './api.js';
-
-const SCAN_PRESETS = {
+const FOOD_SAMPLES = {
   oats: {
     name: "Multigrain Oats Crisp",
     category: "Packaged Breakfast Cereal",
@@ -19,7 +19,7 @@ const SCAN_PRESETS = {
     goalColor: "#0284C7",
     goalBg: "#E0F2FE",
     additives: [
-      { code: "INS 500(ii)", name: "Acidity Regulator", text: "Sodium hydrogen carbonate — leavening agent." },
+      { code: "INS 500(ii)", name: "Acidity Regulator", text: "Sodium hydrogen carbonate — pH balance stabilizer." },
       { code: "INS 322", name: "Emulsifier", text: "Soy lecithin — prevents lipid separation." }
     ],
     summary: "Whole oat base with added leavening minerals. Clean label with moderate natural fiber."
@@ -37,8 +37,8 @@ const SCAN_PRESETS = {
     goalColor: "#0284C7",
     goalBg: "#E0F2FE",
     additives: [
-      { code: "INS 120", name: "Carmine Red", text: "Natural red pigment derived from cochineal." },
-      { code: "INS 440", name: "Pectin", text: "Fruit thickener extracted from citrus peels." }
+      { code: "INS 120", name: "Natural Colorant", text: "Carmine — red pigment derived from natural sources." },
+      { code: "INS 440", name: "Stabilizer", text: "Pectin — thickener extracted from citrus peels." }
     ],
     summary: "Contains natural fruit thickeners but flagged for 14g added industrial syrup per serving."
   },
@@ -55,7 +55,7 @@ const SCAN_PRESETS = {
     goalColor: "#3B7A57",
     goalBg: "#E8F5E9",
     additives: [
-      { code: "Natural Spices", name: "Whole Spices", text: "Turmeric, cumin, black pepper — zero synthetic additives." }
+      { code: "Natural Herbs", name: "Whole Spices", text: "Cumin, turmeric, black salt — zero synthetic additives." }
     ],
     summary: "Clean formulation with zero artificial preservatives and low sodium seasoning."
   },
@@ -81,24 +81,165 @@ const SCAN_PRESETS = {
 };
 
 let currentStream = null;
-let currentFacingMode = 'environment'; // 'user' or 'environment'
+let currentFacingMode = 'environment';
 
+// --- 1. HERO SMARTPHONE SCANNER (index.html) ---
+export function initHeroScanner() {
+  const container = document.getElementById('hero-scanner-container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        
+        <!-- Target Sample Switcher -->
+        <div style="font-size: 0.75rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-primary); text-transform: uppercase; margin-bottom: 0.45rem; text-align: center; letter-spacing: 0.05em;">
+          Select Sample Food Item:
+        </div>
+        <div class="scanner-selector">
+          <button type="button" class="food-sample-btn active" data-hero-sample="oats">🥣 Oats Crisp</button>
+          <button type="button" class="food-sample-btn" data-hero-sample="yogurt">🍓 Yogurt Cup</button>
+          <button type="button" class="food-sample-btn" data-hero-sample="makhana">🫘 Makhana</button>
+        </div>
+
+        <!-- Live Scanner Display Card -->
+        <div class="scanner-display-card" id="hero-scanner-card">
+          <div class="cyber-scan-beam" id="hero-scan-beam"></div>
+
+          <div style="display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem; margin-bottom: 0.75rem;">
+            <div style="font-size: 2rem;" id="hero-img">🥣</div>
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-weight: 800; font-family: var(--font-family-display); font-size: 0.98rem; color: var(--color-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="hero-name">Multigrain Oats Crisp</div>
+              <div style="font-size: 0.75rem; color: var(--color-text-muted);" id="hero-cat">Packaged Breakfast Cereal</div>
+            </div>
+          </div>
+
+          <!-- Decoded INS Codes -->
+          <div style="font-size: 0.72rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-secondary); text-transform: uppercase; margin-bottom: 0.4rem;">
+            Decoded INS Codes & Ingredients:
+          </div>
+          <div id="hero-ins-list" style="display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.75rem;">
+            <!-- Injected dynamically -->
+          </div>
+
+          <!-- Dual Telemetry Score Badges -->
+          <div class="score-badge-group">
+            <div class="score-box score-box-health">
+              <div style="font-size: 0.65rem; font-weight: 800; font-family: var(--font-family-display); color: #E11D48; letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 0.15rem;">
+                HEALTH SCORE (NOVA)
+              </div>
+              <div class="score-number" id="hero-health-val" style="color: #E11D48;">72/100</div>
+              <div id="hero-health-label" style="font-size: 0.68rem; font-weight: 700; color: #991B1B; background: #FEE2E2; padding: 0.25rem 0.4rem; border-radius: 6px; margin-top: 0.25rem; line-height: 1.25;">
+                NOVA Group 3 (Processed)
+              </div>
+            </div>
+
+            <div class="score-box score-box-goal">
+              <div style="font-size: 0.65rem; font-weight: 800; font-family: var(--font-family-display); color: #0284C7; letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 0.15rem;">
+                GOAL FIT SCORE
+              </div>
+              <div class="score-number" id="hero-goal-val" style="color: #0284C7;">88/100</div>
+              <div id="hero-goal-label" style="font-size: 0.68rem; font-weight: 700; color: #075985; background: #E0F2FE; padding: 0.25rem 0.4rem; border-radius: 6px; margin-top: 0.25rem; line-height: 1.25;">
+                High Fit (Protein & Fiber)
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  // Bind hero sample switcher
+  const sampleBtns = container.querySelectorAll('[data-hero-sample]');
+  sampleBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      sampleBtns.forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      const key = e.target.dataset.heroSample;
+      loadHeroSample(key);
+    });
+  });
+
+  loadHeroSample('oats');
+}
+
+function loadHeroSample(key) {
+  const sample = FOOD_SAMPLES[key];
+  if (!sample) return;
+
+  const imgEl = document.getElementById('hero-img');
+  const nameEl = document.getElementById('hero-name');
+  const catEl = document.getElementById('hero-cat');
+  const insListEl = document.getElementById('hero-ins-list');
+  const healthValEl = document.getElementById('hero-health-val');
+  const healthLabelEl = document.getElementById('hero-health-label');
+  const goalValEl = document.getElementById('hero-goal-val');
+  const goalLabelEl = document.getElementById('hero-goal-label');
+
+  if (imgEl) imgEl.textContent = sample.image;
+  if (nameEl) nameEl.textContent = sample.name;
+  if (catEl) catEl.textContent = sample.category;
+
+  if (insListEl) {
+    insListEl.innerHTML = sample.additives.map(code => `
+      <div style="background: rgba(241, 245, 249, 0.8); border: 1px solid var(--color-border); padding: 0.4rem 0.6rem; border-radius: 8px; font-size: 0.78rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 800; font-family: var(--font-family-display); color: var(--color-primary);">${code.code}</span>
+          <span style="font-size: 0.7rem; color: var(--color-text-muted); font-weight: 600;">${code.name}</span>
+        </div>
+        <div style="color: var(--color-text-main); margin-top: 0.15rem; font-weight: 500;">${code.text}</div>
+      </div>
+    `).join('');
+  }
+
+  if (healthValEl) {
+    healthValEl.textContent = `${sample.healthScore}/100`;
+    healthValEl.style.color = sample.healthColor;
+  }
+  if (healthLabelEl) {
+    healthLabelEl.textContent = sample.healthLabel;
+    healthLabelEl.style.color = sample.healthColor;
+    healthLabelEl.style.backgroundColor = sample.healthBg;
+  }
+
+  if (goalValEl) {
+    goalValEl.textContent = `${sample.goalScore}/100`;
+    goalValEl.style.color = sample.goalColor;
+  }
+  if (goalLabelEl) {
+    goalLabelEl.textContent = sample.goalLabel;
+    goalLabelEl.style.color = sample.goalColor;
+    goalLabelEl.style.backgroundColor = sample.goalBg;
+  }
+
+  const beam = document.getElementById('hero-scan-beam');
+  if (beam) {
+    beam.style.animation = 'none';
+    void beam.offsetWidth;
+    beam.style.animation = 'scanSweep 1.4s cubic-bezier(0.4, 0, 0.2, 1)';
+  }
+}
+
+// --- 2. LIVE CAMERA SCANNER STUDIO (scanner-demo.html) ---
 export function initLiveScanner() {
+  const cameraViewport = document.getElementById('camera-viewport-container');
+  if (!cameraViewport) return;
+
   const videoEl = document.getElementById('scanner-video');
   const modeCameraBtn = document.getElementById('mode-camera-btn');
   const modeUploadBtn = document.getElementById('mode-upload-btn');
-  const cameraViewport = document.getElementById('camera-viewport-container');
   const uploadDropzone = document.getElementById('upload-dropzone-container');
   const captureBtn = document.getElementById('capture-scan-btn');
   const toggleCamBtn = document.getElementById('toggle-camera-btn');
   const fileInput = document.getElementById('label-file-input');
 
-  // 1. Initialize Camera
   if (videoEl && cameraViewport) {
     startCameraStream();
   }
 
-  // 2. Mode Switching (Camera vs Upload)
   if (modeCameraBtn && modeUploadBtn) {
     modeCameraBtn.addEventListener('click', () => {
       modeCameraBtn.classList.add('active');
@@ -117,20 +258,17 @@ export function initLiveScanner() {
     });
   }
 
-  // 3. Capture & Decode Action
   if (captureBtn) {
     captureBtn.addEventListener('click', () => {
       triggerScanAnimation();
       setTimeout(() => {
-        // Randomly pick sample or use noodles for demonstration
-        const keys = Object.keys(SCAN_PRESETS);
+        const keys = Object.keys(FOOD_SAMPLES);
         const randomKey = keys[Math.floor(Math.random() * keys.length)];
-        renderScanResults(SCAN_PRESETS[randomKey]);
+        renderStudioResults(FOOD_SAMPLES[randomKey]);
       }, 1200);
     });
   }
 
-  // 4. Camera Switcher
   if (toggleCamBtn) {
     toggleCamBtn.addEventListener('click', () => {
       currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
@@ -138,38 +276,34 @@ export function initLiveScanner() {
     });
   }
 
-  // 5. File Upload Handler
   if (fileInput) {
     fileInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files[0]) {
         triggerScanAnimation();
         setTimeout(() => {
-          renderScanResults(SCAN_PRESETS.oats);
+          renderStudioResults(FOOD_SAMPLES.oats);
         }, 1000);
       }
     });
   }
 
-  // 6. Sample Preset Buttons
   const sampleBtns = document.querySelectorAll('[data-sample-test]');
   sampleBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       const key = e.target.dataset.sampleTest;
-      if (SCAN_PRESETS[key]) {
+      if (FOOD_SAMPLES[key]) {
         triggerScanAnimation();
-        renderScanResults(SCAN_PRESETS[key]);
+        renderStudioResults(FOOD_SAMPLES[key]);
       }
     });
   });
 
-  // Load default result
-  renderScanResults(SCAN_PRESETS.oats);
+  renderStudioResults(FOOD_SAMPLES.oats);
 }
 
 async function startCameraStream() {
   const videoEl = document.getElementById('scanner-video');
   if (!videoEl || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    console.warn("Camera API not supported in this environment.");
     return;
   }
 
@@ -181,7 +315,7 @@ async function startCameraStream() {
     currentStream = stream;
     videoEl.srcObject = stream;
   } catch (err) {
-    console.warn("Camera access denied or unavailable:", err.message);
+    console.warn("Camera stream unavailable:", err.message);
   }
 }
 
@@ -201,7 +335,7 @@ function triggerScanAnimation() {
   }
 }
 
-function renderScanResults(product) {
+function renderStudioResults(product) {
   const nameEl = document.getElementById('res-product-name');
   const catEl = document.getElementById('res-product-cat');
   const iconEl = document.getElementById('res-product-icon');
@@ -266,4 +400,9 @@ function renderScanResults(product) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', initLiveScanner);
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    initHeroScanner();
+    initLiveScanner();
+  });
+}

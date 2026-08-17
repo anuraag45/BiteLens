@@ -147,7 +147,7 @@ ADDITIVE_DATABASE.forEach(item => {
 });
 
 export function initAdditiveDecoder() {
-  const container = document.getElementById('additive-decoder-container');
+  const container = document.getElementById('additive-decoder-container') || document.getElementById('additive-decoder-app');
   if (!container) return;
 
   renderDecoderHTML(container);
