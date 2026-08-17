@@ -19,6 +19,7 @@ export default defineConfig({
         faq: resolve(__dirname, 'faq.html'),
         login: resolve(__dirname, 'login.html'),
         signup: resolve(__dirname, 'signup.html'),
+        sgpReport: resolve(__dirname, 'sgp_report.html'),
       },
     },
   },
