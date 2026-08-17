@@ -127,7 +127,7 @@ export function initHeroScanner() {
           <div class="score-badge-group">
             <div class="score-box score-box-health">
               <div style="font-size: 0.65rem; font-weight: 800; font-family: var(--font-family-display); color: #E11D48; letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 0.15rem;">
-                HEALTH SCORE (NOVA)
+                HEALTH SCORE
               </div>
               <div class="score-number" id="hero-health-val" style="color: #E11D48;">72/100</div>
               <div id="hero-health-label" style="font-size: 0.68rem; font-weight: 700; color: #991B1B; background: #FEE2E2; padding: 0.25rem 0.4rem; border-radius: 6px; margin-top: 0.25rem; line-height: 1.25;">

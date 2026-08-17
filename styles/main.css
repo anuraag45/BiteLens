@@ -629,24 +629,35 @@ a:hover {
 }
 
 /* ==========================================================================
-   PHONE MOCKUP SCANNER FRAME SHOWCASE STYLES
+   PHONE MOCKUP SCANNER FRAME SHOWCASE STYLES (STATIC LOCKED SIZE)
    ========================================================================== */
 .phone-mockup {
   background: #1E293B;
-  border-radius: 38px;
+  border-radius: 42px;
   padding: 14px;
-  box-shadow: var(--shadow-lg);
-  border: 2px solid #334155;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.2), 0 8px 16px rgba(15, 23, 42, 0.1);
+  border: 3px solid #334155;
+  width: 100%;
   max-width: 440px;
+  height: 590px; /* STRICT STATIC LOCKED HEIGHT */
+  min-height: 590px;
+  max-height: 590px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .phone-screen {
   background: #FAF8F5;
-  border-radius: 26px;
+  border-radius: 30px;
   overflow: hidden;
-  padding: 1.25rem;
+  padding: 1.15rem 1.15rem 1rem 1.15rem;
   border: 1px solid rgba(226, 232, 240, 0.8);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .phone-notch {
@@ -654,13 +665,15 @@ a:hover {
   height: 18px;
   background: #1E293B;
   border-radius: 0 0 12px 12px;
-  margin: -1.25rem auto 1rem auto;
+  margin: -1.15rem auto 0.75rem auto;
+  flex-shrink: 0;
 }
 
 .scanner-selector {
   display: flex;
   gap: 0.4rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+  flex-shrink: 0;
 }
 
 .food-sample-btn {
@@ -689,10 +702,82 @@ a:hover {
   position: relative;
   background: #FFFFFF;
   border-radius: var(--radius-md);
-  padding: 1rem;
+  padding: 0.95rem;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   overflow: hidden;
+  box-sizing: border-box;
+}
+
+#hero-ins-list {
+  min-height: 114px;
+  height: 114px;
+  max-height: 114px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Subpage Universal Back & Breadcrumb Navigation Bar */
+.subpage-back-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0 0.5rem 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.back-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.back-nav-btn:hover {
+  background: rgba(59, 122, 87, 0.08);
+  color: var(--color-primary);
+  border-color: rgba(59, 122, 87, 0.3);
+  transform: translateX(-2px);
+}
+
+.breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.breadcrumb-trail a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.breadcrumb-trail a:hover {
+  color: var(--color-primary);
+}
+
+.breadcrumb-current {
+  color: var(--color-text-main);
+  font-weight: 700;
 }
 
 /* Elevated Dual Score Badges inside Phone Mockup */
@@ -700,11 +785,12 @@ a:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
+  flex-shrink: 0;
 }
 
 .score-box {
-  padding: 0.85rem 0.75rem;
+  padding: 0.75rem 0.65rem;
   border-radius: var(--radius-md);
   text-align: center;
   overflow: hidden;

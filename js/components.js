@@ -2,9 +2,10 @@
    BiteLens Web Application - Shared Components & Global Navigation
    Features:
    - Streamlined, clean navbar with organized multi-tier dropdowns
+   - Universal "← Back" and Breadcrumb navigation bar on all subpages
    - Responsive slide-out mobile drawer with 48px touch targets
    - Dynamic user authentication state integration
-   - Animated BiteLens splash loading screen
+   - Landing-page-only BiteLens splash loading screen
    ========================================================================== */
 
 import { CONFIG } from './config.js';
@@ -48,8 +49,30 @@ import {
   AlertTriangle,
   UserCheck,
   BookOpen,
-  FileText
+  FileText,
+  ArrowLeft,
+  ChevronLeft,
+  Home
 } from 'lucide';
+
+const PAGE_TITLES = {
+  'features.html': 'App Features',
+  'how-it-works.html': 'How BiteLens Works',
+  'bmi-calculator.html': 'BMI Calculator',
+  'calorie-calculator.html': 'Calorie & TDEE Calculator',
+  'snack-budget.html': 'Snack Budget Simulator',
+  'scanner-demo.html': 'Live Camera Scanner',
+  'additive-decoder.html': 'INS Additive Decoder',
+  'compare.html': 'Food Comparison Tool',
+  'dashboard.html': 'Member Dashboard',
+  'science.html': 'NOVA & FSSAI Science',
+  'faq.html': 'Food Labeling FAQ',
+  'about.html': 'About Team',
+  'contact.html': 'Contact Us',
+  'login.html': 'Account Login',
+  'signup.html': 'Create Account',
+  'sgp_report.html': 'Indus SGP Project Report'
+};
 
 export function renderComponents() {
   initCyberBackground();
@@ -232,6 +255,41 @@ export function renderComponents() {
     `;
   }
 
+  // Inject Breadcrumb & Back navigation on all sub-pages
+  if (currentPath !== 'index.html' && currentPath !== '' && currentPath !== 'sgp_report.html') {
+    const mainEl = document.querySelector('main');
+    if (mainEl && !document.getElementById('subpage-nav-bar')) {
+      const pageTitle = PAGE_TITLES[currentPath] || 'Page';
+      const navBar = document.createElement('div');
+      navBar.id = 'subpage-nav-bar';
+      navBar.className = 'container';
+      navBar.innerHTML = `
+        <div class="subpage-back-nav">
+          <button type="button" class="back-nav-btn" id="subpage-back-btn">
+            <i data-lucide="arrow-left" style="width: 0.9rem; height: 0.9rem;"></i> Back
+          </button>
+          <div class="breadcrumb-trail">
+            <a href="index.html"><i data-lucide="home" style="width: 0.85rem; height: 0.85rem; vertical-align: middle;"></i> Home</a>
+            <span>/</span>
+            <span class="breadcrumb-current">${pageTitle}</span>
+          </div>
+        </div>
+      `;
+      mainEl.insertBefore(navBar, mainEl.firstChild);
+
+      const backBtn = document.getElementById('subpage-back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            window.location.href = 'index.html';
+          }
+        });
+      }
+    }
+  }
+
   if (footerContainer) {
     footerContainer.innerHTML = `
       <footer class="site-footer">
@@ -332,7 +390,7 @@ export function renderComponents() {
       Search, PieChart, HelpCircle, ArrowRight, ShieldAlert, LogOut, LogIn,
       UserPlus, Eye, Columns, LayoutDashboard, Camera, View, UploadCloud,
       RefreshCw, Scan, History, Barcode, AlertTriangle, UserCheck, BookOpen,
-      FileText
+      FileText, ArrowLeft, ChevronLeft, Home
     }
   });
 
@@ -358,6 +416,13 @@ export function renderComponents() {
 function renderBiteLensSplashScreen() {
   const splashContainer = document.getElementById('bitelens-splash-screen');
   if (!splashContainer) return;
+
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  // ONLY render splash on the landing page!
+  if (currentPath !== 'index.html' && currentPath !== '') {
+    splashContainer.style.display = 'none';
+    return;
+  }
 
   const splashShown = sessionStorage.getItem('bitelens_splash_shown');
   if (splashShown) {
