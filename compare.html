@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Side-by-Side Food Comparison Tool — BiteLens</title>
+  <meta name="description" content="Compare two packaged foods side-by-side to see transparent differences in NOVA processing level, hidden chemical additives, sodium, and goal fit scores.">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+  <div id="bitelens-splash-screen"></div>
+  <div id="site-header-container"></div>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="hero-pill">
+            <i data-lucide="columns"></i> Comparative Telemetry Studio
+          </div>
+          <h1 class="section-title">Compare Two Packaged Foods Side-by-Side</h1>
+          <p class="section-subtitle">
+            See the exact differences in industrial processing, hidden synthetic additives, added sugars, and how each product impacts your personal health goal.
+          </p>
+        </div>
+
+        <!-- Quick Comparison Preset Chips -->
+        <div style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem;">
+          <button type="button" class="btn btn-outline active" style="height: 36px; font-size: 0.85rem;" data-compare-preset="makhana_vs_chips">
+            🫘 Roasted Makhana vs 🍟 Potato Chips
+          </button>
+          <button type="button" class="btn btn-outline" style="height: 36px; font-size: 0.85rem;" data-compare-preset="oats_vs_cornflakes">
+            🥣 Oats Crisp vs 🌽 Sugar Cornflakes
+          </button>
+          <button type="button" class="btn btn-outline" style="height: 36px; font-size: 0.85rem;" data-compare-preset="yogurt_vs_plain">
+            🍓 Berry Yogurt vs 🥛 Plain Greek Yogurt
+          </button>
+        </div>
+
+        <!-- Dual Column Comparison Arena -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1080px; margin: 0 auto;">
+          
+          <!-- Product A Card -->
+          <div class="card hud-card" id="card-prod-a" style="border-top: 5px solid var(--color-primary);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+              <span class="hud-code-tag" style="background: rgba(59, 122, 87, 0.15); color: #3B7A57;">Product A (Selected)</span>
+              <div id="icon-prod-a" style="font-size: 2.2rem;">🫘</div>
+            </div>
+
+            <h2 id="name-prod-a" style="font-size: 1.4rem; margin-bottom: 0.25rem;">Roasted Masala Makhana</h2>
+            <p id="cat-prod-a" style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Traditional Indian Snack</p>
+
+            <!-- Scores -->
+            <div class="score-badge-group" style="margin-bottom: 1.25rem;">
+              <div class="score-box" style="background: #F0FDF4; border-color: rgba(59, 122, 87, 0.3);">
+                <div style="font-size: 0.65rem; font-weight: 800; color: #166534; text-transform: uppercase;">HEALTH SCORE</div>
+                <div class="score-number" id="health-prod-a" style="color: #166534;">92/100</div>
+                <div id="nova-prod-a" style="font-size: 0.68rem; font-weight: 700; color: #166534; background: #DCFCE7; padding: 0.2rem 0.4rem; border-radius: 4px;">NOVA Group 2</div>
+              </div>
+              <div class="score-box" style="background: #F0F9FF; border-color: rgba(2, 132, 199, 0.3);">
+                <div style="font-size: 0.65rem; font-weight: 800; color: #0284C7; text-transform: uppercase;">GOAL FIT</div>
+                <div class="score-number" id="goal-prod-a" style="color: #0284C7;">90/100</div>
+                <div style="font-size: 0.68rem; font-weight: 700; color: #075985; background: #E0F2FE; padding: 0.2rem 0.4rem; border-radius: 4px;">High Protein</div>
+              </div>
+            </div>
+
+            <!-- Nutritional Telemetry List -->
+            <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.88rem; margin-bottom: 1.25rem;">
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Processing Level:</span>
+                <strong id="proc-prod-a" style="color: #166534;">Minimally Processed</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Chemical Additives:</span>
+                <strong id="additives-prod-a">0 Synthetic Additives</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Saturated Fat:</span>
+                <strong id="fat-prod-a">1.2g per 100g</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Added Sugar:</span>
+                <strong id="sugar-prod-a" style="color: #166534;">0g (Zero Added)</strong>
+              </div>
+            </div>
+
+            <div style="background: #F0FDF4; border: 1px solid rgba(59, 122, 87, 0.25); border-radius: var(--radius-sm); padding: 0.85rem; font-size: 0.82rem; color: #166534;" id="verdict-prod-a">
+              ✓ <strong>BiteLens Verdict:</strong> Exceptional clean snack choice. High fiber and low calorie density.
+            </div>
+
+          </div>
+
+          <!-- Product B Card -->
+          <div class="card hud-card" id="card-prod-b" style="border-top: 5px solid var(--color-accent);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+              <span class="hud-code-tag" style="background: rgba(225, 29, 72, 0.15); color: #E11D48;">Product B (Alternative)</span>
+              <div id="icon-prod-b" style="font-size: 2.2rem;">🍟</div>
+            </div>
+
+            <h2 id="name-prod-b" style="font-size: 1.4rem; margin-bottom: 0.25rem;">Classic Salted Potato Chips</h2>
+            <p id="cat-prod-b" style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Packaged Fried Snack</p>
+
+            <!-- Scores -->
+            <div class="score-badge-group" style="margin-bottom: 1.25rem;">
+              <div class="score-box" style="background: #FEF2F2; border-color: rgba(225, 29, 72, 0.3);">
+                <div style="font-size: 0.65rem; font-weight: 800; color: #E11D48; text-transform: uppercase;">HEALTH SCORE</div>
+                <div class="score-number" id="health-prod-b" style="color: #E11D48;">35/100</div>
+                <div id="nova-prod-b" style="font-size: 0.68rem; font-weight: 700; color: #991B1B; background: #FEE2E2; padding: 0.2rem 0.4rem; border-radius: 4px;">NOVA Group 4</div>
+              </div>
+              <div class="score-box" style="background: #FEF2F2; border-color: rgba(225, 29, 72, 0.3);">
+                <div style="font-size: 0.65rem; font-weight: 800; color: #E11D48; text-transform: uppercase;">GOAL FIT</div>
+                <div class="score-number" id="goal-prod-b" style="color: #E11D48;">42/100</div>
+                <div style="font-size: 0.68rem; font-weight: 700; color: #991B1B; background: #FEE2E2; padding: 0.2rem 0.4rem; border-radius: 4px;">Low Fit (High Fat)</div>
+              </div>
+            </div>
+
+            <!-- Nutritional Telemetry List -->
+            <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.88rem; margin-bottom: 1.25rem;">
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Processing Level:</span>
+                <strong id="proc-prod-b" style="color: #E11D48;">Ultra-Processed (UPF)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Chemical Additives:</span>
+                <strong id="additives-prod-b">3 Synthetic Additives (INS 627, 631)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Saturated Fat:</span>
+                <strong id="fat-prod-b" style="color: #E11D48;">15.4g per 100g (High)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.4rem;">
+                <span style="color: var(--color-text-muted);">Sodium Density:</span>
+                <strong id="sugar-prod-b" style="color: #E11D48;">680mg (34% Daily Limit)</strong>
+              </div>
+            </div>
+
+            <div style="background: #FEF2F2; border: 1px solid rgba(225, 29, 72, 0.25); border-radius: var(--radius-sm); padding: 0.85rem; font-size: 0.82rem; color: #991B1B;" id="verdict-prod-b">
+              ⚠ <strong>BiteLens Warning:</strong> High oil absorption with chemical flavor potentiators. Exceeds healthy snack thresholds.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-container"></div>
+
+  <script type="module" src="./js/compare.js"></script>
+</body>
+</html>
