@@ -3,7 +3,7 @@
    Contains:
    1. BMI Calculator (Standard WHO vs. Asian-specific cutoffs)
    2. Calorie Calculator (Mifflin-St Jeor Equation & TDEE)
-   Accelerated with LRUCache Memoization
+   Accelerated with LRUCache Memoization & Mobile Input Support
    ========================================================================== */
 
 import { LRUCache } from './data-structures.js';
@@ -218,30 +218,89 @@ export function initCalorieCalculator() {
 
   const ageInput = document.getElementById('cal-age');
   const weightInput = document.getElementById('cal-weight');
-  const heightInput = document.getElementById('cal-height');
+  const heightCmInput = document.getElementById('cal-height-cm') || document.getElementById('cal-height');
+  const heightFtInput = document.getElementById('cal-height-ft');
+  const heightInInput = document.getElementById('cal-height-in');
+  const sexSelect = document.getElementById('cal-sex');
   const activitySelect = document.getElementById('cal-activity');
   const goalSelect = document.getElementById('cal-goal');
+
+  const unitWeightBtns = document.querySelectorAll('#cal-weight-unit .toggle-btn');
+  const unitHeightBtns = document.querySelectorAll('#cal-height-unit .toggle-btn');
+  const heightCmGroup = document.getElementById('cal-height-cm-group');
+  const heightFtInGroup = document.getElementById('cal-height-ftin-group');
+  const weightLabelUnit = document.getElementById('cal-weight-unit-label');
 
   const resultContainer = document.getElementById('calorie-result');
   const errorContainer = document.getElementById('calorie-error');
 
+  let currentWeightUnit = 'kg';
+  let currentHeightUnit = 'cm';
+
+  if (unitWeightBtns.length > 0) {
+    unitWeightBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        unitWeightBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentWeightUnit = btn.dataset.unit;
+        if (weightLabelUnit) weightLabelUnit.textContent = currentWeightUnit.toUpperCase();
+        calculateAndRender();
+      });
+    });
+  }
+
+  if (unitHeightBtns.length > 0) {
+    unitHeightBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        unitHeightBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentHeightUnit = btn.dataset.unit;
+        if (currentHeightUnit === 'cm') {
+          if (heightCmGroup) heightCmGroup.style.display = 'block';
+          if (heightFtInGroup) heightFtInGroup.style.display = 'none';
+        } else {
+          if (heightCmGroup) heightCmGroup.style.display = 'none';
+          if (heightFtInGroup) heightFtInGroup.style.display = 'flex';
+        }
+        calculateAndRender();
+      });
+    });
+  }
+
   function calculateAndRender() {
-    errorContainer.style.display = 'none';
-    resultContainer.style.display = 'none';
+    if (errorContainer) errorContainer.style.display = 'none';
+    if (resultContainer) resultContainer.style.display = 'none';
 
     try {
-      const sex = document.querySelector('input[name="cal-sex"]:checked')?.value;
-      const age = parseInt(ageInput.value, 10);
-      const weight = parseFloat(weightInput.value);
-      const height = parseFloat(heightInput.value);
-      const activity = activitySelect.value;
-      const goal = goalSelect.value;
+      const sex = sexSelect?.value || document.querySelector('input[name="cal-sex"]:checked')?.value || 'male';
+      const age = parseInt(ageInput?.value, 10);
+      const rawWeight = parseFloat(weightInput?.value);
 
-      if (!sex || isNaN(age) || isNaN(weight) || isNaN(height) || age <= 0 || weight <= 0 || height <= 0) {
+      if (!sex || isNaN(age) || isNaN(rawWeight) || age <= 0 || rawWeight <= 0) {
         return;
       }
 
-      const bmr = calculateBMR(sex, age, weight, height);
+      let weightKg = rawWeight;
+      if (currentWeightUnit === 'lb') {
+        weightKg = rawWeight * 0.453592;
+      }
+
+      let heightCm = 0;
+      if (currentHeightUnit === 'cm') {
+        heightCm = parseFloat(heightCmInput?.value);
+      } else {
+        const ft = parseFloat(heightFtInput?.value) || 0;
+        const inches = parseFloat(heightInInput?.value) || 0;
+        if (ft <= 0 && inches <= 0) return;
+        heightCm = ((ft * 12) + inches) * 2.54;
+      }
+
+      if (isNaN(heightCm) || heightCm <= 0) return;
+
+      const activity = activitySelect?.value || 'sedentary';
+      const goal = goalSelect?.value || 'maintain';
+
+      const bmr = calculateBMR(sex, age, weightKg, heightCm);
       const tdee = calculateTDEE(bmr, activity);
       const targetCalories = calculateGoalCalories(tdee, goal);
 
@@ -250,24 +309,38 @@ export function initCalorieCalculator() {
       const fatG = Math.round((targetCalories * 0.25) / 9);
       const carbG = Math.round((targetCalories * 0.50) / 4);
 
-      document.getElementById('bmr-val').textContent = Math.round(bmr);
-      document.getElementById('tdee-val').textContent = Math.round(tdee);
-      document.getElementById('target-cal-val').textContent = Math.round(targetCalories);
+      const bmrEl = document.getElementById('bmr-val');
+      const tdeeEl = document.getElementById('tdee-val');
+      const goalValEl = document.getElementById('goal-val') || document.getElementById('target-cal-val');
+      const goalGroupEl = document.getElementById('goal-result-group');
 
-      document.getElementById('macro-protein').textContent = `${proteinG}g`;
-      document.getElementById('macro-fat').textContent = `${fatG}g`;
-      document.getElementById('macro-carb').textContent = `${carbG}g`;
+      if (bmrEl) bmrEl.textContent = Math.round(bmr);
+      if (tdeeEl) tdeeEl.textContent = Math.round(tdee);
+      if (goalValEl) goalValEl.textContent = `${Math.round(targetCalories)} kcal`;
+      if (goalGroupEl) goalGroupEl.style.display = 'block';
+
+      const macroProt = document.getElementById('macro-protein');
+      const macroFat = document.getElementById('macro-fat');
+      const macroCarb = document.getElementById('macro-carb');
+      if (macroProt) macroProt.textContent = `${proteinG}g`;
+      if (macroFat) macroFat.textContent = `${fatG}g`;
+      if (macroCarb) macroCarb.textContent = `${carbG}g`;
 
       resultContainer.style.display = 'block';
     } catch (err) {
-      errorContainer.textContent = err.message;
-      errorContainer.style.display = 'block';
+      if (errorContainer) {
+        errorContainer.textContent = err.message;
+        errorContainer.style.display = 'block';
+      }
     }
   }
 
-  const inputs = [ageInput, weightInput, heightInput, activitySelect, goalSelect];
+  const inputs = [ageInput, weightInput, heightCmInput, heightFtInput, heightInInput, sexSelect, activitySelect, goalSelect];
   inputs.forEach(input => {
-    if (input) input.addEventListener('input', calculateAndRender);
+    if (input) {
+      input.addEventListener('input', calculateAndRender);
+      input.addEventListener('change', calculateAndRender);
+    }
   });
 
   const sexRadios = document.querySelectorAll('input[name="cal-sex"]');

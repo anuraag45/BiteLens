@@ -206,10 +206,17 @@ export function initCyberBackground() {
     }
   }
 
-  const nodeCount = Math.min(Math.floor((width * height) / 18000), 54);
-  for (let i = 0; i < nodeCount; i++) {
-    foodNodes.push(new FoodNode());
-  }
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      isPaused = true;
+    }
+
+    const isMobile = window.innerWidth < 768;
+    const maxNodes = isMobile ? 18 : 54;
+    const nodeCount = Math.min(Math.floor((width * height) / (isMobile ? 32000 : 18000)), maxNodes);
+    for (let i = 0; i < nodeCount; i++) {
+      foodNodes.push(new FoodNode());
+    }
 
   function renderCutePopoverCard() {
     if (document.getElementById('cute-telemetry-popover')) return;

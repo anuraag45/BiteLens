@@ -1,10 +1,11 @@
 /* ==========================================================================
-   BiteLens Web Application - Shared Components & Global Navigation
+   BiteLens Web Application - Shared Components & Mobile Navigation Drawer
    Features:
-   - Streamlined, clean navbar with organized multi-tier dropdowns
-   - Universal "← Back" and Breadcrumb navigation bar on all subpages
-   - Responsive slide-out mobile drawer with 48px touch targets
-   - Dynamic user authentication state integration
+   - Streamlined, clean navbar for desktop & tablet
+   - Full Mobile Slide-in Drawer with Backdrop Overlay & Close Button
+   - Escape Key & Tap-outside Dismissal
+   - Universal "← Back" and Breadcrumb navigation on all subpages
+   - Touch targets >= 44x44px per WCAG / Apple guidelines
    - Landing-page-only BiteLens splash loading screen
    ========================================================================== */
 
@@ -52,7 +53,8 @@ import {
   FileText,
   ArrowLeft,
   ChevronLeft,
-  Home
+  Home,
+  X
 } from 'lucide';
 
 const PAGE_TITLES = {
@@ -86,7 +88,7 @@ export function renderComponents() {
 
   if (headerContainer) {
     const authNavHTML = currentUser ? `
-      <!-- Logged-In User Profile Chip -->
+      <!-- Logged-In User Profile Chip (Desktop) -->
       <div style="display: inline-flex; align-items: center; gap: 0.55rem; background: #FFFFFF; border: 1.5px solid rgba(59, 122, 87, 0.35); padding: 0.3rem 0.85rem; border-radius: var(--radius-pill); height: 40px; box-shadow: var(--shadow-sm);">
         <span style="font-size: 1.05rem;">👤</span>
         <a href="dashboard.html" style="display: flex; flex-direction: column; text-decoration: none;">
@@ -97,18 +99,53 @@ export function renderComponents() {
             ${currentUser.weightGoal || 'Dashboard'}
           </span>
         </a>
-        <button id="logout-btn" style="background: none; border: none; color: #E11D48; cursor: pointer; padding: 0 0.2rem; margin-left: 0.25rem; display: flex; align-items: center;" title="Logout">
+        <button id="logout-btn" style="background: none; border: none; color: #E11D48; cursor: pointer; padding: 0 0.2rem; margin-left: 0.25rem; display: flex; align-items: center; min-width: 32px; min-height: 32px; justify-content: center;" title="Logout">
           <i data-lucide="log-out" style="width: 1rem; height: 1rem;"></i>
         </button>
       </div>
     ` : `
-      <!-- Logged-Out Auth Buttons -->
+      <!-- Logged-Out Auth Buttons (Desktop) -->
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <a href="login.html" class="nav-link ${currentPath === 'login.html' ? 'active' : ''}" style="height: 38px;">
           <i data-lucide="log-in" style="width: 0.95rem; height: 0.95rem;"></i> Login
         </a>
         <a href="signup.html" class="btn btn-primary" style="height: 38px; padding: 0 1.1rem; font-size: 0.88rem;">
           <i data-lucide="user-plus" style="width: 0.95rem; height: 0.95rem;"></i> Sign Up
+        </a>
+      </div>
+    `;
+
+    const mobileAuthHTML = currentUser ? `
+      <div style="background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1rem; margin-top: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <div style="font-size: 1.5rem; width: 44px; height: 44px; background: rgba(59, 122, 87, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">👤</div>
+            <div>
+              <div style="font-weight: 800; font-family: var(--font-family-display); font-size: 0.95rem; color: var(--color-text-main);">
+                ${currentUser.fullName || currentUser.email?.split('@')[0]}
+              </div>
+              <div style="font-size: 0.78rem; color: var(--color-text-muted);">
+                ${currentUser.email}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <a href="dashboard.html" class="btn btn-outline" style="flex: 1; height: 44px; font-size: 0.88rem;">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+          </a>
+          <button id="mobile-logout-btn" class="btn btn-outline" style="height: 44px; color: #E11D48; border-color: #FCA5A5; padding: 0 1rem;">
+            <i data-lucide="log-out"></i> Logout
+          </button>
+        </div>
+      </div>
+    ` : `
+      <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border);">
+        <a href="signup.html" class="btn btn-primary" style="height: 46px; font-size: 0.95rem; width: 100%;">
+          <i data-lucide="user-plus"></i> Create Free Account
+        </a>
+        <a href="login.html" class="btn btn-outline" style="height: 46px; font-size: 0.95rem; width: 100%;">
+          <i data-lucide="log-in"></i> Log In to BiteLens
         </a>
       </div>
     `;
@@ -125,8 +162,8 @@ export function renderComponents() {
             <span>${CONFIG.BRAND_NAME}</span>
           </a>
 
-          <!-- Mobile Toggle Button -->
-          <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Toggle navigation">
+          <!-- Mobile Hamburger Toggle Button (Minimum 44x44px touch target) -->
+          <button class="mobile-nav-toggle" id="mobile-toggle" aria-label="Open navigation menu" aria-expanded="false">
             <i data-lucide="menu"></i>
           </button>
 
@@ -246,12 +283,99 @@ export function renderComponents() {
               <i data-lucide="layout-dashboard" style="width: 0.95rem; height: 0.95rem;"></i> Dashboard
             </a>
 
-            <!-- Authentication Controls -->
+            <!-- Authentication Controls (Desktop) -->
             ${authNavHTML}
 
           </nav>
         </div>
       </header>
+
+      <!-- Slide-In Mobile Navigation Drawer & Backdrop -->
+      <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
+      <aside class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation Drawer" aria-hidden="true">
+        <div class="mobile-drawer-header">
+          <a href="index.html" class="brand-logo" style="font-size: 1.35rem;">
+            <div class="brand-logo-icon" style="width: 34px; height: 34px;">
+              <i data-lucide="eye" style="width: 1.1rem; height: 1.1rem;"></i>
+            </div>
+            <span>${CONFIG.BRAND_NAME}</span>
+          </a>
+          <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close navigation menu">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="mobile-drawer-content">
+          
+          <a href="scanner-demo.html" class="btn btn-primary mobile-drawer-cta" style="height: 46px; width: 100%; margin-bottom: 1.25rem; font-size: 0.95rem;">
+            <i data-lucide="camera"></i> Launch Live Scanner
+          </a>
+
+          <div class="mobile-nav-group">
+            <div class="mobile-nav-group-title">Navigation</div>
+            <a href="index.html" class="mobile-nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
+              <i data-lucide="home"></i> Home Overview
+            </a>
+            <a href="dashboard.html" class="mobile-nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
+              <i data-lucide="layout-dashboard"></i> Member Dashboard
+            </a>
+          </div>
+
+          <div class="mobile-nav-group">
+            <div class="mobile-nav-group-title">Scan & Telemetry Tools</div>
+            <a href="scanner-demo.html" class="mobile-nav-link ${currentPath === 'scanner-demo.html' ? 'active' : ''}">
+              <i data-lucide="camera"></i> Live Camera Scanner
+            </a>
+            <a href="additive-decoder.html" class="mobile-nav-link ${currentPath === 'additive-decoder.html' ? 'active' : ''}">
+              <i data-lucide="search"></i> INS Additive Decoder
+            </a>
+            <a href="compare.html" class="mobile-nav-link ${currentPath === 'compare.html' ? 'active' : ''}">
+              <i data-lucide="columns"></i> Food Comparison Tool
+            </a>
+            <a href="snack-budget.html" class="mobile-nav-link ${currentPath === 'snack-budget.html' ? 'active' : ''}">
+              <i data-lucide="pie-chart"></i> Snack Budget Simulator
+            </a>
+          </div>
+
+          <div class="mobile-nav-group">
+            <div class="mobile-nav-group-title">Health Calculators</div>
+            <a href="bmi-calculator.html" class="mobile-nav-link ${currentPath === 'bmi-calculator.html' ? 'active' : ''}">
+              <i data-lucide="activity"></i> BMI Calculator (Asian Cutoffs)
+            </a>
+            <a href="calorie-calculator.html" class="mobile-nav-link ${currentPath === 'calorie-calculator.html' ? 'active' : ''}">
+              <i data-lucide="flame"></i> Calorie & TDEE Calculator
+            </a>
+          </div>
+
+          <div class="mobile-nav-group">
+            <div class="mobile-nav-group-title">Learn & Science</div>
+            <a href="how-it-works.html" class="mobile-nav-link ${currentPath === 'how-it-works.html' ? 'active' : ''}">
+              <i data-lucide="sparkles"></i> How BiteLens Works
+            </a>
+            <a href="features.html" class="mobile-nav-link ${currentPath === 'features.html' ? 'active' : ''}">
+              <i data-lucide="scan-line"></i> Features Overview
+            </a>
+            <a href="science.html" class="mobile-nav-link ${currentPath === 'science.html' ? 'active' : ''}">
+              <i data-lucide="flask-conical"></i> NOVA & FSSAI Science
+            </a>
+            <a href="faq.html" class="mobile-nav-link ${currentPath === 'faq.html' ? 'active' : ''}">
+              <i data-lucide="help-circle"></i> Food Labeling FAQ
+            </a>
+            <a href="about.html" class="mobile-nav-link ${currentPath === 'about.html' ? 'active' : ''}">
+              <i data-lucide="user"></i> About Team & Mission
+            </a>
+            <a href="contact.html" class="mobile-nav-link ${currentPath === 'contact.html' ? 'active' : ''}">
+              <i data-lucide="mail"></i> Contact Us
+            </a>
+            <a href="sgp_report.html" target="_blank" class="mobile-nav-link">
+              <i data-lucide="file-text"></i> Indus SGP Project Report
+            </a>
+          </div>
+
+          ${mobileAuthHTML}
+
+        </div>
+      </aside>
     `;
   }
 
@@ -265,8 +389,8 @@ export function renderComponents() {
       navBar.className = 'container';
       navBar.innerHTML = `
         <div class="subpage-back-nav">
-          <button type="button" class="back-nav-btn" id="subpage-back-btn">
-            <i data-lucide="arrow-left" style="width: 0.9rem; height: 0.9rem;"></i> Back
+          <button type="button" class="back-nav-btn" id="subpage-back-btn" aria-label="Go back to previous page">
+            <i data-lucide="arrow-left" style="width: 0.95rem; height: 0.95rem;"></i> Back
           </button>
           <div class="breadcrumb-trail">
             <a href="index.html"><i data-lucide="home" style="width: 0.85rem; height: 0.85rem; vertical-align: middle;"></i> Home</a>
@@ -370,7 +494,7 @@ export function renderComponents() {
             <div>
               © 2026 ${CONFIG.BRAND_NAME}. Built with Go (Golang) & Vite. All rights reserved.
             </div>
-            <div style="display: flex; gap: 1.5rem;">
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
               <a href="sgp_report.html" target="_blank" style="color: #94A3B8; font-size: 0.85rem;">Indus University SGP Report</a>
               <a href="about.html" style="color: #94A3B8; font-size: 0.85rem;">Project Credits</a>
               <a href="contact.html" style="color: #94A3B8; font-size: 0.85rem;">Support</a>
@@ -390,27 +514,70 @@ export function renderComponents() {
       Search, PieChart, HelpCircle, ArrowRight, ShieldAlert, LogOut, LogIn,
       UserPlus, Eye, Columns, LayoutDashboard, Camera, View, UploadCloud,
       RefreshCw, Scan, History, Barcode, AlertTriangle, UserCheck, BookOpen,
-      FileText, ArrowLeft, ChevronLeft, Home
+      FileText, ArrowLeft, ChevronLeft, Home, X
     }
   });
 
-  // Mobile Menu Toggle
+  // Mobile Drawer Toggle Logic (Open, Close, Backdrop Click, Escape Key)
   const mobileToggle = document.getElementById('mobile-toggle');
-  const mainNav = document.getElementById('main-nav');
-  if (mobileToggle && mainNav) {
-    mobileToggle.addEventListener('click', () => {
-      mainNav.classList.toggle('mobile-open');
-    });
+  const drawer = document.getElementById('mobile-drawer');
+  const backdrop = document.getElementById('mobile-drawer-backdrop');
+  const drawerClose = document.getElementById('mobile-drawer-close');
+
+  function openMobileDrawer() {
+    if (drawer && backdrop) {
+      drawer.classList.add('open');
+      backdrop.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('mobile-drawer-open');
+    }
   }
 
-  // Logout listener
-  const logoutBtn = document.getElementById('logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-      await logoutUser();
-      window.location.href = 'index.html';
-    });
+  function closeMobileDrawer() {
+    if (drawer && backdrop) {
+      drawer.classList.remove('open');
+      backdrop.classList.remove('open');
+      drawer.setAttribute('aria-hidden', 'true');
+      if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('mobile-drawer-open');
+    }
   }
+
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', openMobileDrawer);
+  }
+
+  if (drawerClose) {
+    drawerClose.addEventListener('click', closeMobileDrawer);
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', closeMobileDrawer);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) {
+      closeMobileDrawer();
+    }
+  });
+
+  // Close drawer automatically when any mobile nav link is tapped
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link, .mobile-drawer-cta');
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', closeMobileDrawer);
+  });
+
+  // Logout listeners
+  const logoutBtn = document.getElementById('logout-btn');
+  const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+  const handleLogout = async () => {
+    await logoutUser();
+    window.location.href = 'index.html';
+  };
+
+  if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
 }
 
 function renderBiteLensSplashScreen() {

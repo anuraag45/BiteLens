@@ -723,6 +723,29 @@ a:hover {
   gap: 0.4rem;
 }
 
+/* Feature Studio Responsive Grids */
+.comparison-arena-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.scanner-studio-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+}
+
 /* Subpage Universal Back & Breadcrumb Navigation Bar */
 .subpage-back-nav {
   display: flex;
@@ -1471,50 +1494,375 @@ a:hover {
 }
 
 /* ==========================================================================
-   ANDROID & MOBILE RESPONSIVE OPTIMIZATION
+   MOBILE & TABLET RESPONSIVE SYSTEM (320px, 375px, 414px, 768px, 1024px)
    ========================================================================== */
-@media (max-width: 1024px) {
-  .hero-wrapper { grid-template-columns: 1fr; gap: 2.5rem; text-align: center; }
-  .hero-subtitle { max-width: 600px; margin-left: auto; margin-right: auto; }
-  .hero-ctas { justify-content: center; }
-  .footer-main-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
-  .stepper-grid, .grid-4 { grid-template-columns: repeat(2, 1fr); }
-  .telemetry-stepper-header, .hud-controls-grid, .comparison-card-grid, .nova-gauge-grid, .dual-meters-grid { grid-template-columns: 1fr; }
+
+/* Global Mobile Viewport Safety (Zero Horizontal Overflow) */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
+/* Mobile Slide-In Navigation Drawer & Backdrop */
+.mobile-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.mobile-drawer-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 88%;
+  max-width: 380px;
+  background: #FAF8F5;
+  z-index: 1000;
+  transform: translateX(100%);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -16px 0 40px rgba(15, 23, 42, 0.2);
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--color-border);
+}
+
+.mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  background: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.mobile-drawer-close {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: #F1F5F9;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobile-drawer-close:hover, .mobile-drawer-close:active {
+  background: rgba(225, 29, 72, 0.1);
+  color: #E11D48;
+  border-color: #FCA5A5;
+}
+
+.mobile-drawer-content {
+  padding: 1.25rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mobile-nav-group-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-family: var(--font-family-display);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0.15rem;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  text-decoration: none;
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.mobile-nav-link i {
+  color: var(--color-primary);
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+}
+
+.mobile-nav-link:hover, .mobile-nav-link.active {
+  background: rgba(59, 122, 87, 0.1);
+  color: var(--color-primary);
+  border-color: rgba(59, 122, 87, 0.3);
+  transform: translateX(3px);
+}
+
+body.mobile-drawer-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+/* Breakpoint: Laptops & Tablets (< 1024px) */
+@media (max-width: 1024px) {
+  .hero-wrapper {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+  .hero-subtitle {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-ctas {
+    justify-content: center;
+  }
+  .footer-main-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  .stepper-grid, .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .telemetry-stepper-header, .hud-controls-grid, .comparison-card-grid, .nova-gauge-grid, .dual-meters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Breakpoint: Tablets & Mobile (< 768px) */
 @media (max-width: 768px) {
-  .site-header { padding: 0.6rem 0; }
-  .mobile-nav-toggle { display: flex; }
-  
-  .main-nav {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #FAF8F5;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1.25rem;
-    gap: 0.75rem;
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: var(--shadow-md);
+  .site-header {
+    padding: 0.55rem 0;
   }
 
-  .main-nav.mobile-open {
+  /* Hamburger Toggle: strictly >= 44x44px touch target */
+  .mobile-nav-toggle {
     display: flex;
-  }
-
-  .nav-link {
+    width: 44px;
     height: 44px;
-    justify-content: flex-start;
-    font-size: 0.98rem;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
   }
 
-  .hero-title { font-size: 2.35rem; }
-  .grid-2, .grid-3, .stepper-grid, .grid-4, .footer-main-grid { grid-template-columns: 1fr; }
-  
-  .calculator-card, .hud-telemetry-workbench {
-    padding: 1.5rem;
+  /* Hide Desktop Horizontal Navigation */
+  .main-nav {
+    display: none !important;
+  }
+
+  /* Headings & Typography Scaling */
+  .hero-title {
+    font-size: 2.15rem;
+    line-height: 1.18;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .section {
+    padding: 3rem 0;
+  }
+
+  /* Responsive Single-Column Grids */
+  .grid-2, .grid-3, .grid-4, .stepper-grid, .footer-main-grid, .comparison-arena-grid, .scanner-studio-grid, .dashboard-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem;
+  }
+
+  .calculator-card, .hud-telemetry-workbench, .card {
+    padding: 1.25rem;
+  }
+
+  /* Form Inputs on Mobile: 16px font prevents iOS Safari auto-zoom */
+  .form-input, .form-select, input, select, textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+
+  .form-group {
+    margin-bottom: 1.15rem;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .toggle-btn {
+    min-height: 44px;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .hud-status-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .score-badge-group {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .score-number {
+    font-size: 1.35rem;
+  }
+
+  /* Phone Mockup on Mobile (locked static sizing within viewport) */
+  .phone-mockup {
+    max-width: 390px;
+    height: 580px;
+    min-height: 580px;
+    max-height: 580px;
+    padding: 12px;
+    border-radius: 36px;
+  }
+
+  .phone-screen {
+    padding: 1rem 1rem 0.85rem 1rem;
+    border-radius: 26px;
+  }
+
+  .phone-notch {
+    width: 95px;
+    height: 16px;
+    margin: -1rem auto 0.65rem auto;
+  }
+
+  #hero-ins-list {
+    min-height: 110px;
+    height: 110px;
+    max-height: 110px;
+  }
+
+  .cute-popover-card {
+    width: 200px;
+  }
+
+  .bg-control-widget {
+    bottom: 10px;
+    right: 10px;
+    padding: 0.25rem 0.35rem;
+  }
+
+  .bg-ctrl-btn {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Breakpoint: Small Mobile Phones (< 480px, e.g. 320px, 375px) */
+@media (max-width: 480px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .hero-title {
+    font-size: 1.85rem;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-ctas .btn {
+    width: 100%;
+  }
+
+  .phone-mockup {
+    max-width: 100%;
+    height: 560px;
+    min-height: 560px;
+    max-height: 560px;
+    padding: 10px;
+    border-radius: 32px;
+  }
+
+  .phone-screen {
+    padding: 0.85rem;
+    border-radius: 22px;
+  }
+
+  .phone-notch {
+    width: 85px;
+    height: 14px;
+    margin: -0.85rem auto 0.5rem auto;
+  }
+
+  .scanner-selector {
+    gap: 0.25rem;
+  }
+
+  .food-sample-btn {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.15rem;
+    min-height: 38px;
+  }
+
+  #hero-ins-list {
+    min-height: 102px;
+    height: 102px;
+    max-height: 102px;
+  }
+
+  .score-badge-group {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .subpage-back-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .footer-compliance-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-bottom-bar {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
   }
 }
