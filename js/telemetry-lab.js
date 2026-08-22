@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Pink Web Application - Interactive Telemetry Walkthrough Laboratory
+   BiteLens Web Application - Interactive Telemetry Walkthrough Laboratory
    Redesigns how-it-works.html into an interactive 4-step pipeline
    ========================================================================== */
 
@@ -635,7 +635,7 @@ function renderStep1OpticalScan(product) {
           <div style="margin-top: 1.25rem; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; color: var(--color-text-main); display: flex; gap: 0.5rem; align-items: flex-start;">
             <i data-lucide="info" style="color: var(--color-secondary); width: 1.1rem; height: 1.1rem; flex-shrink: 0; margin-top: 0.1rem;"></i>
             <div>
-              <strong>Step 1 Logic:</strong> Pink isolates cramped ingredient strings, recognizing standardized FSSAI numerical codes and nutritional targets in under 800 milliseconds.
+              <strong>Step 1 Logic:</strong> BiteLens isolates cramped ingredient strings, recognizing standardized FSSAI numerical codes and nutritional targets in under 800 milliseconds.
             </div>
           </div>
         </div>
@@ -657,7 +657,7 @@ function renderStep2INSTranslator(product) {
         <div>
           <h3 style="font-size: 1.25rem; margin-bottom: 0.25rem;">Demystifying Cryptic FSSAI INS Additives</h3>
           <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 0;">
-            Compare raw regulatory numbers against Pink's plain consumer English translations.
+            Compare raw regulatory numbers against BiteLens's plain consumer English translations.
           </p>
         </div>
 
@@ -713,12 +713,12 @@ function renderStep2INSTranslator(product) {
             </div>
           ` : ''}
 
-          <!-- After Column: Pink Plain English Translation -->
+          <!-- After Column: BiteLens Plain English Translation -->
           ${(state.comparisonViewMode === 'split' || state.comparisonViewMode === 'after') ? `
             <div class="comparison-column comparison-column-decoded" style="${state.comparisonViewMode === 'after' ? 'grid-column: span 2;' : ''}">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid rgba(59, 122, 87, 0.2); padding-bottom: 0.5rem;">
                 <div style="font-family: var(--font-family-display); font-weight: 800; font-size: 0.9rem; color: var(--color-primary);">
-                  🟢 AFTER: Pink Plain-English Consumer Translation
+                  🟢 AFTER: BiteLens Plain-English Consumer Translation
                 </div>
                 <span class="hud-code-tag">Decoded</span>
               </div>

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Pink Web Application - Interactive Label Scanner Studio Page
+   BiteLens Web Application - Interactive Label Scanner Studio Page
    Allows visitors to test 5 real Indian packaged food profiles
    ========================================================================== */
 

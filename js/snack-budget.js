@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Pink Web Application - Packaged Snack Budget Simulator
+   BiteLens Web Application - Packaged Snack Budget Simulator
    Calculates daily calorie %, sodium %, and added sugar % consumption
    ========================================================================== */
 

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Pink Web Application - Background Canvas Engine
+   BiteLens Web Application - Background Canvas Engine
    Features:
    - Zero Bleed-Through: Background nodes only activate when mouse is over empty background,
      NEVER triggering behind cards, headers, footers, or buttons!
