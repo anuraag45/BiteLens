@@ -37,7 +37,8 @@
         {
           "cameraPermission": "Allow BiteLens to access your camera to scan packaged food labels and barcodes."
         }
-      ]
+      ],
+      "expo-asset"
     ]
   }
 }
