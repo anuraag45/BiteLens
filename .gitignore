@@ -5,7 +5,9 @@ node_modules/
 # Production Build
 dist/
 
-# Environment & Temp
+# Environment & Agent Temp
 .DS_Store
 *.log
 scratch/
+.agents/
+.expo/

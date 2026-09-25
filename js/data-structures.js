@@ -229,6 +229,21 @@ export class FuzzyMatcher {
     const dist = this.levenshtein(s1, s2);
     return (maxLen - dist) / maxLen;
   }
+
+  static findBestMatch(query, candidates, maxDistance = 2) {
+    let bestDist = Infinity;
+    let bestMatch = null;
+
+    for (const cand of candidates) {
+      const dist = this.levenshtein(query, cand.name);
+      if (dist < bestDist && dist <= maxDistance) {
+        bestDist = dist;
+        bestMatch = cand.item;
+      }
+    }
+
+    return bestMatch ? { item: bestMatch, distance: bestDist } : null;
+  }
 }
 
 /**

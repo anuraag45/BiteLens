@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "BiteLens",
+    "slug": "bitelens",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF8F5"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bitelens.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "BiteLens requires camera access to scan packaged food barcodes and nutritional ingredient labels."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAF8F5"
+      },
+      "package": "com.bitelens.app",
+      "permissions": [
+        "CAMERA"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow BiteLens to access your camera to scan packaged food labels and barcodes."
+        }
+      ]
+    ]
+  }
+}
