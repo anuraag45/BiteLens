@@ -12,3 +12,6 @@ scratch/
 .agents/
 .expo/
 android_build/
+
+.vercel
+.env*
