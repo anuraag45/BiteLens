@@ -1,5 +1,5 @@
 /* ==========================================================================
-   BiteLens Mobile Catalog - Curated Indian Packaged Foods
+   BiteLens Mobile Catalog - Comprehensive Indian Packaged Foods Database
    Includes authentic EAN-13 barcodes, FSSAI additive decoding, NOVA tiers,
    macronutrients per serving, and Blinkit-style clean swaps.
    ========================================================================== */
@@ -7,8 +7,8 @@
 export const INDIAN_PRODUCTS_CATALOG = [
   {
     barcode: "8901030383178",
-    name: "Masala Instant Noodles",
-    brand: "QuickBite",
+    name: "Maggi 2-Minute Masala Instant Noodles",
+    brand: "Nestlé India",
     category: "Instant",
     categoryLabel: "🍜 Instant & Ready Meals",
     image: "🍜",
@@ -59,6 +59,198 @@ export const INDIAN_PRODUCTS_CATALOG = [
       recommendedBarcode: "8901725134821",
       recommendedName: "Roasted Masala Makhana",
       reason: "78% less sodium, 0g synthetic MSG, whole foxnut seed base."
+    }
+  },
+  {
+    barcode: "8901063004071",
+    name: "Parle-G Original Gluco Biscuits",
+    brand: "Parle Products",
+    category: "Snacks",
+    categoryLabel: "🫘 Biscuits & Snacks",
+    image: "🍪",
+    size: "65g Pack",
+    price: 5,
+    novaGroup: 4,
+    novaLabel: "Group 4 (Ultra-Processed)",
+    novaBg: "#FEE2E2",
+    novaColor: "#DC2626",
+    healthScore: 38,
+    goalFit: "Low Fit (High Refined Sugar & Palm Oil)",
+    goalColor: "#DC2626",
+    servingSize: "30g",
+    calories: 135,
+    protein: 2.1,
+    carbs: 23.5,
+    sugars: 8.4,
+    fat: 3.9,
+    saturatedFat: 1.9,
+    sodium: 95,
+    dietaryFiber: 0.6,
+    allergens: ["Wheat (Gluten)", "Milk Solids", "Invert Sugar"],
+    additives: [
+      {
+        code: "INS 500(ii)",
+        name: "Sodium Hydrogen Carbonate",
+        purpose: "Raising Agent",
+        note: "Baking soda used for aerated crispy texture.",
+        status: "Permitted"
+      },
+      {
+        code: "INS 503(ii)",
+        name: "Ammonium Hydrogen Carbonate",
+        purpose: "Leavening Agent",
+        note: "Volatile leavener used in commercial biscuits.",
+        status: "Permitted"
+      }
+    ],
+    summary: "Traditional glucose tea biscuit made with refined wheat flour (Maida), invert sugar syrup, and palmolein oil.",
+    swaps: {
+      recommendedBarcode: "8901058863294",
+      recommendedName: "Multigrain Oats Crisp",
+      reason: "60% less refined sugar, 4x higher dietary fiber."
+    }
+  },
+  {
+    barcode: "8901262010016",
+    name: "Amul Pasteurized Salted Butter",
+    brand: "Amul (GCMMF)",
+    category: "Dairy",
+    categoryLabel: "🍓 Dairy & Butter",
+    image: "🧈",
+    size: "100g Pack",
+    price: 58,
+    novaGroup: 2,
+    novaLabel: "Group 2 (Processed Culinary Ingredient)",
+    novaBg: "#E0F2FE",
+    novaColor: "#0284C7",
+    healthScore: 68,
+    goalFit: "Moderate Fit (Natural Fat, High Saturated)",
+    goalColor: "#0284C7",
+    servingSize: "10g",
+    calories: 72,
+    protein: 0.1,
+    carbs: 0.0,
+    sugars: 0.0,
+    fat: 8.0,
+    saturatedFat: 5.2,
+    sodium: 83,
+    dietaryFiber: 0.0,
+    allergens: ["Milk (Dairy)"],
+    additives: [
+      {
+        code: "INS 160a(i)",
+        name: "Beta-Carotene",
+        purpose: "Natural Plant Colorant",
+        note: "Pro-vitamin A plant pigment giving butter its uniform golden hue.",
+        status: "Clean"
+      }
+    ],
+    summary: "Natural churned butterfat from cow & buffalo milk with common salt and natural beta-carotene color. Pure culinary fat.",
+    swaps: null
+  },
+  {
+    barcode: "8901058852391",
+    name: "Lay's India's Magic Masala Potato Chips",
+    brand: "PepsiCo India",
+    category: "Snacks",
+    categoryLabel: "🫘 Crisps & Chips",
+    image: "🥔",
+    size: "50g Pack",
+    price: 20,
+    novaGroup: 4,
+    novaLabel: "Group 4 (Ultra-Processed)",
+    novaBg: "#FEE2E2",
+    novaColor: "#DC2626",
+    healthScore: 26,
+    goalFit: "Poor Fit (High Sodium & Palm Fat)",
+    goalColor: "#DC2626",
+    servingSize: "30g",
+    calories: 165,
+    protein: 2.1,
+    carbs: 16.5,
+    sugars: 1.5,
+    fat: 10.2,
+    saturatedFat: 4.8,
+    sodium: 295,
+    dietaryFiber: 1.0,
+    allergens: ["Milk Solids"],
+    additives: [
+      {
+        code: "INS 627",
+        name: "Disodium Guanylate",
+        purpose: "Flavor Enhancer",
+        note: "Umami salt booster used to intensify savory sensation.",
+        status: "Ultra-Processed"
+      },
+      {
+        code: "INS 631",
+        name: "Disodium Inosinate",
+        purpose: "Flavor Enhancer",
+        note: "Synthetic flavor potentiator.",
+        status: "Watchlist"
+      },
+      {
+        code: "INS 330",
+        name: "Citric Acid",
+        purpose: "Acidity Regulator",
+        note: "Natural citrus acid for tart masala flavor.",
+        status: "Clean"
+      }
+    ],
+    summary: "Thin sliced potatoes deep-fried in palmolein oil, dusted with synthetic flavor enhancers INS 627 and 631.",
+    swaps: {
+      recommendedBarcode: "8901725134821",
+      recommendedName: "Roasted Masala Makhana",
+      reason: "Roasted (zero deep-frying), 75% lower saturated fat, zero synthetic flavor enhancers."
+    }
+  },
+  {
+    barcode: "8901491102931",
+    name: "Kurkure Masala Munch",
+    brand: "PepsiCo India",
+    category: "Snacks",
+    categoryLabel: "🫘 Healthy Snacks",
+    image: "🥨",
+    size: "75g Pack",
+    price: 20,
+    novaGroup: 4,
+    novaLabel: "Group 4 (Ultra-Processed)",
+    novaBg: "#FEE2E2",
+    novaColor: "#DC2626",
+    healthScore: 28,
+    goalFit: "Poor Fit (High Trans/Saturated Fats)",
+    goalColor: "#DC2626",
+    servingSize: "30g",
+    calories: 168,
+    protein: 1.8,
+    carbs: 17.1,
+    sugars: 0.6,
+    fat: 10.5,
+    saturatedFat: 4.9,
+    sodium: 270,
+    dietaryFiber: 0.9,
+    allergens: ["Milk Solids", "Wheat Derivatives"],
+    additives: [
+      {
+        code: "INS 627",
+        name: "Disodium Guanylate",
+        purpose: "Flavor Enhancer",
+        note: "Synergistic flavor enhancer frequently paired with MSG. Characteristic of ultra-processed snacks.",
+        status: "Ultra-Processed"
+      },
+      {
+        code: "INS 631",
+        name: "Disodium Inosinate",
+        purpose: "Flavor Enhancer",
+        note: "Prepared from starch or meat extract. Intensifies salt perception.",
+        status: "Watchlist"
+      }
+    ],
+    summary: "Extruded corn meal and rice flour fried in palmolein with high sodium density and industrial flavor enhancers.",
+    swaps: {
+      recommendedBarcode: "8901725134821",
+      recommendedName: "Roasted Masala Makhana",
+      reason: "Roasted (not deep fried in palm oil) with 90% less saturated fat."
     }
   },
   {
@@ -239,59 +431,150 @@ export const INDIAN_PRODUCTS_CATALOG = [
     swaps: null
   },
   {
-    barcode: "8901491102931",
-    name: "Crispy Potato Chips (Spanish Tomato)",
-    brand: "CrunchMax",
+    barcode: "7622201824103",
+    name: "Cadbury Dairy Milk Chocolate",
+    brand: "Mondelez India",
     category: "Snacks",
-    categoryLabel: "🫘 Healthy Snacks",
-    image: "🥔",
-    size: "52g Pack",
-    price: 20,
+    categoryLabel: "🍫 Chocolates & Confectionery",
+    image: "🍫",
+    size: "50g Bar",
+    price: 45,
     novaGroup: 4,
     novaLabel: "Group 4 (Ultra-Processed)",
     novaBg: "#FEE2E2",
     novaColor: "#DC2626",
-    healthScore: 28,
-    goalFit: "Poor Fit (High Trans/Saturated Fats)",
+    healthScore: 30,
+    goalFit: "Poor Fit (High Refined Sugar 57%)",
     goalColor: "#DC2626",
-    servingSize: "52g",
-    calories: 285,
-    protein: 3.2,
-    carbs: 29.0,
-    sugars: 4.5,
-    fat: 17.5,
-    saturatedFat: 7.8,
-    sodium: 460,
-    dietaryFiber: 1.1,
-    allergens: ["Milk Solids", "Wheat Derivatives"],
+    servingSize: "20g",
+    calories: 106,
+    protein: 1.5,
+    carbs: 11.8,
+    sugars: 11.4, // Over 55% sugar by weight
+    fat: 6.1,
+    saturatedFat: 3.8,
+    sodium: 30,
+    dietaryFiber: 0.4,
+    allergens: ["Milk Solids", "Soy"],
     additives: [
       {
-        code: "INS 627",
-        name: "Disodium Guanylate",
-        purpose: "Flavor Enhancer",
-        note: "Synergistic flavor enhancer frequently paired with MSG. Characteristic of ultra-processed snacks.",
-        status: "Ultra-Processed"
+        code: "INS 442",
+        name: "Ammonium Phosphatides",
+        purpose: "Emulsifier",
+        note: "Synthetic emulsifier used to regulate viscosity of chocolate.",
+        status: "Permitted"
       },
       {
-        code: "INS 631",
-        name: "Disodium Inosinate",
-        purpose: "Flavor Enhancer",
-        note: "Prepared from meat or tapioca starch. Intensifies salt perception.",
+        code: "INS 476",
+        name: "Polyglycerol Polyricinoleate (PGPR)",
+        purpose: "Emulsifier",
+        note: "Synthesized from castor beans and glycerol. Reduces cocoa butter requirements.",
         status: "Watchlist"
-      },
+      }
+    ],
+    summary: "Milk chocolate containing over 57g added refined cane sugar per 100g, blended with PGPR (INS 476) and cocoa butter equivalents.",
+    swaps: {
+      recommendedBarcode: "8901262984102",
+      recommendedName: "Dark Cocoa Whey Protein Bar",
+      reason: "80% less sugar, 4x more protein, unsweetened Dutch cocoa."
+    }
+  },
+  {
+    barcode: "8901063141127",
+    name: "Haldiram's Aloo Bhujia",
+    brand: "Haldiram's",
+    category: "Snacks",
+    categoryLabel: "🫘 Traditional Indian Namkeen",
+    image: "🍟",
+    size: "150g Pack",
+    price: 45,
+    novaGroup: 4,
+    novaLabel: "Group 4 (Ultra-Processed)",
+    novaBg: "#FEE2E2",
+    novaColor: "#DC2626",
+    healthScore: 24,
+    goalFit: "Poor Fit (High Saturated Fat & Sodium)",
+    goalColor: "#DC2626",
+    servingSize: "30g",
+    calories: 178,
+    protein: 2.8,
+    carbs: 13.5,
+    sugars: 0.9,
+    fat: 12.6,
+    saturatedFat: 5.8,
+    sodium: 310,
+    dietaryFiber: 1.2,
+    allergens: ["Gram Flour (Besan)", "Peanut Oil traces"],
+    additives: [
       {
         code: "INS 330",
         name: "Citric Acid",
         purpose: "Acidity Regulator",
-        note: "Provides tartness matching tomato seasoning.",
+        note: "Provides authentic Indian chatpata tanginess.",
         status: "Clean"
       }
     ],
-    summary: "Deep fried sliced potatoes in palmolein oil containing double flavor enhancers (INS 627, 631) and high saturated fat density.",
+    summary: "Potato flakes and chickpea flour fried in refined cottonseed/palmolein oil with intense spicy seasoning.",
     swaps: {
       recommendedBarcode: "8901725134821",
       recommendedName: "Roasted Masala Makhana",
-      reason: "Roasted (not deep fried in palm oil) with 90% less saturated fat."
+      reason: "85% less fat, zero palmolein oil, clean roasted foxnuts."
+    }
+  },
+  {
+    barcode: "8901764012210",
+    name: "Real Fruit Power Mixed Fruit Juice",
+    brand: "Dabur India",
+    category: "Beverages",
+    categoryLabel: "🥤 Beverages & Juices",
+    image: "🧃",
+    size: "1000ml Pack",
+    price: 130,
+    novaGroup: 4,
+    novaLabel: "Group 4 (Ultra-Processed)",
+    novaBg: "#FEE2E2",
+    novaColor: "#DC2626",
+    healthScore: 36,
+    goalFit: "Low Fit (High Free Sugars, Zero Fiber)",
+    goalColor: "#DC2626",
+    servingSize: "200ml",
+    calories: 112,
+    protein: 0.4,
+    carbs: 27.6,
+    sugars: 26.0, // High added liquid sugar
+    fat: 0.0,
+    saturatedFat: 0.0,
+    sodium: 40,
+    dietaryFiber: 0.0,
+    allergens: ["None declared"],
+    additives: [
+      {
+        code: "INS 330",
+        name: "Citric Acid",
+        purpose: "Acidity Regulator",
+        note: "Fruit acidity buffer.",
+        status: "Clean"
+      },
+      {
+        code: "INS 440",
+        name: "Pectin",
+        purpose: "Thickener & Stabilizer",
+        note: "Citrus peel fruit pectin.",
+        status: "Clean"
+      },
+      {
+        code: "INS 300",
+        name: "Ascorbic Acid (Vitamin C)",
+        purpose: "Antioxidant",
+        note: "Synthetic Vitamin C added to prevent oxidation and browning.",
+        status: "Clean"
+      }
+    ],
+    summary: "Reconstituted fruit concentrate with 13g added industrial sugar per 100ml. Stripped of all natural fruit pulp dietary fiber.",
+    swaps: {
+      recommendedBarcode: "8902080345129",
+      recommendedName: "Berry Greek Yogurt",
+      reason: "Provides whole protein and active probiotic cultures instead of liquid sugar."
     }
   }
 ];
