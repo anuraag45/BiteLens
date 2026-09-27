@@ -54,12 +54,10 @@ import {
   ArrowLeft,
   ChevronLeft,
   Home,
-  Smartphone,
   X
 } from 'lucide';
 
 const PAGE_TITLES = {
-  'mobile-preview.html': 'Smartphone App Studio',
   'features.html': 'App Features',
   'how-it-works.html': 'How BiteLens Works',
   'bmi-calculator.html': 'BMI Calculator',
@@ -280,11 +278,6 @@ export function renderComponents() {
               </div>
             </div>
 
-            <!-- Direct Link: Smartphone Studio -->
-            <a href="mobile-preview.html" class="nav-link ${currentPath === 'mobile-preview.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 800; background: rgba(59, 122, 87, 0.08); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; border: 1px solid rgba(59, 122, 87, 0.25);">
-              <i data-lucide="smartphone" style="width: 0.95rem; height: 0.95rem;"></i> App Studio
-            </a>
-
             <!-- Direct Link: Dashboard -->
             <a href="dashboard.html" class="nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
               <i data-lucide="layout-dashboard" style="width: 0.95rem; height: 0.95rem;"></i> Dashboard
@@ -322,9 +315,6 @@ export function renderComponents() {
             <div class="mobile-nav-group-title">Navigation</div>
             <a href="index.html" class="mobile-nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
               <i data-lucide="home"></i> Home Overview
-            </a>
-            <a href="mobile-preview.html" class="mobile-nav-link ${currentPath === 'mobile-preview.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 800;">
-              <i data-lucide="smartphone"></i> Smartphone App Studio
             </a>
             <a href="dashboard.html" class="mobile-nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
               <i data-lucide="layout-dashboard"></i> Member Dashboard
