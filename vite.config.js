@@ -22,6 +22,7 @@ export default defineConfig({
         dashboard: resolve(__dirname, 'dashboard.html'),
         compare: resolve(__dirname, 'compare.html'),
         sgpReport: resolve(__dirname, 'sgp_report.html'),
+        app: resolve(__dirname, 'app.html'),
       },
     },
   },

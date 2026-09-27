@@ -54,10 +54,12 @@ import {
   ArrowLeft,
   ChevronLeft,
   Home,
+  Smartphone,
   X
 } from 'lucide';
 
 const PAGE_TITLES = {
+  'app.html': 'Blinkit-Style Mobile App',
   'features.html': 'App Features',
   'how-it-works.html': 'How BiteLens Works',
   'bmi-calculator.html': 'BMI Calculator',
@@ -278,6 +280,11 @@ export function renderComponents() {
               </div>
             </div>
 
+            <!-- Direct Link: Blinkit-Style Mobile App -->
+            <a href="app.html" class="nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 800; background: rgba(59, 122, 87, 0.08); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; border: 1px solid rgba(59, 122, 87, 0.25);">
+              <i data-lucide="smartphone" style="width: 0.95rem; height: 0.95rem;"></i> Mobile App
+            </a>
+
             <!-- Direct Link: Dashboard -->
             <a href="dashboard.html" class="nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
               <i data-lucide="layout-dashboard" style="width: 0.95rem; height: 0.95rem;"></i> Dashboard
@@ -315,6 +322,9 @@ export function renderComponents() {
             <div class="mobile-nav-group-title">Navigation</div>
             <a href="index.html" class="mobile-nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
               <i data-lucide="home"></i> Home Overview
+            </a>
+            <a href="app.html" class="mobile-nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 800;">
+              <i data-lucide="smartphone"></i> Blinkit Mobile App
             </a>
             <a href="dashboard.html" class="mobile-nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
               <i data-lucide="layout-dashboard"></i> Member Dashboard
