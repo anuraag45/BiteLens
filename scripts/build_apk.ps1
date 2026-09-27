@@ -59,6 +59,10 @@ Write-Host "==> 3. Linking Resources & Manifest into Base APK..." -ForegroundCol
 & "$buildToolsDir\aapt2.exe" link `
     -I $platformJar `
     --manifest "android\app\src\main\AndroidManifest.xml" `
+    --min-sdk-version 24 `
+    --target-sdk-version 34 `
+    --version-code 240 `
+    --version-name "2.4.0" `
     -A "$workDir\assets" `
     --java "$workDir\gen" `
     -o "$workDir\base.apk" `
@@ -107,6 +111,9 @@ $outputApk = "public\downloads\bitelens.apk"
     --ks-pass "pass:android" `
     --key-pass "pass:android" `
     --ks-key-alias "androiddebugkey" `
+    --v1-signing-enabled true `
+    --v2-signing-enabled true `
+    --v3-signing-enabled true `
     --out $outputApk `
     "$workDir\aligned.apk"
 
