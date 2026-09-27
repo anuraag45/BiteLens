@@ -130,6 +130,7 @@
       <!-- Prominent Barcode Scan Button in Search Bar -->
       <button 
         data-action="open-scanner" 
+        onclick="window.bitelensApp?.openScanner()"
         title="Open Barcode Scanner"
         class="bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white p-2.5 rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 flex-shrink-0"
       >
@@ -158,6 +159,7 @@
           </p>
           <button 
             data-action="open-scanner" 
+            onclick="window.bitelensApp?.openScanner()"
             class="mt-3 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-900 font-bold text-xs px-3.5 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5"
           >
             <span>Launch Live Barcode Lens</span>
@@ -177,23 +179,26 @@
         <span class="text-[11px] font-semibold text-emerald-700">6 Collections</span>
       </div>
       <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-        <button data-mobile-cat="all" class="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-700 text-white whitespace-nowrap shadow-xs active">
+        <button data-mobile-cat="all" onclick="window.bitelensApp?.filterCategory('all')" class="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-700 text-white whitespace-nowrap shadow-xs active">
           ✨ All Items
         </button>
-        <button data-mobile-cat="Snacks" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
+        <button data-mobile-cat="Snacks" onclick="window.bitelensApp?.filterCategory('Snacks')" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
           🫘 Healthy Snacks
         </button>
-        <button data-mobile-cat="Breakfast" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
+        <button data-mobile-cat="Breakfast" onclick="window.bitelensApp?.filterCategory('Breakfast')" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
           🥣 Oats & Cereals
         </button>
-        <button data-mobile-cat="Dairy" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
+        <button data-mobile-cat="Dairy" onclick="window.bitelensApp?.filterCategory('Dairy')" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
           🍓 Dairy & Yogurts
         </button>
-        <button data-mobile-cat="Instant" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
+        <button data-mobile-cat="Instant" onclick="window.bitelensApp?.filterCategory('Instant')" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
           🍜 Ready Meals
         </button>
-        <button data-mobile-cat="Fitness" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
+        <button data-mobile-cat="Fitness" onclick="window.bitelensApp?.filterCategory('Fitness')" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
           🍫 Protein Bars
+        </button>
+        <button data-mobile-cat="Beverages" onclick="window.bitelensApp?.filterCategory('Beverages')" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap">
+          🥤 Beverages
         </button>
       </div>
     </div>
@@ -258,6 +263,7 @@
     <div class="relative -top-4 flex-1 flex justify-center">
       <button 
         data-action="open-scanner" 
+        onclick="window.bitelensApp?.openScanner()"
         class="w-14 h-14 rounded-full bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white shadow-lg shadow-emerald-700/40 flex flex-col items-center justify-center border-4 border-white transition group"
       >
         <svg class="w-6 h-6 text-white group-hover:scale-110 transition" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>

@@ -1,8 +1,8 @@
 /* ==========================================================================
    BiteLens Mobile Application Controller (Blinkit-Style UX)
    Engineered with:
-   - Html5Qrcode multi-format hardware camera barcode engine
-   - Photo file barcode detection via Html5Qrcode.scanFile
+   - Direct execution & resilient event binding (no DOMContentLoaded race conditions)
+   - Preloaded HTML5 QR & Barcode Engine (window.Html5Qrcode)
    - Multi-Tier Universal Barcode Telemetry Engine:
      1. Local Verified Indian Packaged Goods Database
      2. Live Open Food Facts Global API Cloud Query
@@ -10,7 +10,7 @@
    - Slide-up Blinkit-style product dossier bottom sheet
    ========================================================================== */
 
-import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import './html5-qrcode.min.js';
 import { INDIAN_PRODUCTS_CATALOG } from './data/indianProductsCatalog.js';
 
 class BiteLensMobileApp {
@@ -21,12 +21,12 @@ class BiteLensMobileApp {
     this.html5QrCode = null;
     this.isScanning = false;
     this.facingMode = 'environment';
-    this.userGoal = localStorage.getItem('bitelens_user_goal') || 'maintenance';
+    this.userGoal = (typeof localStorage !== 'undefined' && localStorage.getItem('bitelens_user_goal')) || 'maintenance';
 
-    this.init();
+    this.boot();
   }
 
-  async init() {
+  boot() {
     this.bindDOM();
     this.renderCatalog(this.catalog);
     this.checkURLParams();
@@ -36,75 +36,73 @@ class BiteLensMobileApp {
     // Search input
     const searchInput = document.getElementById('mobileSearchInput');
     if (searchInput) {
-      searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+      searchInput.oninput = (e) => this.handleSearch(e.target.value);
     }
 
     // Category pills
     const categoryButtons = document.querySelectorAll('[data-mobile-cat]');
     categoryButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        categoryButtons.forEach(b => b.classList.remove('active', 'bg-emerald-700', 'text-white'));
-        const target = e.currentTarget;
-        target.classList.add('active', 'bg-emerald-700', 'text-white');
-        this.filterCategory(target.dataset.mobileCat);
-      });
+      btn.onclick = (e) => {
+        const cat = e.currentTarget.dataset.mobileCat;
+        this.filterCategory(cat);
+      };
     });
 
     // Scanner trigger buttons
     const scanTriggers = document.querySelectorAll('[data-action="open-scanner"]');
     scanTriggers.forEach(btn => {
-      btn.addEventListener('click', () => this.openScanner());
+      btn.onclick = () => this.openScanner();
     });
 
     // Close scanner
     const closeScannerBtn = document.getElementById('closeScannerBtn');
     if (closeScannerBtn) {
-      closeScannerBtn.addEventListener('click', () => this.closeScanner());
+      closeScannerBtn.onclick = () => this.closeScanner();
     }
 
     // Camera flip & torch
     const flipCamBtn = document.getElementById('flipCameraBtn');
     if (flipCamBtn) {
-      flipCamBtn.addEventListener('click', () => this.flipCamera());
+      flipCamBtn.onclick = () => this.flipCamera();
     }
 
     const torchBtn = document.getElementById('torchToggleBtn');
     if (torchBtn) {
-      torchBtn.addEventListener('click', () => this.toggleTorch());
+      torchBtn.onclick = () => this.toggleTorch();
     }
 
     // Start camera stream button
     const enableCamBtn = document.getElementById('enableWebcamBtn');
     if (enableCamBtn) {
-      enableCamBtn.addEventListener('click', () => this.startCameraScanner());
+      enableCamBtn.onclick = () => this.startCameraScanner();
     }
 
     // Bottom sheet close
     const closeSheetBtn = document.getElementById('closeProductSheetBtn');
     if (closeSheetBtn) {
-      closeSheetBtn.addEventListener('click', () => this.closeBottomSheet());
+      closeSheetBtn.onclick = () => this.closeBottomSheet();
     }
 
     // Backdrop click
     const backdrop = document.getElementById('sheetBackdrop');
     if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeBottomSheet());
+      backdrop.onclick = () => this.closeBottomSheet();
     }
 
     // Real photo file barcode scanning
     const fileInput = document.getElementById('barcodeFileInput');
     if (fileInput) {
-      fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+      fileInput.onchange = (e) => this.handleFileUpload(e);
     }
 
     // Manual barcode input Enter key listener
     const manualInput = document.getElementById('manualBarcodeInput');
     if (manualInput) {
-      manualInput.addEventListener('keydown', (e) => {
+      manualInput.onkeydown = (e) => {
         if (e.key === 'Enter') {
           this.handleManualBarcodeSubmit();
         }
-      });
+      };
     }
   }
 
@@ -125,7 +123,7 @@ class BiteLensMobileApp {
           <div class="text-4xl mb-2">🔍</div>
           <p class="text-xs font-bold text-slate-700">No packaged food items found</p>
           <p class="text-[11px] text-slate-400 mt-1">Try searching by additive code or food category</p>
-          <button onclick="window.bitelensApp.filterCategory('all')" class="mt-3 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg">
+          <button onclick="window.bitelensApp?.filterCategory('all')" class="mt-3 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg">
             Reset Filters
           </button>
         </div>
@@ -146,7 +144,7 @@ class BiteLensMobileApp {
 
           <!-- Product Graphic -->
           <div class="w-full h-20 bg-slate-50 rounded-xl flex items-center justify-center text-4xl mb-2 select-none border border-slate-100/60 overflow-hidden">
-            ${p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : p.image}
+            ${p.image && p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : (p.image || '📦')}
           </div>
 
           <!-- Title & Specs -->
@@ -156,7 +154,7 @@ class BiteLensMobileApp {
           
           <!-- Health Pill -->
           <div class="mt-1.5">
-            <span class="text-[10px] font-bold" style="color: ${p.goalColor};">
+            <span class="text-[10px] font-bold" style="color: ${p.goalColor || '#2E7D32'};">
               Score ${p.healthScore}/100
             </span>
           </div>
@@ -168,7 +166,7 @@ class BiteLensMobileApp {
             <span class="font-display font-extrabold text-sm text-slate-900">₹${p.price}</span>
           </div>
           <button 
-            onclick="window.bitelensApp.triggerScan('${p.barcode}')" 
+            onclick="window.bitelensApp?.triggerScan('${p.barcode}')" 
             class="bg-emerald-50 hover:bg-emerald-700 text-emerald-800 hover:text-white border border-emerald-300 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wide transition flex items-center gap-1 shadow-xs"
           >
             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -181,6 +179,18 @@ class BiteLensMobileApp {
 
   filterCategory(category) {
     this.currentCategory = category;
+
+    // Visual button active toggle
+    const categoryButtons = document.querySelectorAll('[data-mobile-cat]');
+    categoryButtons.forEach(btn => {
+      const isSelected = btn.dataset.mobileCat === category;
+      if (isSelected) {
+        btn.className = "px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-700 text-white whitespace-nowrap shadow-xs active";
+      } else {
+        btn.className = "px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 whitespace-nowrap";
+      }
+    });
+
     if (category === 'all') {
       this.renderCatalog(this.catalog);
     } else {
@@ -190,7 +200,7 @@ class BiteLensMobileApp {
   }
 
   handleSearch(term) {
-    const q = term.toLowerCase().trim();
+    const q = (term || '').toLowerCase().trim();
     if (!q) {
       this.filterCategory(this.currentCategory);
       return;
@@ -210,7 +220,9 @@ class BiteLensMobileApp {
     const modal = document.getElementById('mobileScannerModal');
     if (modal) {
       modal.classList.remove('hidden');
-      this.startCameraScanner();
+      this.startCameraScanner().catch(err => {
+        console.warn("Camera auto-start notice:", err);
+      });
     }
   }
 
@@ -218,7 +230,7 @@ class BiteLensMobileApp {
     const modal = document.getElementById('mobileScannerModal');
     if (modal) {
       modal.classList.add('hidden');
-      this.stopCameraScanner();
+      this.stopCameraScanner().catch(() => {});
     }
   }
 
@@ -230,19 +242,15 @@ class BiteLensMobileApp {
     try {
       await this.stopCameraScanner();
 
+      const Html5QrcodeClass = window.Html5Qrcode;
+      if (!Html5QrcodeClass) {
+        console.warn("Html5Qrcode library not loaded yet.");
+        if (placeholder) placeholder.classList.remove('hidden');
+        return;
+      }
+
       if (!this.html5QrCode) {
-        this.html5QrCode = new Html5Qrcode('scannerReader', {
-          formatsToSupport: [
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.EAN_8,
-            Html5QrcodeSupportedFormats.UPC_A,
-            Html5QrcodeSupportedFormats.UPC_E,
-            Html5QrcodeSupportedFormats.CODE_128,
-            Html5QrcodeSupportedFormats.CODE_39,
-            Html5QrcodeSupportedFormats.QR_CODE
-          ],
-          verbose: false
-        });
+        this.html5QrCode = new Html5QrcodeClass('scannerReader');
       }
 
       const config = {
@@ -264,7 +272,7 @@ class BiteLensMobileApp {
           this.triggerScan(decodedText);
         },
         () => {
-          // Frame scanner active - seeking barcode
+          // Seeking barcode in video frame
         }
       );
 
@@ -301,17 +309,14 @@ class BiteLensMobileApp {
     if (!file) return;
 
     try {
+      const Html5QrcodeClass = window.Html5Qrcode;
+      if (!Html5QrcodeClass) {
+        alert("Barcode scanner library is loading. Please try again in 1 second.");
+        return;
+      }
+
       if (!this.html5QrCode) {
-        this.html5QrCode = new Html5Qrcode('scannerReader', {
-          formatsToSupport: [
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.EAN_8,
-            Html5QrcodeSupportedFormats.UPC_A,
-            Html5QrcodeSupportedFormats.CODE_128,
-            Html5QrcodeSupportedFormats.QR_CODE
-          ],
-          verbose: false
-        });
+        this.html5QrCode = new Html5QrcodeClass('scannerReader');
       }
 
       // Actually decode the barcode from the uploaded photo!
@@ -319,7 +324,7 @@ class BiteLensMobileApp {
       this.triggerScan(decodedText);
     } catch (err) {
       console.warn("Could not find barcode in photo:", err);
-      alert("No barcode lines could be read from this photo. Please ensure the barcode is centered, well-lit, and not blurry, or enter the 13 digits directly!");
+      alert("No clear barcode could be detected in this photo. Please ensure the barcode is centered, well-lit, and in focus, or enter the 13 digits directly!");
     } finally {
       event.target.value = '';
     }
@@ -568,7 +573,7 @@ class BiteLensMobileApp {
       <!-- Main Identity Card -->
       <div class="flex items-start gap-3.5 pb-2">
         <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-4xl border border-slate-100 flex-shrink-0 select-none overflow-hidden">
-          ${p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : p.image}
+          ${p.image && p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : (p.image || '📦')}
         </div>
         <div class="flex-1">
           <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${p.brand}</span>
@@ -672,7 +677,7 @@ class BiteLensMobileApp {
             <span>Healthier Clean Swap Available</span>
           </div>
           <p class="text-[11px] text-slate-600 mb-2.5">${p.swaps.reason}</p>
-          <button onclick="window.bitelensApp.triggerScan('${p.swaps.recommendedBarcode}')" class="w-full bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs py-2 rounded-xl shadow-xs transition flex items-center justify-center gap-2">
+          <button onclick="window.bitelensApp?.triggerScan('${p.swaps.recommendedBarcode}')" class="w-full bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs py-2 rounded-xl shadow-xs transition flex items-center justify-center gap-2">
             <span>Inspect ${p.swaps.recommendedName}</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
@@ -734,7 +739,19 @@ class BiteLensMobileApp {
   }
 }
 
-// Global initialization
-document.addEventListener('DOMContentLoaded', () => {
-  window.bitelensApp = new BiteLensMobileApp();
-});
+// Immediate and bulletproof initialization
+function initAppInstance() {
+  if (!window.bitelensApp) {
+    window.bitelensApp = new BiteLensMobileApp();
+  }
+}
+
+// Run immediately if DOM is ready, or on next tick
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAppInstance);
+} else {
+  initAppInstance();
+}
+
+// Window load safety net
+window.addEventListener('load', initAppInstance);
