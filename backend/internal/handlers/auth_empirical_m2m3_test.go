@@ -22,8 +22,8 @@ import (
 func TestEmpirical_MinorRegistrationAndIsMinor(t *testing.T) {
 	router, _, _, _ := setupTestRouter(t)
 
-	// 15 years old from today
-	dob15 := time.Now().AddDate(-15, 0, 0).Format("2006-01-02")
+	// 15 years old from today (normalized to UTC to match handler calculation)
+	dob15 := time.Now().UTC().AddDate(-15, 0, 0).Format("2006-01-02")
 	regPayload := map[string]string{
 		"email":         "minor15@example.com",
 		"password":      "SecurePass123!",

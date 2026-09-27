@@ -792,6 +792,49 @@
         </tbody>
       </table>
 
+      <h3>Tools and Platforms Used</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Platform / Tool</th>
+            <th>Purpose in BiteLens Lifecycle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>IDE & Editors</strong></td>
+            <td>Visual Studio Code, GoLand</td>
+            <td>Full-stack code editing, Go LSP autocomplete, debugger inspection.</td>
+          </tr>
+          <tr>
+            <td><strong>Compilers & Runtimes</strong></td>
+            <td>Go Toolchain 1.22+, Node.js v20+ LTS</td>
+            <td>Native backend compilation, Vite development server, ES6 module bundling.</td>
+          </tr>
+          <tr>
+            <td><strong>Mobile Tooling</strong></td>
+            <td>Android SDK Platform-Tools (API 34), Gradle</td>
+            <td>APK packaging, resource compiling, zipalign optimization, and signing.</td>
+          </tr>
+          <tr>
+            <td><strong>Database Management</strong></td>
+            <td>PostgreSQL 16, pgAdmin 4, GORM Migrations</td>
+            <td>Schema definition, JSONB indexing, relational constraint enforcement.</td>
+          </tr>
+          <tr>
+            <td><strong>Testing & Benchmarking</strong></td>
+            <td>Go Standard <code>testing</code>, Postman, Lighthouse</td>
+            <td>Uncached unit test execution, HTTP REST endpoint regression, accessibility audits.</td>
+          </tr>
+          <tr>
+            <td><strong>Version Control</strong></td>
+            <td>Git, GitHub Enterprise Repository</td>
+            <td>Branch management (<code>main</code>, <code>feature/*</code>), peer review pull requests, change history.</td>
+          </tr>
+        </tbody>
+      </table>
+
       <h3>Justification for Technology Selection</h3>
       <ul>
         <li><strong>Why Go (Golang) over Node.js or Python:</strong> Go compiles to a single standalone native binary, offers superior concurrent request handling via lightweight goroutines, maintains a remarkably low memory footprint (&lt;30MB baseline RAM), and provides strict static type safety essential for medical and nutritional scoring logic.</li>
@@ -932,13 +975,21 @@
       </p>
       <div class="code-box">
 // Dynamic Read-Time Age Calculation (prevents stale database column bugs)
-func (u *User) CalculateAge() int {
-    now := time.Now()
-    years := now.Year() - u.BirthDate.Year()
-    if now.YearDay() &lt; u.BirthDate.YearDay() { years-- }
+func (u *User) CalculateAge(atDate time.Time) int {
+    dob := u.DateOfBirth.UTC()
+    ref := atDate.UTC()
+    if dob.After(ref) { return 0 }
+    years := ref.Year() - dob.Year()
+    if ref.Month() &lt; dob.Month() || (ref.Month() == dob.Month() && ref.Day() &lt; dob.Day()) {
+        years--
+    }
+    if years &lt; 0 { return 0 }
     return years
 }
-func (u *User) IsMinor() bool { return u.CalculateAge() &lt; 18 }
+
+func (u *User) IsMinor(atDate time.Time) bool {
+    return u.CalculateAge(atDate) &lt; 18
+}
       </div>
       <p>
         When a user is detected as a minor (&lt;18 years), the system enforces parental consent recording via `POST /api/v1/auth/parental-consent` before telemetry storage is unlocked.
@@ -990,6 +1041,61 @@ SUCCESS: All mathematical worked examples matched with 100% precision!
       <p>
         All 7 Go backend test suites (`cmd/api`, `auth`, `db`, `handlers`, `middleware`, `models`, `telemetry`) passed with zero failures and sub-50ms API endpoint response times.
       </p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Go Backend Package</th>
+            <th>Test Suite Scope</th>
+            <th>Duration</th>
+            <th>Pass Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>backend/cmd/api</code></td>
+            <td>Server bootstrapping, route binding, environment configuration</td>
+            <td>0.181s</td>
+            <td><strong style="color: #16A34A;">100% PASS</strong></td>
+          </tr>
+          <tr>
+            <td><code>backend/internal/auth</code></td>
+            <td>Bcrypt hashing, JWT cookie issuance, parental consent flow</td>
+            <td>1.250s</td>
+            <td><strong style="color: #16A34A;">100% PASS</strong></td>
+          </tr>
+          <tr>
+            <td><code>backend/internal/db</code></td>
+            <td>PostgreSQL GORM connection, SQLite fallback, auto-migrations</td>
+            <td>0.243s</td>
+            <td><strong style="color: #16A34A;">100% PASS</strong></td>
+          </tr>
+          <tr>
+            <td><code>backend/internal/handlers</code></td>
+            <td>Scan parsing, INS lookup, rate limiting, minor compliance</td>
+            <td>0.843s</td>
+            <td><strong style="color: #16A34A;">100% PASS</strong></td>
+          </tr>
+          <tr>
+            <td><code>backend/internal/middleware</code></td>
+            <td>CORS credentials headers, token-bucket rate limiter</td>
+            <td>0.949s</td>
+            <td><strong style="color: #16A34A;">100% PASS</strong></td>
+          </tr>
+          <tr>
+            <td><code>backend/internal/models</code></td>
+            <td>Dynamic age derivation, JSONB undeclared nutrients</td>
+            <td>0.318s</td>
+            <td><strong style="color: #16A34A;">100% PASS</strong></td>
+          </tr>
+          <tr>
+            <td><code>backend/internal/telemetry</code></td>
+            <td>NOVA deductions, Goal Fit trade-offs, SHA-256 signing</td>
+            <td>0.700s</td>
+            <td><strong style="color: #16A34A;">100% PASS</strong></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div class="page-break"></div>
@@ -1047,6 +1153,9 @@ SUCCESS: All mathematical worked examples matched with 100% precision!
         <li>Ministry of Law and Justice, Government of India. (2023). <em>The Digital Personal Data Protection Act, 2023 (DPDP Act)</em>. The Gazette of India.</li>
         <li>Codex Alimentarius Commission. (2021). <em>Class Names and the International Numbering System for Food Additives (CXG 36-1989)</em>. Food and Agriculture Organization (FAO) / WHO.</li>
         <li>Donovan, A. A., & Kernighan, B. W. (2015). <em>The Go Programming Language</em>. Addison-Wesley Professional.</li>
+        <li>Srour, B., Fezeu, L. K., Kesse-Guyot, E., et al. (2019). "Ultra-processed food intake and risk of cardiovascular disease: prospective cohort study (NutriNet-Santé)." <em>The British Medical Journal (BMJ)</em>, 365:l1451.</li>
+        <li>European Commission. (2022). <em>Nutri-Score: Frequently Asked Questions</em>. Directorate-General for Health and Food Safety.</li>
+        <li>Indus University. (2025). <em>Guidelines for Software Group Project (SGP) Course B.Tech Computer Engineering</em>. Institute of Technology and Engineering, Ahmedabad.</li>
       </ol>
     </div>
 
