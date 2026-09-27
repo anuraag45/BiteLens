@@ -23,6 +23,15 @@
   <!-- HTML5 QR / Barcode Scanner Engine (Non-blocking Deferred) -->
   <script defer src="/js/html5-qrcode.min.js"></script>
 
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(e => console.log('SW registration note:', e));
+      });
+    }
+  </script>
+
   <style>
     :root {
       --color-primary: #3B7A57;
@@ -86,6 +95,25 @@
 </head>
 <body class="flex flex-col min-h-screen antialiased bg-[#F8FAF7]">
 
+  <!-- Offline PWA Install Banner -->
+  <div id="pwaInstallBanner" class="hidden bg-gradient-to-r from-emerald-800 to-teal-900 text-white px-4 py-2.5 flex items-center justify-between text-xs shadow-md z-40 border-b border-emerald-700/60 safe-top">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-lg flex-shrink-0">📲</div>
+      <div>
+        <div class="font-bold text-xs tracking-tight">Add BiteLens App to Home Screen</div>
+        <div class="text-[10px] text-emerald-200">1-tap camera scanner + 100% offline grocery catalog</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <button id="pwaInstallBtn" onclick="window.bitelensApp?.promptInstallPwa()" class="bg-white hover:bg-emerald-50 active:scale-95 text-emerald-900 font-extrabold px-3 py-1.5 rounded-lg text-xs shadow-xs transition">
+        Install
+      </button>
+      <button id="pwaDismissBtn" onclick="window.bitelensApp?.dismissPwaBanner()" class="text-emerald-300 hover:text-white p-1 text-sm transition">
+        ✕
+      </button>
+    </div>
+  </div>
+
   <!-- Top Sticky Blinkit-Style Brand Header -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100 safe-top px-4 pb-3">
     
@@ -139,6 +167,31 @@
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
         <span class="text-[11px] font-bold pr-1">Scan</span>
+      </button>
+    </div>
+
+    <!-- Quick Access Strip: Dietary Guardrails & Recent Scans -->
+    <div class="flex items-center justify-between mt-2.5 pt-1.5 border-t border-slate-100 text-[11px]">
+      <button 
+        type="button"
+        onclick="window.bitelensApp?.openDietaryModal()"
+        class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200/90 active:scale-95 transition shadow-2xs"
+        title="Configure personal dietary guardrails"
+      >
+        <span>🌿</span>
+        <span id="dietaryPillLabel">Dietary Guardrails</span>
+        <span id="dietaryActiveCount" class="hidden w-4 h-4 rounded-full bg-emerald-700 text-white text-[9px] flex items-center justify-center font-extrabold">0</span>
+      </button>
+
+      <button 
+        type="button"
+        onclick="window.bitelensApp?.openRecentDrawer()"
+        class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold active:scale-95 transition border border-slate-200/90"
+        title="View recent barcode scans & bookmarks"
+      >
+        <span>🕒</span>
+        <span>Recent Scans</span>
+        <span id="recentScansCountBadge" class="bg-slate-700 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full">0</span>
       </button>
     </div>
 
@@ -306,6 +359,10 @@
       </div>
 
       <div class="flex items-center gap-2">
+        <!-- Audio Chime Toggle -->
+        <button id="audioMuteToggleBtn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center transition text-white" title="Toggle Supermarket Beep Audio">
+          <span id="audioMuteIcon">🔊</span>
+        </button>
         <!-- Torch Toggle -->
         <button id="torchToggleBtn" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition text-amber-300" title="Toggle Flashlight">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -349,6 +406,14 @@
         <span class="text-[11px] font-bold text-white/80 tracking-widest uppercase bg-black/50 px-2 py-0.5 rounded backdrop-blur-sm">
           EAN-13 / QR HUD
         </span>
+      </div>
+
+      <!-- Hardware Camera Zoom Buttons -->
+      <div id="cameraZoomControls" class="absolute bottom-4 z-20 flex items-center gap-1.5 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+        <span class="text-[10px] text-slate-300 font-bold uppercase tracking-wider pr-1">Zoom</span>
+        <button data-zoom="1" onclick="window.bitelensApp?.setZoom(1)" class="zoom-btn px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white transition active:scale-95">1x</button>
+        <button data-zoom="2" onclick="window.bitelensApp?.setZoom(2)" class="zoom-btn px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 text-slate-200 hover:bg-white/30 transition active:scale-95">2x</button>
+        <button data-zoom="3" onclick="window.bitelensApp?.setZoom(3)" class="zoom-btn px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 text-slate-200 hover:bg-white/30 transition active:scale-95">3x</button>
       </div>
 
     </div>
@@ -443,8 +508,6 @@
 
     </div>
 
-    </div>
-
   </div>
 
   <!-- ============================================================== -->
@@ -473,13 +536,181 @@
 
     <!-- Fixed Action Bar inside Sheet -->
     <div class="p-4 bg-white border-t border-slate-100 flex items-center gap-2 flex-shrink-0">
-      <button onclick="window.bitelensApp.logToSnackBudget()" class="flex-1 bg-emerald-700 hover:bg-emerald-800 active:scale-98 text-white font-bold py-3 rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5">
+      <button onclick="window.bitelensApp?.logToSnackBudget()" class="flex-1 bg-emerald-700 hover:bg-emerald-800 active:scale-98 text-white font-bold py-3 rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         <span>Log to Daily Snack Budget</span>
       </button>
       <a href="compare.html" class="w-12 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition" title="Open Comparison Arena">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
       </a>
+    </div>
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- PERSONALIZED DIETARY & ALLERGY RADAR MODAL                    -->
+  <!-- ============================================================== -->
+  <div id="dietaryModalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="window.bitelensApp?.closeDietaryModal()"></div>
+  <div id="dietaryModal" class="fixed inset-x-4 top-1/2 -translate-y-1/2 max-w-md mx-auto bg-white rounded-3xl shadow-2xl z-50 p-5 hidden border border-slate-100 flex flex-col max-h-[90vh]">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🌿</span>
+        <div>
+          <h3 class="font-display font-bold text-sm text-slate-900">Dietary & Allergy Radar</h3>
+          <p class="text-[11px] text-slate-500">Personalized ingredient shields applied during barcode scan</p>
+        </div>
+      </div>
+      <button onclick="window.bitelensApp?.closeDietaryModal()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 text-sm">
+        ✕
+      </button>
+    </div>
+
+    <div class="py-3 space-y-2.5 overflow-y-auto no-scrollbar flex-1">
+      <!-- Rule 1: Strict Vegetarian -->
+      <label class="flex items-center justify-between p-3 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-emerald-50/40 cursor-pointer transition">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">🥦</span>
+          <div>
+            <div class="font-bold text-xs text-slate-900">Strict Vegetarian & Vegan</div>
+            <div class="text-[10px] text-slate-500">Flags Carmine (INS 120), Gelatin, Shellac (INS 904), Bone Char</div>
+          </div>
+        </div>
+        <input type="checkbox" id="dietRule_vegetarian" onchange="window.bitelensApp?.onDietaryRuleChange()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer">
+      </label>
+
+      <!-- Rule 2: Diabetic Shield -->
+      <label class="flex items-center justify-between p-3 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-emerald-50/40 cursor-pointer transition">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">🩸</span>
+          <div>
+            <div class="font-bold text-xs text-slate-900">Diabetic & Low Glycemic Shield</div>
+            <div class="text-[10px] text-slate-500">Flags Sugars > 5g/100g, Maltodextrin, High-Fructose Syrup</div>
+          </div>
+        </div>
+        <input type="checkbox" id="dietRule_diabetic" onchange="window.bitelensApp?.onDietaryRuleChange()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer">
+      </label>
+
+      <!-- Rule 3: Low-Sodium Heart Radar -->
+      <label class="flex items-center justify-between p-3 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-emerald-50/40 cursor-pointer transition">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">🧂</span>
+          <div>
+            <div class="font-bold text-xs text-slate-900">Low Sodium Heart Radar</div>
+            <div class="text-[10px] text-slate-500">Flags Sodium > 400mg/100g (Cardio / Hypertension Shield)</div>
+          </div>
+        </div>
+        <input type="checkbox" id="dietRule_lowSodium" onchange="window.bitelensApp?.onDietaryRuleChange()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer">
+      </label>
+
+      <!-- Rule 4: Gluten-Free Shield -->
+      <label class="flex items-center justify-between p-3 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-emerald-50/40 cursor-pointer transition">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">🌾</span>
+          <div>
+            <div class="font-bold text-xs text-slate-900">Gluten-Free Shield</div>
+            <div class="text-[10px] text-slate-500">Flags Wheat, Maida, Atta, Barley, Malt & Celiac triggers</div>
+          </div>
+        </div>
+        <input type="checkbox" id="dietRule_glutenFree" onchange="window.bitelensApp?.onDietaryRuleChange()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer">
+      </label>
+
+      <!-- Rule 5: Lactose-Free Shield -->
+      <label class="flex items-center justify-between p-3 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-emerald-50/40 cursor-pointer transition">
+        <div class="flex items-center gap-3">
+          <span class="text-xl">🥛</span>
+          <div>
+            <div class="font-bold text-xs text-slate-900">Lactose & Dairy-Free</div>
+            <div class="text-[10px] text-slate-500">Flags Milk solids, Whey, Casein, Lactose & Butterfat</div>
+          </div>
+        </div>
+        <input type="checkbox" id="dietRule_lactoseFree" onchange="window.bitelensApp?.onDietaryRuleChange()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer">
+      </label>
+    </div>
+
+    <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-3 flex-shrink-0">
+      <button onclick="window.bitelensApp?.resetDietaryRules()" class="text-xs font-semibold text-slate-500 hover:text-slate-800 transition">
+        Reset All
+      </button>
+      <button onclick="window.bitelensApp?.saveDietaryRulesFromModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-xs active:scale-95 transition">
+        Apply Guardrails
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- RECENT SCANS & BOOKMARKED FAVORITES DRAWER                     -->
+  <!-- ============================================================== -->
+  <div id="recentDrawerBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="window.bitelensApp?.closeRecentDrawer()"></div>
+  <div id="recentScansDrawer" class="fixed inset-x-0 bottom-0 max-h-[85%] bg-white rounded-t-[32px] shadow-2xl z-50 flex flex-col overflow-hidden border-t border-slate-200 transform translate-y-full sheet-transition safe-bottom">
+    
+    <!-- Drawer Header -->
+    <div class="pt-3 pb-2.5 px-5 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+      <div class="w-10 h-1 bg-slate-200 rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-2.5"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-base">🕒</span>
+        <h4 class="font-display font-bold text-sm text-slate-900">Scan History & Favorites</h4>
+      </div>
+      <button onclick="window.bitelensApp?.closeRecentDrawer()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 text-sm">
+        ✕
+      </button>
+    </div>
+
+    <!-- Tab Bar: Recent vs Favorites -->
+    <div class="flex items-center border-b border-slate-100 px-5 pt-1.5 flex-shrink-0 bg-slate-50/60">
+      <button id="recentTabBtn_all" onclick="window.bitelensApp?.switchRecentTab('all')" class="flex-1 py-2 text-xs font-bold border-b-2 border-emerald-600 text-emerald-800 transition">
+        Recent Scans (<span id="recentTabCountAll">0</span>)
+      </button>
+      <button id="recentTabBtn_favs" onclick="window.bitelensApp?.switchRecentTab('favs')" class="flex-1 py-2 text-xs font-semibold text-slate-500 border-b-2 border-transparent hover:text-slate-800 transition">
+        ⭐ Favorites (<span id="recentTabCountFavs">0</span>)
+      </button>
+    </div>
+
+    <!-- History List Items -->
+    <div class="overflow-y-auto no-scrollbar p-4 space-y-2 flex-1" id="recentDrawerList">
+      <!-- Populated dynamically by mobileApp.js -->
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-3 border-t border-slate-100 bg-white flex items-center justify-between px-5 flex-shrink-0">
+      <button onclick="window.bitelensApp?.clearScanHistory()" class="text-xs font-semibold text-red-600 hover:text-red-700 transition flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        <span>Clear History</span>
+      </button>
+      <button onclick="window.bitelensApp?.closeRecentDrawer(); window.bitelensApp?.openScanner();" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-xl transition flex items-center gap-1.5">
+        <span>Scan New Item</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- SIDE-BY-SIDE CLEAN SWAP COMPARISON MODAL                       -->
+  <!-- ============================================================== -->
+  <div id="cleanSwapBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden transition-opacity" onclick="window.bitelensApp?.closeCleanSwapCompare()"></div>
+  <div id="cleanSwapModal" class="fixed inset-x-3 sm:inset-x-auto sm:max-w-lg top-1/2 -translate-y-1/2 sm:mx-auto bg-white rounded-3xl shadow-2xl z-50 p-5 hidden border border-slate-100 flex flex-col max-h-[92vh] overflow-hidden">
+    
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">⚖️</span>
+        <div>
+          <h3 class="font-display font-bold text-sm text-slate-900">Side-by-Side Clean Swap Arena</h3>
+          <p class="text-[11px] text-emerald-700 font-semibold">Instant nutrient & chemical delta comparison</p>
+        </div>
+      </div>
+      <button onclick="window.bitelensApp?.closeCleanSwapCompare()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 text-sm">
+        ✕
+      </button>
+    </div>
+
+    <!-- Comparison Content Body -->
+    <div class="overflow-y-auto no-scrollbar py-3 space-y-3 flex-1" id="cleanSwapCompareContent">
+      <!-- Populated dynamically by mobileApp.js -->
+    </div>
+
+    <!-- Swap Action Footer -->
+    <div class="pt-3 border-t border-slate-100 flex items-center gap-2 flex-shrink-0" id="cleanSwapActionFooter">
+      <!-- Populated dynamically -->
     </div>
 
   </div>

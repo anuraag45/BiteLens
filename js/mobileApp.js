@@ -22,6 +22,15 @@ class BiteLensMobileApp {
     this.facingMode = 'environment';
     this.userGoal = (typeof localStorage !== 'undefined' && localStorage.getItem('bitelens_user_goal')) || 'maintenance';
 
+    // 6-Feature Suite State
+    this.isMuted = (typeof localStorage !== 'undefined' && localStorage.getItem('bitelens_audio_muted') === 'true') || false;
+    this.audioCtx = null;
+    this.torchOn = false;
+    this.zoomLevel = 1;
+    this.dietaryRules = this.loadDietaryRules();
+    this.activeRecentTab = 'all';
+    this.deferredInstallPrompt = null;
+
     this.boot();
   }
 
@@ -29,6 +38,10 @@ class BiteLensMobileApp {
     this.bindDOM();
     this.renderCatalog(this.catalog);
     this.checkURLParams();
+    this.updateDietaryHeaderBadge();
+    this.updateRecentHeaderBadge();
+    this.updateMuteIcon();
+    this.setupPwaListeners();
   }
 
   bindDOM() {
@@ -68,6 +81,12 @@ class BiteLensMobileApp {
     const torchBtn = document.getElementById('torchToggleBtn');
     if (torchBtn) {
       torchBtn.onclick = () => this.toggleTorch();
+    }
+
+    // Audio chime toggle
+    const muteBtn = document.getElementById('audioMuteToggleBtn');
+    if (muteBtn) {
+      muteBtn.onclick = () => this.toggleMute();
     }
 
     // Start camera stream button
@@ -385,8 +404,81 @@ class BiteLensMobileApp {
     await this.startCameraScanner();
   }
 
-  toggleTorch() {
-    alert("Flashlight/Torch toggle: Keep food barcode in a well-lit area for fastest focus.");
+  async toggleTorch() {
+    if (!this.isScanning) {
+      alert("Please start the camera stream first to toggle flashlight.");
+      return;
+    }
+    try {
+      const videoElement = document.querySelector('#scannerReader video');
+      const stream = videoElement?.srcObject;
+      const track = stream?.getVideoTracks?.()[0];
+      if (!track) {
+        alert("No active camera track found.");
+        return;
+      }
+      const capabilities = track.getCapabilities ? track.getCapabilities() : {};
+      if (!capabilities.torch) {
+        alert("Flashlight/Torch is not supported on this camera/browser. Ensure packaging is in a well-lit area.");
+        return;
+      }
+      this.torchOn = !this.torchOn;
+      await track.applyConstraints({
+        advanced: [{ torch: this.torchOn }]
+      });
+      const torchBtn = document.getElementById('torchToggleBtn');
+      if (torchBtn) {
+        torchBtn.classList.toggle('text-amber-300', this.torchOn);
+        torchBtn.classList.toggle('text-white', !this.torchOn);
+        torchBtn.classList.toggle('bg-amber-500/30', this.torchOn);
+      }
+    } catch (err) {
+      console.warn("Torch toggle notice:", err);
+      alert("Flashlight toggle error: " + (err.message || 'Unsupported hardware'));
+    }
+  }
+
+  async setZoom(level) {
+    this.zoomLevel = level;
+    document.querySelectorAll('.zoom-btn').forEach(btn => {
+      const z = parseInt(btn.dataset.zoom, 10);
+      if (z === level) {
+        btn.className = 'zoom-btn px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white transition active:scale-95';
+      } else {
+        btn.className = 'zoom-btn px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/20 text-slate-200 hover:bg-white/30 transition active:scale-95';
+      }
+    });
+
+    const videoElement = document.querySelector('#scannerReader video');
+    if (!videoElement) return;
+
+    const stream = videoElement.srcObject;
+    const track = stream?.getVideoTracks?.()[0];
+    let hardwareApplied = false;
+
+    if (track && track.getCapabilities) {
+      const capabilities = track.getCapabilities();
+      if (capabilities.zoom) {
+        try {
+          const min = capabilities.zoom.min || 1;
+          const max = capabilities.zoom.max || 3;
+          const targetZoom = Math.min(max, Math.max(min, level === 1 ? min : (level === 2 ? (min + max) / 2 : max)));
+          await track.applyConstraints({
+            advanced: [{ zoom: targetZoom }]
+          });
+          hardwareApplied = true;
+        } catch (e) {
+          console.warn("Hardware zoom apply error:", e);
+        }
+      }
+    }
+
+    // Resilient CSS zoom fallback if hardware zoom is unavailable
+    if (!hardwareApplied && videoElement) {
+      videoElement.style.transform = `scale(${level})`;
+      videoElement.style.transformOrigin = 'center center';
+      videoElement.style.transition = 'transform 0.25s ease-out';
+    }
   }
 
   /**
@@ -543,6 +635,10 @@ class BiteLensMobileApp {
       alert("Invalid barcode detected.");
       return;
     }
+
+    // Authentic Supermarket Audio Chime & Haptic Vibration
+    this.playScannerBeep();
+    this.triggerHaptic();
 
     this.closeScanner();
     this.showLoadingSheet(barcode);
@@ -762,22 +858,98 @@ class BiteLensMobileApp {
     const content = document.getElementById('bottomSheetContent');
     if (!sheet || !content) return;
 
+    // Evaluate dietary guardrails compliance
+    const dietaryEval = this.evaluateDietaryCompliance(p);
+    const isFav = this.isFavorite(p.barcode);
+
     content.innerHTML = `
       <!-- Main Identity Card -->
-      <div class="flex items-start gap-3.5 pb-2">
-        <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-4xl border border-slate-100 flex-shrink-0 select-none overflow-hidden">
-          ${p.image && p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : (p.image || '📦')}
-        </div>
-        <div class="flex-1">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${p.brand}</span>
-          <h3 class="font-display font-bold text-base text-slate-900 leading-tight">${p.name}</h3>
-          <div class="flex items-center gap-2 mt-1">
-            <span class="text-xs font-semibold text-slate-500">${p.size}</span>
-            <span class="text-slate-300">•</span>
-            <span class="text-xs font-mono font-bold text-emerald-800">EAN ${p.barcode}</span>
+      <div class="flex items-start justify-between gap-3 pb-2">
+        <div class="flex items-start gap-3 flex-1 min-w-0">
+          <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-4xl border border-slate-100 flex-shrink-0 select-none overflow-hidden">
+            ${p.image && p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : (p.image || '📦')}
+          </div>
+          <div class="flex-1 min-w-0">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${p.brand}</span>
+            <h3 class="font-display font-bold text-base text-slate-900 leading-tight truncate">${p.name}</h3>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xs font-semibold text-slate-500">${p.size}</span>
+              <span class="text-slate-300">•</span>
+              <span class="text-xs font-mono font-bold text-emerald-800">EAN ${p.barcode}</span>
+            </div>
           </div>
         </div>
+
+        <!-- 1-Tap Favorite Bookmark Button -->
+        <button 
+          onclick="window.bitelensApp?.toggleFavoriteCurrent()" 
+          class="w-10 h-10 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200/80 flex items-center justify-center text-xl transition active:scale-90 flex-shrink-0 shadow-2xs"
+          title="${isFav ? 'Remove from Saved Favorites' : 'Save to Favorites'}"
+        >
+          ${isFav ? '⭐' : '☆'}
+        </button>
       </div>
+
+      <!-- Personalized Dietary Guardrail Radar Banner (If Guardrails Active) -->
+      ${dietaryEval.activeRuleCount > 0 ? `
+        <div class="rounded-2xl p-3 border text-xs shadow-2xs ${
+          dietaryEval.status === 'VIOLATION' ? 'bg-red-50/90 border-red-200 text-red-950' :
+          dietaryEval.status === 'WARNING' ? 'bg-amber-50/90 border-amber-200 text-amber-950' :
+          'bg-emerald-50/90 border-emerald-200 text-emerald-950'
+        }">
+          <div class="flex items-center justify-between mb-1.5">
+            <div class="flex items-center gap-1.5 font-bold">
+              <span>${dietaryEval.status === 'VIOLATION' ? '🚨' : dietaryEval.status === 'WARNING' ? '⚠️' : '🌿'}</span>
+              <span>${
+                dietaryEval.status === 'VIOLATION' ? `Dietary Guardrail Alert (${dietaryEval.violations.length} Flagged)` :
+                dietaryEval.status === 'WARNING' ? `Dietary Guardrail Warning (${dietaryEval.warnings.length} Note)` :
+                `100% Guardrail Compliant`
+              }</span>
+            </div>
+            <button onclick="window.bitelensApp?.openDietaryModal()" class="text-[10px] font-bold underline ${
+              dietaryEval.status === 'VIOLATION' ? 'text-red-700' :
+              dietaryEval.status === 'WARNING' ? 'text-amber-800' :
+              'text-emerald-700'
+            }">
+              Edit Rules
+            </button>
+          </div>
+
+          ${dietaryEval.violations.length > 0 ? `
+            <div class="space-y-1 mt-1.5">
+              ${dietaryEval.violations.map(v => `
+                <div class="bg-white/80 rounded-xl p-2 border border-red-200 text-[11px]">
+                  <div class="font-bold text-red-800 flex items-center gap-1">
+                    <span>⛔</span>
+                    <span>${v.title}</span>
+                  </div>
+                  <div class="text-[10px] text-red-700 mt-0.5">${v.detail}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${dietaryEval.warnings.length > 0 ? `
+            <div class="space-y-1 mt-1.5">
+              ${dietaryEval.warnings.map(w => `
+                <div class="bg-white/80 rounded-xl p-2 border border-amber-200 text-[11px]">
+                  <div class="font-bold text-amber-800 flex items-center gap-1">
+                    <span>⚠️</span>
+                    <span>${w.title}</span>
+                  </div>
+                  <div class="text-[10px] text-amber-700 mt-0.5">${w.detail}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${dietaryEval.status === 'PASS' ? `
+            <div class="text-[10px] text-emerald-800 mt-0.5">
+              Verified safe for: <strong>${dietaryEval.passes.join(', ')}</strong>. Zero flagged additives or thresholds exceeded.
+            </div>
+          ` : ''}
+        </div>
+      ` : ''}
 
       <!-- NOVA Processing & Health Score HUD -->
       <div class="grid grid-cols-2 gap-2">
@@ -862,18 +1034,26 @@ class BiteLensMobileApp {
         </div>
       </div>
 
-      <!-- Blinkit 10m Clean Swap Recommendation -->
+      <!-- Blinkit 10m Clean Swap Recommendation with Inline Side-by-Side Modal Launcher -->
       ${p.swaps ? `
         <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-3.5">
-          <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-xs font-display mb-1">
-            <span>⚡</span>
-            <span>Healthier Clean Swap Available</span>
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-1.5 text-emerald-800 font-bold text-xs font-display">
+              <span>⚡</span>
+              <span>Healthier Clean Swap Available</span>
+            </div>
+            <span class="text-[9px] font-extrabold px-1.5 py-0.5 bg-emerald-200 text-emerald-900 rounded-full">RECOMMENDED</span>
           </div>
           <p class="text-[11px] text-slate-600 mb-2.5">${p.swaps.reason}</p>
-          <button onclick="window.bitelensApp?.triggerScan('${p.swaps.recommendedBarcode}')" class="w-full bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs py-2 rounded-xl shadow-xs transition flex items-center justify-center gap-2">
-            <span>Inspect ${p.swaps.recommendedName}</span>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="window.bitelensApp?.openCleanSwapCompare()" class="flex-1 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-bold text-xs py-2.5 rounded-xl shadow-xs transition flex items-center justify-center gap-1.5">
+              <span>Compare Side-by-Side ⚖️</span>
+            </button>
+            <button onclick="window.bitelensApp?.triggerScan('${p.swaps.recommendedBarcode}')" class="px-3 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-800 border border-emerald-300 font-bold text-xs py-2.5 rounded-xl shadow-xs transition flex items-center justify-center gap-1" title="Inspect Item">
+              <span>Inspect</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
         </div>
       ` : ''}
     `;
@@ -896,24 +1076,718 @@ class BiteLensMobileApp {
     }
   }
 
+  // --- 5. AUDIO & HAPTIC SYSTEM ---
+
+  playScannerBeep() {
+    if (this.isMuted) return;
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      if (!this.audioCtx) {
+        this.audioCtx = new AudioContextClass();
+      }
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+
+      // Supermarket POS frequency: 1760 Hz (musical note A6)
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1760, this.audioCtx.currentTime);
+
+      // Crisp exponential decay chime: 0.18 -> 0.0001 over 0.085s (0kB network footprint)
+      gain.gain.setValueAtTime(0.18, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + 0.085);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      osc.start(this.audioCtx.currentTime);
+      osc.stop(this.audioCtx.currentTime + 0.09);
+    } catch (e) {
+      console.debug('Scanner audio chime note:', e);
+    }
+  }
+
+  triggerHaptic() {
+    try {
+      if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate([40, 30, 80]);
+      }
+    } catch (e) {}
+  }
+
+  toggleMute() {
+    this.isMuted = !this.isMuted;
+    try {
+      localStorage.setItem('bitelens_audio_muted', String(this.isMuted));
+    } catch (e) {}
+    this.updateMuteIcon();
+  }
+
+  updateMuteIcon() {
+    const icon = document.getElementById('audioMuteIcon');
+    const btn = document.getElementById('audioMuteToggleBtn');
+    if (icon) {
+      icon.textContent = this.isMuted ? '🔇' : '🔊';
+    }
+    if (btn) {
+      btn.title = this.isMuted ? 'Unmute Scanner Audio Beep' : 'Mute Scanner Audio Beep';
+    }
+  }
+
+  // --- 6. PERSONALIZED DIETARY & ALLERGY RADAR ENGINE ---
+
+  loadDietaryRules() {
+    try {
+      const saved = localStorage.getItem('bitelens_dietary_rules');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return {
+      vegetarian: false,
+      diabetic: false,
+      lowSodium: false,
+      glutenFree: false,
+      lactoseFree: false
+    };
+  }
+
+  saveDietaryRules(rules) {
+    this.dietaryRules = rules;
+    try {
+      localStorage.setItem('bitelens_dietary_rules', JSON.stringify(rules));
+    } catch (e) {}
+    this.updateDietaryHeaderBadge();
+    if (this.activeProduct) {
+      this.renderProductDetails(this.activeProduct);
+    }
+  }
+
+  openDietaryModal() {
+    const modal = document.getElementById('dietaryModal');
+    const backdrop = document.getElementById('dietaryModalBackdrop');
+    if (!modal) return;
+
+    // Sync checkboxes with current state
+    const rules = this.dietaryRules;
+    const vegInput = document.getElementById('dietRule_vegetarian');
+    const diaInput = document.getElementById('dietRule_diabetic');
+    const sodInput = document.getElementById('dietRule_lowSodium');
+    const gluInput = document.getElementById('dietRule_glutenFree');
+    const lacInput = document.getElementById('dietRule_lactoseFree');
+
+    if (vegInput) vegInput.checked = !!rules.vegetarian;
+    if (diaInput) diaInput.checked = !!rules.diabetic;
+    if (sodInput) sodInput.checked = !!rules.lowSodium;
+    if (gluInput) gluInput.checked = !!rules.glutenFree;
+    if (lacInput) lacInput.checked = !!rules.lactoseFree;
+
+    if (backdrop) backdrop.classList.remove('hidden');
+    modal.classList.remove('hidden');
+  }
+
+  closeDietaryModal() {
+    const modal = document.getElementById('dietaryModal');
+    const backdrop = document.getElementById('dietaryModalBackdrop');
+    if (modal) modal.classList.add('hidden');
+    if (backdrop) backdrop.classList.add('hidden');
+  }
+
+  onDietaryRuleChange() {
+    const rules = {
+      vegetarian: !!document.getElementById('dietRule_vegetarian')?.checked,
+      diabetic: !!document.getElementById('dietRule_diabetic')?.checked,
+      lowSodium: !!document.getElementById('dietRule_lowSodium')?.checked,
+      glutenFree: !!document.getElementById('dietRule_glutenFree')?.checked,
+      lactoseFree: !!document.getElementById('dietRule_lactoseFree')?.checked
+    };
+    this.saveDietaryRules(rules);
+  }
+
+  saveDietaryRulesFromModal() {
+    this.onDietaryRuleChange();
+    this.closeDietaryModal();
+  }
+
+  resetDietaryRules() {
+    const reset = {
+      vegetarian: false,
+      diabetic: false,
+      lowSodium: false,
+      glutenFree: false,
+      lactoseFree: false
+    };
+    const vegInput = document.getElementById('dietRule_vegetarian');
+    const diaInput = document.getElementById('dietRule_diabetic');
+    const sodInput = document.getElementById('dietRule_lowSodium');
+    const gluInput = document.getElementById('dietRule_glutenFree');
+    const lacInput = document.getElementById('dietRule_lactoseFree');
+
+    if (vegInput) vegInput.checked = false;
+    if (diaInput) diaInput.checked = false;
+    if (sodInput) sodInput.checked = false;
+    if (gluInput) gluInput.checked = false;
+    if (lacInput) lacInput.checked = false;
+
+    this.saveDietaryRules(reset);
+    this.closeDietaryModal();
+  }
+
+  updateDietaryHeaderBadge() {
+    const countBadge = document.getElementById('dietaryActiveCount');
+    const label = document.getElementById('dietaryPillLabel');
+    const activeCount = Object.values(this.dietaryRules).filter(Boolean).length;
+
+    if (countBadge) {
+      if (activeCount > 0) {
+        countBadge.textContent = activeCount;
+        countBadge.classList.remove('hidden');
+      } else {
+        countBadge.classList.add('hidden');
+      }
+    }
+
+    if (label) {
+      label.textContent = activeCount > 0 ? `${activeCount} Guardrails` : 'Dietary Guardrails';
+    }
+  }
+
+  evaluateDietaryCompliance(product) {
+    const rules = this.dietaryRules;
+    const violations = [];
+    const warnings = [];
+    const passes = [];
+    let activeRuleCount = 0;
+
+    if (!product) return { status: 'PASS', activeRuleCount: 0, violations, warnings, passes };
+
+    const additives = Array.isArray(product.additives) ? product.additives : [];
+    const allergens = Array.isArray(product.allergens) ? product.allergens.join(' ').toLowerCase() : String(product.allergens || '').toLowerCase();
+    const summary = String(product.summary || '').toLowerCase();
+    const name = String(product.name || '').toLowerCase();
+    const combinedText = `${name} ${summary} ${allergens} ${additives.map(a => `${a.code} ${a.name} ${a.note}`).join(' ')}`.toLowerCase();
+
+    // 1. Strict Vegetarian
+    if (rules.vegetarian) {
+      activeRuleCount++;
+      const nonVegFound = additives.some(a => {
+        const code = String(a.code || '').toUpperCase();
+        const n = String(a.name || '').toLowerCase();
+        return code.includes('120') || n.includes('carmine') || n.includes('cochineal') ||
+               code.includes('441') || n.includes('gelatin') ||
+               code.includes('904') || n.includes('shellac') ||
+               n.includes('bone char');
+      }) || combinedText.includes('gelatin') || combinedText.includes('carmine') || combinedText.includes('shellac');
+
+      if (nonVegFound) {
+        violations.push({
+          rule: 'vegetarian',
+          title: 'Non-Vegetarian Additive Flagged',
+          detail: 'Contains insect or animal derived additive (e.g. INS 120 Carmine or Gelatin).'
+        });
+      } else {
+        passes.push('Strict Vegetarian');
+      }
+    }
+
+    // 2. Diabetic & Low Glycemic Shield
+    if (rules.diabetic) {
+      activeRuleCount++;
+      const sugars = parseFloat(product.sugars) || 0;
+      const hasSyrup = combinedText.includes('maltodextrin') || combinedText.includes('high fructose') || 
+                       combinedText.includes('invert sugar') || combinedText.includes('corn syrup') || 
+                       combinedText.includes('glucose-fructose');
+
+      if (sugars > 15 || (sugars > 8 && hasSyrup)) {
+        violations.push({
+          rule: 'diabetic',
+          title: `High Glycemic Risk (${sugars}g Sugars)`,
+          detail: `Sugars (${sugars}g/100g) and fast-absorbing syrups pose high spike risk for diabetics.`
+        });
+      } else if (sugars > 5) {
+        warnings.push({
+          rule: 'diabetic',
+          title: `Moderate Sugar Level (${sugars}g)`,
+          detail: `Sugars exceed recommended <5g per 100g serving limit.`
+        });
+      } else {
+        passes.push('Diabetic Safe (<5g Sugar)');
+      }
+    }
+
+    // 3. Low Sodium Heart Radar
+    if (rules.lowSodium) {
+      activeRuleCount++;
+      const sodium = parseFloat(product.sodium) || 0;
+      if (sodium > 600) {
+        violations.push({
+          rule: 'lowSodium',
+          title: `Excessive Sodium (${sodium}mg)`,
+          detail: `Sodium level (${sodium}mg/100g) significantly exceeds heart-safe threshold (<400mg).`
+        });
+      } else if (sodium > 400) {
+        warnings.push({
+          rule: 'lowSodium',
+          title: `Elevated Sodium (${sodium}mg)`,
+          detail: `Above low-sodium benchmark (<400mg per 100g).`
+        });
+      } else {
+        passes.push('Low Sodium (<400mg)');
+      }
+    }
+
+    // 4. Gluten-Free Shield
+    if (rules.glutenFree) {
+      activeRuleCount++;
+      const glutenKeywords = ['wheat', 'maida', 'atta', 'barley', 'rye', 'malt', 'gluten', 'semolina', 'sooji', 'rava'];
+      const hasGluten = glutenKeywords.some(k => combinedText.includes(k));
+      if (hasGluten) {
+        violations.push({
+          rule: 'glutenFree',
+          title: 'Contains Gluten / Wheat Grains',
+          detail: 'Packaged product contains wheat, maida, barley or malt gluten triggers.'
+        });
+      } else {
+        passes.push('Gluten-Free');
+      }
+    }
+
+    // 5. Lactose & Dairy-Free
+    if (rules.lactoseFree) {
+      activeRuleCount++;
+      const dairyKeywords = ['milk', 'lactose', 'whey', 'casein', 'butter', 'cheese', 'dairy', 'cream', 'dahi', 'paneer', 'ghee'];
+      const hasDairy = dairyKeywords.some(k => combinedText.includes(k));
+      if (hasDairy) {
+        violations.push({
+          rule: 'lactoseFree',
+          title: 'Contains Dairy / Lactose',
+          detail: 'Product contains milk solids, whey, butterfat, or dairy derivatives.'
+        });
+      } else {
+        passes.push('Lactose-Free');
+      }
+    }
+
+    let status = 'PASS';
+    if (violations.length > 0) status = 'VIOLATION';
+    else if (warnings.length > 0) status = 'WARNING';
+
+    return { status, activeRuleCount, violations, warnings, passes };
+  }
+
+  // --- 7. RECENT SCANS & FAVORITES DRAWER ---
+
   saveScanToHistory(product) {
     try {
-      const history = JSON.parse(localStorage.getItem('bitelens_scan_history') || '[]');
+      const history = this.getScanHistory();
       const updated = [
         {
           barcode: product.barcode,
           name: product.name,
           brand: product.brand,
+          image: product.image,
           novaGroup: product.novaGroup,
+          novaBg: product.novaBg,
+          novaColor: product.novaColor,
           healthScore: product.healthScore,
+          calories: product.calories,
+          sugars: product.sugars,
+          sodium: product.sodium,
           timestamp: new Date().toISOString()
         },
         ...history.filter(h => h.barcode !== product.barcode)
-      ].slice(0, 10);
+      ].slice(0, 30);
       localStorage.setItem('bitelens_scan_history', JSON.stringify(updated));
+      this.updateRecentHeaderBadge();
     } catch (e) {
-      // storage unavailable
+      console.warn("Scan history save note:", e);
     }
+  }
+
+  getScanHistory() {
+    try {
+      return JSON.parse(localStorage.getItem('bitelens_scan_history') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  clearScanHistory() {
+    if (confirm("Are you sure you want to clear your recent scan history?")) {
+      try {
+        localStorage.removeItem('bitelens_scan_history');
+      } catch (e) {}
+      this.updateRecentHeaderBadge();
+      this.renderRecentDrawer();
+    }
+  }
+
+  getFavorites() {
+    try {
+      return JSON.parse(localStorage.getItem('bitelens_favorites') || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  isFavorite(barcode) {
+    const favs = this.getFavorites();
+    return favs.includes(String(barcode));
+  }
+
+  toggleFavorite(barcode) {
+    const code = String(barcode);
+    let favs = this.getFavorites();
+    if (favs.includes(code)) {
+      favs = favs.filter(b => b !== code);
+    } else {
+      favs.unshift(code);
+    }
+    try {
+      localStorage.setItem('bitelens_favorites', JSON.stringify(favs));
+    } catch (e) {}
+
+    this.renderRecentDrawer();
+    if (this.activeProduct && this.activeProduct.barcode === code) {
+      this.renderProductDetails(this.activeProduct);
+    }
+    this.updateRecentHeaderBadge();
+  }
+
+  toggleFavoriteCurrent() {
+    if (!this.activeProduct) return;
+    this.toggleFavorite(this.activeProduct.barcode);
+  }
+
+  updateRecentHeaderBadge() {
+    const badge = document.getElementById('recentScansCountBadge');
+    if (badge) {
+      const history = this.getScanHistory();
+      badge.textContent = history.length;
+    }
+  }
+
+  openRecentDrawer() {
+    const drawer = document.getElementById('recentScansDrawer');
+    const backdrop = document.getElementById('recentDrawerBackdrop');
+    if (!drawer) return;
+
+    this.renderRecentDrawer();
+    if (backdrop) backdrop.classList.remove('hidden');
+    drawer.classList.remove('translate-y-full');
+    drawer.classList.add('translate-y-0');
+  }
+
+  closeRecentDrawer() {
+    const drawer = document.getElementById('recentScansDrawer');
+    const backdrop = document.getElementById('recentDrawerBackdrop');
+    if (drawer) {
+      drawer.classList.remove('translate-y-0');
+      drawer.classList.add('translate-y-full');
+    }
+    if (backdrop) {
+      backdrop.classList.add('hidden');
+    }
+  }
+
+  switchRecentTab(tab) {
+    this.activeRecentTab = tab;
+    const btnAll = document.getElementById('recentTabBtn_all');
+    const btnFavs = document.getElementById('recentTabBtn_favs');
+
+    if (tab === 'all') {
+      btnAll?.classList.add('border-emerald-600', 'text-emerald-800');
+      btnAll?.classList.remove('border-transparent', 'text-slate-500');
+      btnFavs?.classList.remove('border-emerald-600', 'text-emerald-800');
+      btnFavs?.classList.add('border-transparent', 'text-slate-500');
+    } else {
+      btnFavs?.classList.add('border-emerald-600', 'text-emerald-800');
+      btnFavs?.classList.remove('border-transparent', 'text-slate-500');
+      btnAll?.classList.remove('border-emerald-600', 'text-emerald-800');
+      btnAll?.classList.add('border-transparent', 'text-slate-500');
+    }
+
+    this.renderRecentDrawer();
+  }
+
+  formatRelativeTime(isoString) {
+    if (!isoString) return 'Recently';
+    const now = Date.now();
+    const past = new Date(isoString).getTime();
+    const diff = Math.max(0, now - past);
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return `${days}d ago`;
+    return new Date(isoString).toLocaleDateString();
+  }
+
+  renderRecentDrawer() {
+    const list = document.getElementById('recentDrawerList');
+    const countAll = document.getElementById('recentTabCountAll');
+    const countFavs = document.getElementById('recentTabCountFavs');
+    if (!list) return;
+
+    const history = this.getScanHistory();
+    const favs = this.getFavorites();
+
+    if (countAll) countAll.textContent = history.length;
+    if (countFavs) countFavs.textContent = favs.length;
+
+    let itemsToDisplay = history;
+    if (this.activeRecentTab === 'favs') {
+      itemsToDisplay = history.filter(item => favs.includes(item.barcode));
+    }
+
+    if (itemsToDisplay.length === 0) {
+      list.innerHTML = `
+        <div class="py-12 text-center text-slate-400">
+          <div class="text-4xl mb-2">${this.activeRecentTab === 'favs' ? '⭐' : '📦'}</div>
+          <p class="text-xs font-bold text-slate-700">${this.activeRecentTab === 'favs' ? 'No Saved Favorites' : 'No Recent Scans'}</p>
+          <p class="text-[11px] text-slate-400 mt-1 max-w-[220px] mx-auto">
+            ${this.activeRecentTab === 'favs' ? 'Tap the star on any product to save it here for quick re-inspection.' : 'Scan packaged goods in grocery aisles to build your verified nutritional ledger.'}
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = itemsToDisplay.map(item => {
+      const isFav = favs.includes(item.barcode);
+      return `
+        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 transition cursor-pointer group active:scale-98">
+          <div class="flex items-center gap-3 flex-1 min-w-0" onclick="window.bitelensApp?.closeRecentDrawer(); window.bitelensApp?.triggerScan('${item.barcode}')">
+            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl border border-slate-200/80 flex-shrink-0 select-none overflow-hidden">
+              ${item.image && item.image.startsWith('http') ? `<img src="${item.image}" class="w-full h-full object-contain" alt="${item.name}">` : (item.image || '📦')}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider truncate">${item.brand}</span>
+                <span class="text-slate-300">•</span>
+                <span class="text-[10px] text-slate-400 font-mono">${this.formatRelativeTime(item.timestamp)}</span>
+              </div>
+              <h5 class="text-xs font-bold text-slate-900 truncate leading-snug">${item.name}</h5>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-[9px] font-extrabold px-1.5 py-0.2 rounded-full" style="background-color: ${item.novaBg || '#FEE2E2'}; color: ${item.novaColor || '#DC2626'};">
+                  NOVA ${item.novaGroup || 4}
+                </span>
+                <span class="text-[10px] font-bold text-emerald-800">
+                  ${item.healthScore || 50}/100 Score
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Star Favorite Button -->
+          <button 
+            type="button"
+            onclick="event.stopPropagation(); window.bitelensApp?.toggleFavorite('${item.barcode}')" 
+            class="w-9 h-9 rounded-xl flex items-center justify-center text-lg hover:bg-white active:scale-90 transition ml-2 flex-shrink-0"
+            title="Toggle Bookmark"
+          >
+            ${isFav ? '⭐' : '☆'}
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // --- 8. INLINE SIDE-BY-SIDE CLEAN SWAP COMPARISON MODAL ---
+
+  openCleanSwapCompare() {
+    const modal = document.getElementById('cleanSwapModal');
+    const backdrop = document.getElementById('cleanSwapBackdrop');
+    const content = document.getElementById('cleanSwapCompareContent');
+    const footer = document.getElementById('cleanSwapActionFooter');
+    if (!modal || !content) return;
+
+    const orig = this.activeProduct;
+    if (!orig || !orig.swaps) {
+      alert("No clean swap available for this product.");
+      return;
+    }
+
+    const swapBarcode = orig.swaps.recommendedBarcode;
+    const swap = this.catalog.find(p => p.barcode === swapBarcode) || this.synthesizeUnindexedProduct(swapBarcode);
+
+    // Calculate deltas
+    const calDelta = swap.calories - orig.calories;
+    const sugarDelta = swap.sugars - orig.sugars;
+    const sugarPct = orig.sugars > 0 ? Math.round(((orig.sugars - swap.sugars) / orig.sugars) * 100) : 0;
+    const sodiumDelta = swap.sodium - orig.sodium;
+    const sodiumPct = orig.sodium > 0 ? Math.round(((orig.sodium - swap.sodium) / orig.sodium) * 100) : 0;
+    const scoreDelta = swap.healthScore - orig.healthScore;
+    const additivesEliminated = Math.max(0, orig.additives.length - swap.additives.length);
+
+    content.innerHTML = `
+      <!-- Reason Pill -->
+      <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 text-xs text-emerald-950">
+        <span class="font-extrabold block text-emerald-800 mb-0.5">⚡ Clean Swap Rationale</span>
+        <span>${orig.swaps.reason}</span>
+      </div>
+
+      <!-- Side-by-Side Cards Grid -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <!-- Original Product Card -->
+        <div class="bg-red-50/60 border border-red-200 rounded-2xl p-3 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-red-200 text-red-900">Current Item</span>
+              <span class="text-[9px] font-bold text-red-600">NOVA ${orig.novaGroup}</span>
+            </div>
+            <div class="w-full h-16 bg-white rounded-xl flex items-center justify-center text-3xl mb-1.5 select-none border border-red-100 overflow-hidden">
+              ${orig.image && orig.image.startsWith('http') ? `<img src="${orig.image}" class="w-full h-full object-contain">` : (orig.image || '📦')}
+            </div>
+            <div class="text-[9px] font-bold text-slate-400 uppercase truncate">${orig.brand}</div>
+            <h5 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2">${orig.name}</h5>
+          </div>
+          <div class="mt-2 pt-2 border-t border-red-200/80 text-center">
+            <span class="text-xs font-extrabold text-red-700">${orig.healthScore}/100</span>
+            <span class="text-[9px] text-slate-500 block">BiteLens Score</span>
+          </div>
+        </div>
+
+        <!-- Clean Swap Product Card -->
+        <div class="bg-emerald-50/60 border-2 border-emerald-500 rounded-2xl p-3 flex flex-col justify-between relative shadow-xs">
+          <div class="absolute -top-2.5 right-2 bg-emerald-600 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">
+            Clean Swap
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-emerald-200 text-emerald-900">Healthy Match</span>
+              <span class="text-[9px] font-bold text-emerald-700">NOVA ${swap.novaGroup}</span>
+            </div>
+            <div class="w-full h-16 bg-white rounded-xl flex items-center justify-center text-3xl mb-1.5 select-none border border-emerald-100 overflow-hidden">
+              ${swap.image && swap.image.startsWith('http') ? `<img src="${swap.image}" class="w-full h-full object-contain">` : (swap.image || '📦')}
+            </div>
+            <div class="text-[9px] font-bold text-emerald-600 uppercase truncate">${swap.brand}</div>
+            <h5 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2">${swap.name}</h5>
+          </div>
+          <div class="mt-2 pt-2 border-t border-emerald-200/80 text-center">
+            <span class="text-xs font-extrabold text-emerald-700">${swap.healthScore}/100</span>
+            <span class="text-[9px] text-emerald-800 font-bold block">+${scoreDelta} Improvement</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparative Metric Deltas Table -->
+      <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200/80 space-y-2 text-xs">
+        <h6 class="font-display font-bold text-[11px] uppercase tracking-wider text-slate-600">Nutritional & Chemical Deltas</h6>
+
+        <!-- Sugars Delta -->
+        <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-100 shadow-2xs">
+          <span class="font-semibold text-slate-600 text-[11px]">Sugars</span>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400 line-through text-[11px]">${orig.sugars}g</span>
+            <span class="font-bold text-xs text-slate-900">➔ ${swap.sugars}g</span>
+            ${sugarPct > 0 ? `<span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-1.5 py-0.5 rounded">−${sugarPct}%</span>` : ''}
+          </div>
+        </div>
+
+        <!-- Sodium Delta -->
+        <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-100 shadow-2xs">
+          <span class="font-semibold text-slate-600 text-[11px]">Sodium</span>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400 line-through text-[11px]">${orig.sodium}mg</span>
+            <span class="font-bold text-xs text-slate-900">➔ ${swap.sodium}mg</span>
+            ${sodiumPct > 0 ? `<span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-1.5 py-0.5 rounded">−${sodiumPct}%</span>` : ''}
+          </div>
+        </div>
+
+        <!-- Calories Delta -->
+        <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-100 shadow-2xs">
+          <span class="font-semibold text-slate-600 text-[11px]">Calories</span>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400 line-through text-[11px]">${orig.calories} kcal</span>
+            <span class="font-bold text-xs text-slate-900">➔ ${swap.calories} kcal</span>
+            <span class="bg-slate-100 text-slate-700 font-bold text-[10px] px-1.5 py-0.5 rounded">${calDelta > 0 ? `+${calDelta}` : calDelta} kcal</span>
+          </div>
+        </div>
+
+        <!-- Additives Elimination -->
+        <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-100 shadow-2xs">
+          <span class="font-semibold text-slate-600 text-[11px]">FSSAI Chemicals</span>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400 line-through text-[11px]">${orig.additives.length} chemicals</span>
+            <span class="font-bold text-xs text-slate-900">➔ ${swap.additives.length}</span>
+            <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-1.5 py-0.5 rounded">
+              ${additivesEliminated > 0 ? `−${additivesEliminated} Eliminated` : 'Clean Base'}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (footer) {
+      footer.innerHTML = `
+        <button onclick="window.bitelensApp?.closeCleanSwapCompare()" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition">
+          Dismiss
+        </button>
+        <button onclick="window.bitelensApp?.closeCleanSwapCompare(); window.bitelensApp?.triggerScan('${swap.barcode}')" class="flex-2 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-bold text-xs py-2.5 rounded-xl shadow-xs transition flex items-center justify-center gap-1.5">
+          <span>Switch to ${swap.name.split(' ')[0]}</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      `;
+    }
+
+    if (backdrop) backdrop.classList.remove('hidden');
+    modal.classList.remove('hidden');
+  }
+
+  closeCleanSwapCompare() {
+    const modal = document.getElementById('cleanSwapModal');
+    const backdrop = document.getElementById('cleanSwapBackdrop');
+    if (modal) modal.classList.add('hidden');
+    if (backdrop) backdrop.classList.add('hidden');
+  }
+
+  // --- 9. PWA OFFLINE ENGINE & INSTALL PROMPT ---
+
+  setupPwaListeners() {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredInstallPrompt = e;
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner && sessionStorage.getItem('bitelens_pwa_dismissed') !== 'true') {
+        banner.classList.remove('hidden');
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      this.deferredInstallPrompt = null;
+      const banner = document.getElementById('pwaInstallBanner');
+      if (banner) banner.classList.add('hidden');
+      console.log('BiteLens PWA successfully installed to homescreen.');
+    });
+  }
+
+  promptInstallPwa() {
+    if (this.deferredInstallPrompt) {
+      this.deferredInstallPrompt.prompt();
+      this.deferredInstallPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted PWA installation');
+        }
+        this.deferredInstallPrompt = null;
+        this.dismissPwaBanner();
+      });
+    } else {
+      alert("To install BiteLens Mobile:\n• Android/Chrome: Tap Chrome menu (⋮) -> 'Install App' or 'Add to Home screen'\n• iOS/Safari: Tap Share (⬆️) -> 'Add to Home Screen'");
+      this.dismissPwaBanner();
+    }
+  }
+
+  dismissPwaBanner() {
+    const banner = document.getElementById('pwaInstallBanner');
+    if (banner) banner.classList.add('hidden');
+    try {
+      sessionStorage.setItem('bitelens_pwa_dismissed', 'true');
+    } catch (e) {}
   }
 
   logToSnackBudget() {
