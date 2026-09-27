@@ -383,6 +383,31 @@
         border-top: none;
       }
     }
+
+    /* Mobile Responsive Optimizations */
+    @media screen and (max-width: 768px) {
+      .report-container {
+        padding: 1.5rem 1rem !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+      }
+      .toc-table, .data-table, table {
+        display: block !important;
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      .student-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .title-page {
+        min-height: auto !important;
+        padding: 2rem 0 !important;
+      }
+      .report-main-title {
+        font-size: 1.45rem !important;
+      }
+    }
   </style>
 </head>
 <body>
