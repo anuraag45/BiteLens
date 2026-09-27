@@ -10,7 +10,6 @@
    - Slide-up Blinkit-style product dossier bottom sheet
    ========================================================================== */
 
-import './html5-qrcode.min.js';
 import { INDIAN_PRODUCTS_CATALOG } from './data/indianProductsCatalog.js';
 
 class BiteLensMobileApp {
@@ -113,68 +112,76 @@ class BiteLensMobileApp {
     const countLabel = document.getElementById('mobileItemCount');
     if (!grid) return;
 
-    if (countLabel) {
-      countLabel.textContent = `Showing ${items.length} verified items`;
-    }
+    try {
+      const safeItems = Array.isArray(items) ? items : [];
 
-    if (items.length === 0) {
-      grid.innerHTML = `
-        <div class="col-span-2 py-12 text-center text-slate-400">
-          <div class="text-4xl mb-2">🔍</div>
-          <p class="text-xs font-bold text-slate-700">No packaged food items found</p>
-          <p class="text-[11px] text-slate-400 mt-1">Try searching by additive code or food category</p>
-          <button onclick="window.bitelensApp?.filterCategory('all')" class="mt-3 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg">
-            Reset Filters
-          </button>
-        </div>
-      `;
-      return;
-    }
+      if (countLabel) {
+        countLabel.textContent = `Showing ${safeItems.length} verified items`;
+      }
 
-    grid.innerHTML = items.map(p => `
-      <div class="bg-white rounded-2xl p-3 border border-slate-200/90 shadow-sm flex flex-col justify-between hover:shadow-md transition">
-        <div>
-          <!-- Header Badges -->
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full" style="background-color: ${p.novaBg}; color: ${p.novaColor};">
-              NOVA ${p.novaGroup}
-            </span>
-            <span class="text-[9px] text-slate-400 font-mono tracking-tight">EAN ${p.barcode.slice(-4)}</span>
+      if (safeItems.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-2 py-12 text-center text-slate-400">
+            <div class="text-4xl mb-2">🔍</div>
+            <p class="text-xs font-bold text-slate-700">No packaged food items found</p>
+            <p class="text-[11px] text-slate-400 mt-1">Try searching by additive code or food category</p>
+            <button onclick="window.bitelensApp?.filterCategory('all')" class="mt-3 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg">
+              Reset Filters
+            </button>
           </div>
+        `;
+        return;
+      }
 
-          <!-- Product Graphic -->
-          <div class="w-full h-20 bg-slate-50 rounded-xl flex items-center justify-center text-4xl mb-2 select-none border border-slate-100/60 overflow-hidden">
-            ${p.image && p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : (p.image || '📦')}
-          </div>
-
-          <!-- Title & Specs -->
-          <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${p.brand}</div>
-          <h5 class="font-bold text-xs text-slate-900 leading-snug line-clamp-1">${p.name}</h5>
-          <div class="text-[11px] text-slate-500 font-medium">${p.size}</div>
-          
-          <!-- Health Pill -->
-          <div class="mt-1.5">
-            <span class="text-[10px] font-bold" style="color: ${p.goalColor || '#2E7D32'};">
-              Score ${p.healthScore}/100
-            </span>
-          </div>
-        </div>
-
-        <!-- Price & Action Button -->
-        <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+      grid.innerHTML = safeItems.map(p => `
+        <div onclick="window.bitelensApp?.triggerScan('${p.barcode}')" class="bg-white rounded-2xl p-3 border border-slate-200/90 shadow-xs flex flex-col justify-between hover:shadow-md transition cursor-pointer active:scale-98">
           <div>
-            <span class="font-display font-extrabold text-sm text-slate-900">₹${p.price}</span>
+            <!-- Header Badges -->
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full" style="background-color: ${p.novaBg || '#FEE2E2'}; color: ${p.novaColor || '#DC2626'};">
+                NOVA ${p.novaGroup || 4}
+              </span>
+              <span class="text-[9px] text-slate-400 font-mono tracking-tight">EAN ${p.barcode.slice(-4)}</span>
+            </div>
+
+            <!-- Product Graphic -->
+            <div class="w-full h-20 bg-slate-50 rounded-xl flex items-center justify-center text-4xl mb-2 select-none border border-slate-100/60 overflow-hidden">
+              ${p.image && p.image.startsWith('http') ? `<img src="${p.image}" class="w-full h-full object-contain" alt="${p.name}">` : (p.image || '📦')}
+            </div>
+
+            <!-- Title & Specs -->
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${p.brand || 'Packaged Item'}</div>
+            <h5 class="font-bold text-xs text-slate-900 leading-snug line-clamp-1">${p.name}</h5>
+            <div class="text-[11px] text-slate-500 font-medium">${p.size || '100g'}</div>
+            
+            <!-- Health Pill -->
+            <div class="mt-1.5">
+              <span class="text-[10px] font-bold" style="color: ${p.goalColor || '#2E7D32'};">
+                Score ${p.healthScore || 50}/100
+              </span>
+            </div>
           </div>
-          <button 
-            onclick="window.bitelensApp?.triggerScan('${p.barcode}')" 
-            class="bg-emerald-50 hover:bg-emerald-700 text-emerald-800 hover:text-white border border-emerald-300 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wide transition flex items-center gap-1 shadow-xs"
-          >
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            <span>Scan</span>
-          </button>
+
+          <!-- Price & Action Button -->
+          <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
+            <div>
+              <span class="font-display font-extrabold text-sm text-slate-900">₹${p.price || 50}</span>
+            </div>
+            <button 
+              type="button"
+              onclick="event.stopPropagation(); window.bitelensApp?.triggerScan('${p.barcode}')" 
+              class="bg-emerald-50 hover:bg-emerald-700 text-emerald-800 hover:text-white border border-emerald-300 px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wide transition flex items-center gap-1 shadow-xs"
+            >
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              <span>Scan</span>
+            </button>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `).join('');
+    } catch (renderErr) {
+      console.error("Catalog rendering error:", renderErr);
+      grid.innerHTML = `<div class="col-span-2 p-4 text-center text-xs text-red-600 bg-red-50 rounded-xl">Error loading items. <button onclick="window.bitelensApp?.renderCatalog(window.bitelensApp.catalog)" class="underline font-bold">Retry</button></div>`;
+    }
   }
 
   filterCategory(category) {
@@ -234,6 +241,61 @@ class BiteLensMobileApp {
     }
   }
 
+  async ensureScannerLibrary() {
+    if (typeof window !== 'undefined' && window.Html5Qrcode) {
+      return window.Html5Qrcode;
+    }
+    if (typeof window !== 'undefined' && window.__Html5QrcodeLibrary__?.Html5Qrcode) {
+      window.Html5Qrcode = window.__Html5QrcodeLibrary__.Html5Qrcode;
+      return window.Html5Qrcode;
+    }
+
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[src*="html5-qrcode"]');
+      if (existing) {
+        if (window.Html5Qrcode || window.__Html5QrcodeLibrary__?.Html5Qrcode) {
+          const cls = window.Html5Qrcode || window.__Html5QrcodeLibrary__?.Html5Qrcode;
+          window.Html5Qrcode = cls;
+          return resolve(cls);
+        }
+        existing.addEventListener('load', () => {
+          const cls = window.Html5Qrcode || window.__Html5QrcodeLibrary__?.Html5Qrcode;
+          if (cls) {
+            window.Html5Qrcode = cls;
+            resolve(cls);
+          } else {
+            reject(new Error('Html5Qrcode not initialized'));
+          }
+        });
+        existing.addEventListener('error', () => reject(new Error('Failed to load html5-qrcode.min.js')));
+        setTimeout(() => {
+          const cls = window.Html5Qrcode || window.__Html5QrcodeLibrary__?.Html5Qrcode;
+          if (cls) {
+            window.Html5Qrcode = cls;
+            resolve(cls);
+          } else {
+            reject(new Error('Html5Qrcode load timeout'));
+          }
+        }, 1500);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = '/js/html5-qrcode.min.js';
+      script.onload = () => {
+        const cls = window.Html5Qrcode || window.__Html5QrcodeLibrary__?.Html5Qrcode;
+        if (cls) {
+          window.Html5Qrcode = cls;
+          resolve(cls);
+        } else {
+          reject(new Error('Html5Qrcode not initialized'));
+        }
+      };
+      script.onerror = () => reject(new Error('Failed to load /js/html5-qrcode.min.js'));
+      document.head.appendChild(script);
+    });
+  }
+
   async startCameraScanner() {
     const readerElement = document.getElementById('scannerReader');
     const placeholder = document.getElementById('scannerCameraPlaceholder');
@@ -242,11 +304,17 @@ class BiteLensMobileApp {
     try {
       await this.stopCameraScanner();
 
-      const Html5QrcodeClass = window.Html5Qrcode;
+      let Html5QrcodeClass = window.Html5Qrcode || window.__Html5QrcodeLibrary__?.Html5Qrcode;
       if (!Html5QrcodeClass) {
-        console.warn("Html5Qrcode library not loaded yet.");
-        if (placeholder) placeholder.classList.remove('hidden');
-        return;
+        try {
+          Html5QrcodeClass = await this.ensureScannerLibrary();
+        } catch (loadErr) {
+          console.warn("Scanner library loading notice:", loadErr);
+          if (placeholder) {
+            placeholder.classList.remove('hidden');
+          }
+          return;
+        }
       }
 
       if (!this.html5QrCode) {
@@ -309,10 +377,14 @@ class BiteLensMobileApp {
     if (!file) return;
 
     try {
-      const Html5QrcodeClass = window.Html5Qrcode;
+      let Html5QrcodeClass = window.Html5Qrcode || window.__Html5QrcodeLibrary__?.Html5Qrcode;
       if (!Html5QrcodeClass) {
-        alert("Barcode scanner library is loading. Please try again in 1 second.");
-        return;
+        try {
+          Html5QrcodeClass = await this.ensureScannerLibrary();
+        } catch (e) {
+          alert("Barcode scanner library is loading. Please try again in a moment.");
+          return;
+        }
       }
 
       if (!this.html5QrCode) {
@@ -329,6 +401,7 @@ class BiteLensMobileApp {
       event.target.value = '';
     }
   }
+
 
   handleManualBarcodeSubmit() {
     const input = document.getElementById('manualBarcodeInput');
