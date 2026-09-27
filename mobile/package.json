@@ -1,0 +1,31 @@
+{
+  "name": "bitelens-mobile",
+  "version": "2.4.0",
+  "description": "BiteLens Cross-Platform Mobile Application built with React Native & TypeScript (Blinkit-Style UX)",
+  "main": "App.tsx",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-native": "0.76.7",
+    "expo": "~52.0.0",
+    "expo-status-bar": "~2.0.0",
+    "expo-camera": "~16.0.0",
+    "expo-haptics": "~14.0.0",
+    "expo-av": "~15.0.0",
+    "lucide-react-native": "^0.479.0",
+    "react-native-svg": "15.8.0",
+    "@react-native-async-storage/async-storage": "1.23.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@types/react": "~18.3.12",
+    "typescript": "^5.3.3"
+  },
+  "private": true
+}

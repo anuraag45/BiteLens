@@ -55,10 +55,12 @@ import {
   ChevronLeft,
   Home,
   Smartphone,
+  Download,
   X
 } from 'lucide';
 
 const PAGE_TITLES = {
+  'download.html': 'Download Android App',
   'app.html': 'Blinkit-Style Mobile App',
   'features.html': 'App Features',
   'how-it-works.html': 'How BiteLens Works',
@@ -282,7 +284,12 @@ export function renderComponents() {
 
             <!-- Direct Link: Blinkit-Style Mobile App -->
             <a href="app.html" class="nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 800; background: rgba(59, 122, 87, 0.08); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; border: 1px solid rgba(59, 122, 87, 0.25);">
-              <i data-lucide="smartphone" style="width: 0.95rem; height: 0.95rem;"></i> Mobile App
+              <i data-lucide="smartphone" style="width: 0.95rem; height: 0.95rem;"></i> Web App
+            </a>
+
+            <!-- Direct Link: Download APK -->
+            <a href="download.html" class="nav-link ${currentPath === 'download.html' ? 'active' : ''}" style="color: #059669; font-weight: 800; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; border: 1px solid rgba(16, 185, 129, 0.35);" title="Download Android APK">
+              <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> Android APK
             </a>
 
             <!-- Direct Link: Dashboard -->
@@ -323,8 +330,11 @@ export function renderComponents() {
             <a href="index.html" class="mobile-nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
               <i data-lucide="home"></i> Home Overview
             </a>
-            <a href="app.html" class="mobile-nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 800;">
-              <i data-lucide="smartphone"></i> Blinkit Mobile App
+            <a href="download.html" class="mobile-nav-link ${currentPath === 'download.html' ? 'active' : ''}" style="color: #059669; font-weight: 800;">
+              <i data-lucide="download"></i> Download Android App (.APK)
+            </a>
+            <a href="app.html" class="mobile-nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 700;">
+              <i data-lucide="smartphone"></i> Blinkit Web App
             </a>
             <a href="dashboard.html" class="mobile-nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
               <i data-lucide="layout-dashboard"></i> Member Dashboard
@@ -450,6 +460,8 @@ export function renderComponents() {
               <div class="footer-col-title">Navigation</div>
               <ul class="footer-link-list">
                 <li><a href="index.html">Home Overview</a></li>
+                <li><a href="download.html" style="color: #34D399; font-weight: 700;">📲 Download Android (.APK)</a></li>
+                <li><a href="app.html">Blinkit Mobile Web App</a></li>
                 <li><a href="dashboard.html">Member Dashboard</a></li>
                 <li><a href="compare.html">Food Comparison</a></li>
                 <li><a href="how-it-works.html">How BiteLens Works</a></li>
@@ -524,7 +536,7 @@ export function renderComponents() {
       Search, PieChart, HelpCircle, ArrowRight, ShieldAlert, LogOut, LogIn,
       UserPlus, Eye, Columns, LayoutDashboard, Camera, View, UploadCloud,
       RefreshCw, Scan, History, Barcode, AlertTriangle, UserCheck, BookOpen,
-      FileText, ArrowLeft, ChevronLeft, Home, X
+      FileText, ArrowLeft, ChevronLeft, Home, Smartphone, Download, X
     }
   });
 

@@ -23,6 +23,7 @@ export default defineConfig({
         compare: resolve(__dirname, 'compare.html'),
         sgpReport: resolve(__dirname, 'sgp_report.html'),
         app: resolve(__dirname, 'app.html'),
+        download: resolve(__dirname, 'download.html'),
       },
     },
   },

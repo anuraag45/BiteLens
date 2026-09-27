@@ -11,3 +11,4 @@ dist/
 scratch/
 .agents/
 .expo/
+android_build/

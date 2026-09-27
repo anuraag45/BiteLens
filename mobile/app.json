@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "BiteLens",
+    "slug": "bitelens",
+    "version": "2.4.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#3B7A57"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bitelens.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "BiteLens requires camera access to scan food barcodes and decode FSSAI nutritional labels in real-time."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#3B7A57"
+      },
+      "package": "com.bitelens.app",
+      "permissions": [
+        "CAMERA",
+        "VIBRATE",
+        "INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
