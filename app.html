@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="BiteLens">
   <meta name="description" content="BiteLens - Blinkit-speed food barcode scanner & FSSAI nutritional telemetry.">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="./images/favicon.png">
   <title>BiteLens - Smart Food Scanner & Grocery Telemetry</title>
 
   <!-- Google Fonts -->
@@ -21,13 +21,13 @@
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
 
   <!-- HTML5 QR / Barcode Scanner Engine (Non-blocking Deferred) -->
-  <script defer src="/js/html5-qrcode.min.js"></script>
+  <script defer src="./js/html5-qrcode.min.js"></script>
 
   <!-- PWA Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(e => console.log('SW registration note:', e));
+        navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW registration note:', e));
       });
     }
   </script>
@@ -716,7 +716,7 @@
   </div>
 
   <!-- Mobile App Controller Script -->
-  <script type="module" src="/js/mobileApp.js"></script>
+  <script type="module" src="./js/mobileApp.js"></script>
 
 </body>
 </html>

@@ -40,16 +40,26 @@ New-Item -ItemType Directory -Path "$workDir\assets" | Out-Null
 # Ensure public/downloads directory exists
 New-Item -ItemType Directory -Force -Path "public\downloads" | Out-Null
 
-Write-Host "==> 1. Bundling Web Assets for Offline Mobile Usage..." -ForegroundColor Yellow
-Copy-Item -Path "app.html" -Destination "$workDir\assets\app.html"
+Write-Host "==> 1. Building Production Web Distribution with Vite..." -ForegroundColor Yellow
+npm.cmd run build
+
+Write-Host "==> 1b. Packaging All Web Pages & Assets into APK Container..." -ForegroundColor Yellow
+# Copy all production files from dist into assets (excluding dist/downloads)
+Get-ChildItem -Path "dist" | Where-Object { $_.Name -ne "downloads" } | ForEach-Object {
+    Copy-Item -Recurse -Force -Path $_.FullName -Destination "$workDir\assets"
+}
+# Ensure uncompiled js/ and images/ are present for static references (like html5-qrcode.min.js)
 if (Test-Path "js") {
-    Copy-Item -Recurse -Path "js" -Destination "$workDir\assets\js"
+    if (-not (Test-Path "$workDir\assets\js")) {
+        New-Item -ItemType Directory -Force -Path "$workDir\assets\js" | Out-Null
+    }
+    Copy-Item -Recurse -Force -Path "js\*" -Destination "$workDir\assets\js"
 }
 if (Test-Path "images") {
-    Copy-Item -Recurse -Path "images" -Destination "$workDir\assets\images"
-}
-if (Test-Path "public\manifest.json") {
-    Copy-Item -Path "public\manifest.json" -Destination "$workDir\assets\manifest.json"
+    if (-not (Test-Path "$workDir\assets\images")) {
+        New-Item -ItemType Directory -Force -Path "$workDir\assets\images" | Out-Null
+    }
+    Copy-Item -Recurse -Force -Path "images\*" -Destination "$workDir\assets\images"
 }
 
 Write-Host "==> 2. Compiling Android Resources with AAPT2..." -ForegroundColor Yellow
@@ -84,6 +94,9 @@ try {
 } finally {
     Pop-Location
 }
+
+Write-Host "==> 6b. Normalizing Zip Path Separators to Standard Unix Slashes..." -ForegroundColor Yellow
+node scripts/fix_zip_slashes.js "$workDir\base.apk"
 
 Write-Host "==> 7. 4-Byte ZipAligning APK Container..." -ForegroundColor Yellow
 & "$buildToolsDir\zipalign.exe" -f -v 4 "$workDir\base.apk" "$workDir\aligned.apk" | Out-Null
