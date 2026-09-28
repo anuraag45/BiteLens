@@ -75,8 +75,6 @@ const PAGE_TITLES = {
   'faq.html': 'Food Labeling FAQ',
   'about.html': 'About Team',
   'contact.html': 'Contact Us',
-  'login.html': 'Account Login',
-  'signup.html': 'Create Account',
   'sgp_report.html': 'Indus SGP Project Report'
 };
 
@@ -108,13 +106,10 @@ export function renderComponents() {
         </button>
       </div>
     ` : `
-      <!-- Logged-Out Auth Buttons (Desktop) -->
+      <!-- App CTAs (Desktop) -->
       <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <a href="login.html" class="nav-link ${currentPath === 'login.html' ? 'active' : ''}" style="height: 38px;">
-          <i data-lucide="log-in" style="width: 0.95rem; height: 0.95rem;"></i> Login
-        </a>
-        <a href="signup.html" class="btn btn-primary" style="height: 38px; padding: 0 1.1rem; font-size: 0.88rem;">
-          <i data-lucide="user-plus" style="width: 0.95rem; height: 0.95rem;"></i> Sign Up
+        <a href="download.html" class="btn btn-primary" style="height: 38px; padding: 0 1.1rem; font-size: 0.88rem; background: linear-gradient(135deg, #10B981, #059669); border-color: #059669;">
+          <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> Download APK
         </a>
       </div>
     `;
@@ -145,11 +140,11 @@ export function renderComponents() {
       </div>
     ` : `
       <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border);">
-        <a href="signup.html" class="btn btn-primary" style="height: 46px; font-size: 0.95rem; width: 100%;">
-          <i data-lucide="user-plus"></i> Create Free Account
+        <a href="download.html" class="btn btn-primary" style="height: 46px; font-size: 0.95rem; width: 100%; background: linear-gradient(135deg, #10B981, #059669); border-color: #059669;">
+          <i data-lucide="download"></i> Download Android App (.APK)
         </a>
-        <a href="login.html" class="btn btn-outline" style="height: 46px; font-size: 0.95rem; width: 100%;">
-          <i data-lucide="log-in"></i> Log In to BiteLens
+        <a href="app.html" class="btn btn-outline" style="height: 46px; font-size: 0.95rem; width: 100%;">
+          <i data-lucide="smartphone"></i> Launch Web App
         </a>
       </div>
     `;

@@ -2,5 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/login(.*)", "destination": "/app", "permanent": false },
+    { "source": "/signup(.*)", "destination": "/app", "permanent": false }
+  ]
 }
