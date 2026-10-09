@@ -54,11 +54,16 @@ function buildTimeIncludesPlugin() {
             <a href="about.html" class="nav-link ${isActive('about.html')}">About</a>
           </nav>
 
-          <!-- Desktop Right Action Pill -->
-          <div id="header-user-action" style="display: flex; align-items: center; gap: 0.65rem;">
-            <a href="download.html" class="btn btn-primary" style="height: 38px; padding: 0 1rem; font-size: 0.85rem; border-radius: var(--radius-pill); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
-              <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> App APK
-            </a>
+          <!-- Desktop Right Action & Mobile Toggle -->
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <div id="header-user-action" style="display: flex; align-items: center; gap: 0.65rem;">
+              <a href="download.html" class="btn btn-primary" style="height: 38px; padding: 0 1rem; font-size: 0.85rem; border-radius: var(--radius-pill); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> App APK
+              </a>
+            </div>
+            <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" style="cursor: pointer;">
+              <i data-lucide="menu"></i>
+            </button>
           </div>
         </div>
       </header>`;
@@ -114,28 +119,88 @@ function buildTimeIncludesPlugin() {
         </div>
       </footer>`;
 
-      const toolsActive = (filename === 'compare.html' || filename === 'health-calculator.html') ? 'active' : '';
-      const learnActive = (filename === 'learn.html' || filename === 'additives.html') ? 'active' : '';
-
       const mobileTabBarHTML = `
       <nav id="site-mobile-tab-bar" class="mobile-tab-bar" aria-label="Mobile Navigation Tabs">
+        <a href="index.html" class="mobile-tab-item ${isActive('index.html')}">
+          <i data-lucide="eye"></i>
+          <span>Home</span>
+        </a>
         <a href="scan.html" class="mobile-tab-item ${isActive('scan.html')}">
           <i data-lucide="camera"></i>
           <span>Scan</span>
         </a>
-        <a href="compare.html" class="mobile-tab-item ${toolsActive}">
+        <a href="additives.html" class="mobile-tab-item ${isActive('additives.html')}">
+          <i data-lucide="flask-conical"></i>
+          <span>Additives</span>
+        </a>
+        <a href="compare.html" class="mobile-tab-item ${isActive('compare.html')}">
           <i data-lucide="scale"></i>
-          <span>Tools</span>
+          <span>Compare</span>
         </a>
-        <a href="learn.html" class="mobile-tab-item ${learnActive}">
-          <i data-lucide="book-open"></i>
-          <span>Learn</span>
-        </a>
-        <a href="dashboard.html" class="mobile-tab-item ${isActive('dashboard.html')}">
-          <i data-lucide="layout-dashboard"></i>
-          <span>Journal</span>
-        </a>
+        <button type="button" class="mobile-tab-item" id="mobile-tab-menu-btn" style="background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;">
+          <i data-lucide="menu"></i>
+          <span>Menu</span>
+        </button>
       </nav>`;
+
+      const mobileDrawerHTML = `
+      <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
+      <aside class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation Menu">
+        <div class="mobile-drawer-header">
+          <a href="index.html" class="brand-logo" style="text-decoration: none;">
+            <div class="brand-logo-icon">
+              <i data-lucide="eye"></i>
+            </div>
+            <span>BiteLens</span>
+          </a>
+          <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close menu">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="mobile-drawer-content">
+          <div class="mobile-nav-group">
+            <span class="mobile-nav-group-title">Core Scanning</span>
+            <a href="index.html" class="mobile-nav-link ${isActive('index.html')}">
+              <i data-lucide="eye"></i> Home Overview
+            </a>
+            <a href="scan.html" class="mobile-nav-link ${isActive('scan.html')}">
+              <i data-lucide="camera"></i> Optical Label Scanner
+            </a>
+            <a href="dashboard.html" class="mobile-nav-link ${isActive('dashboard.html')}">
+              <i data-lucide="layout-dashboard"></i> Scan History & Journal
+            </a>
+          </div>
+
+          <div class="mobile-nav-group">
+            <span class="mobile-nav-group-title">Analysis & Research</span>
+            <a href="additives.html" class="mobile-nav-link ${isActive('additives.html')}">
+              <i data-lucide="flask-conical"></i> FSSAI Additives Directory
+            </a>
+            <a href="compare.html" class="mobile-nav-link ${isActive('compare.html')}">
+              <i data-lucide="scale"></i> Product Matchup & Compare
+            </a>
+            <a href="health-calculator.html" class="mobile-nav-link ${isActive('health-calculator.html')}">
+              <i data-lucide="activity"></i> BMI & Calorie Calculator
+            </a>
+            <a href="learn.html" class="mobile-nav-link ${isActive('learn.html')}">
+              <i data-lucide="book-open"></i> NOVA Science & Guides
+            </a>
+          </div>
+
+          <div class="mobile-nav-group">
+            <span class="mobile-nav-group-title">Project & Download</span>
+            <a href="download.html" class="mobile-nav-link ${isActive('download.html')}">
+              <i data-lucide="download"></i> Download Android APK
+            </a>
+            <a href="about.html" class="mobile-nav-link ${isActive('about.html')}">
+              <i data-lucide="info"></i> About & Mission
+            </a>
+            <a href="report.html" class="mobile-nav-link ${isActive('report.html')}">
+              <i data-lucide="file-text"></i> Technical Report
+            </a>
+          </div>
+        </div>
+      </aside>`;
 
       let transformed = html;
       if (transformed.includes('<div id="site-header-container"></div>')) {
@@ -144,8 +209,8 @@ function buildTimeIncludesPlugin() {
       if (transformed.includes('<div id="site-footer-container"></div>')) {
         transformed = transformed.replace('<div id="site-footer-container"></div>', `<div id="site-footer-container">${footerHTML}</div>`);
       }
-      if (!transformed.includes('site-mobile-tab-bar') && transformed.includes('</body>')) {
-        transformed = transformed.replace('</body>', `${mobileTabBarHTML}\n</body>`);
+      if (!transformed.includes('mobile-drawer') && transformed.includes('</body>')) {
+        transformed = transformed.replace('</body>', `${mobileDrawerHTML}\n${mobileTabBarHTML}\n</body>`);
       }
 
       return transformed;

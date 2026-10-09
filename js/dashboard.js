@@ -12,7 +12,7 @@ import { getUserProfile } from './calculators.js';
 
 const SCAN_HISTORY_KEY = 'bitelens_scan_history';
 
-const INITIAL_DEMO_SCANS = [
+const INITIAL_SAMPLE_SCANS = [
   { id: 1, name: "Roasted Masala Makhana", cat: "Indian Snack", nova: 2, healthScore: 92, goalScore: 90, date: "Today, 11:30 AM", hash: "a7b3...f912" },
   { id: 2, name: "Multigrain Rolled Oats", cat: "Breakfast Cereal", nova: 1, healthScore: 95, goalScore: 92, date: "Yesterday, 4:15 PM", hash: "98c1...e455" },
   { id: 3, name: "Strawberry Flavored Yogurt", cat: "Dairy Dessert", nova: 4, healthScore: 54, goalScore: 62, date: "15 Aug, 8:40 AM", hash: "41d2...b881" },

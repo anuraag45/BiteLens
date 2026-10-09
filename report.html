@@ -993,12 +993,12 @@ func (u *User) IsMinor(atDate time.Time) bool {
         When a user is detected as a minor (&lt;18 years), the system enforces parental consent recording via `POST /api/v1/auth/parental-consent` before telemetry storage is unlocked.
       </p>
 
-      <h3>2. INS Additive Search & Decoding Module (`internal/handlers/scan.go`, `additive-decoder.html`)</h3>
+      <h3>2. INS Additive Search & Decoding Module (`internal/handlers/scan.go`, `additives.html`)</h3>
       <p>
         Provides instant indexing and retrieval of FSSAI food additives. Supports direct URL query auto-input (`?code=INS621`) and fuzzy text matching mapping OCR variants (`"lNS 621"`, `"INS-621"`, `"E 621"`) to canonical records.
       </p>
 
-      <h3>3. Dual-Scoring Telemetry Engine (`internal/telemetry`, `science.html`)</h3>
+      <h3>3. Dual-Scoring Telemetry Engine (`internal/telemetry`, `learn.html`)</h3>
       <p>
         Computes the decoupled dual scores:
       </p>

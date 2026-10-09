@@ -1601,6 +1601,21 @@ body.mobile-drawer-open {
 
 /* Breakpoint: Laptops & Tablets (< 1024px) */
 @media (max-width: 1024px) {
+  .site-header {
+    padding: 0.55rem 0;
+  }
+  .mobile-nav-toggle {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+  .main-nav {
+    display: none !important;
+  }
   .hero-wrapper {
     grid-template-columns: 1fr;
     gap: 2.5rem;

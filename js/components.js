@@ -53,7 +53,16 @@ import {
   Download, 
   X, 
   Scale,
-  Lock
+  Lock,
+  Code,
+  ChevronLeft,
+  ChevronRight,
+  Sliders,
+  Zap,
+  Plus,
+  PlusCircle,
+  WifiOff,
+  Share2
 } from 'lucide';
 
 /**
@@ -95,10 +104,15 @@ export function renderComponents() {
               <a href="about.html" class="nav-link ${currentPath === 'about.html' ? 'active' : ''}">About</a>
             </nav>
 
-            <div id="header-user-action" style="display: flex; align-items: center; gap: 0.65rem;">
-              <a href="download.html" class="btn btn-primary" style="height: 38px; padding: 0 1rem; font-size: 0.85rem; border-radius: var(--radius-pill); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
-                <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> App APK
-              </a>
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+              <div id="header-user-action" style="display: flex; align-items: center; gap: 0.65rem;">
+                <a href="download.html" class="btn btn-primary" style="height: 38px; padding: 0 1rem; font-size: 0.85rem; border-radius: var(--radius-pill); text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+                  <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> App APK
+                </a>
+              </div>
+              <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation menu" style="cursor: pointer;">
+                <i data-lucide="menu"></i>
+              </button>
             </div>
           </div>
         </header>
@@ -117,32 +131,137 @@ export function renderComponents() {
     }
   }
 
-  // 2. Mobile Bottom Tab Bar Hydration
+  // 2. Mobile Drawer Hydration (if not present)
+  if (!document.getElementById('mobile-drawer')) {
+    const backdrop = document.createElement('div');
+    backdrop.id = 'mobile-drawer-backdrop';
+    backdrop.className = 'mobile-drawer-backdrop';
+
+    const drawer = document.createElement('aside');
+    drawer.id = 'mobile-drawer';
+    drawer.className = 'mobile-drawer';
+    drawer.setAttribute('aria-label', 'Mobile Navigation Menu');
+    drawer.innerHTML = `
+      <div class="mobile-drawer-header">
+        <a href="index.html" class="brand-logo" style="text-decoration: none;">
+          <div class="brand-logo-icon">
+            <i data-lucide="eye"></i>
+          </div>
+          <span>${CONFIG.BRAND_NAME}</span>
+        </a>
+        <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Close menu">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="mobile-drawer-content">
+        <div class="mobile-nav-group">
+          <span class="mobile-nav-group-title">Core Scanning</span>
+          <a href="index.html" class="mobile-nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
+            <i data-lucide="eye"></i> Home Overview
+          </a>
+          <a href="scan.html" class="mobile-nav-link ${currentPath === 'scan.html' ? 'active' : ''}">
+            <i data-lucide="camera"></i> Optical Label Scanner
+          </a>
+          <a href="dashboard.html" class="mobile-nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
+            <i data-lucide="layout-dashboard"></i> Scan History & Journal
+          </a>
+        </div>
+
+        <div class="mobile-nav-group">
+          <span class="mobile-nav-group-title">Analysis & Research</span>
+          <a href="additives.html" class="mobile-nav-link ${currentPath === 'additives.html' ? 'active' : ''}">
+            <i data-lucide="flask-conical"></i> FSSAI Additives Directory
+          </a>
+          <a href="compare.html" class="mobile-nav-link ${currentPath === 'compare.html' ? 'active' : ''}">
+            <i data-lucide="scale"></i> Product Matchup & Compare
+          </a>
+          <a href="health-calculator.html" class="mobile-nav-link ${currentPath === 'health-calculator.html' ? 'active' : ''}">
+            <i data-lucide="activity"></i> BMI & Calorie Calculator
+          </a>
+          <a href="learn.html" class="mobile-nav-link ${currentPath === 'learn.html' ? 'active' : ''}">
+            <i data-lucide="book-open"></i> NOVA Science & Guides
+          </a>
+        </div>
+
+        <div class="mobile-nav-group">
+          <span class="mobile-nav-group-title">Project & Download</span>
+          <a href="download.html" class="mobile-nav-link ${currentPath === 'download.html' ? 'active' : ''}">
+            <i data-lucide="download"></i> Download Android APK
+          </a>
+          <a href="about.html" class="mobile-nav-link ${currentPath === 'about.html' ? 'active' : ''}">
+            <i data-lucide="info"></i> About & Mission
+          </a>
+          <a href="report.html" class="mobile-nav-link ${currentPath === 'report.html' ? 'active' : ''}">
+            <i data-lucide="file-text"></i> Technical Report
+          </a>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(backdrop);
+    document.body.appendChild(drawer);
+  }
+
+  // Bind Drawer Toggle handlers
+  const drawerToggleBtn = document.getElementById('mobile-nav-toggle');
+  const drawerCloseBtn = document.getElementById('mobile-drawer-close');
+  const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
+  const mobileDrawer = document.getElementById('mobile-drawer');
+
+  const openDrawer = () => {
+    mobileDrawer?.classList.add('open');
+    drawerBackdrop?.classList.add('open');
+    document.body.classList.add('mobile-drawer-open');
+  };
+
+  const closeDrawer = () => {
+    mobileDrawer?.classList.remove('open');
+    drawerBackdrop?.classList.remove('open');
+    document.body.classList.remove('mobile-drawer-open');
+  };
+
+  drawerToggleBtn?.addEventListener('click', openDrawer);
+  drawerCloseBtn?.addEventListener('click', closeDrawer);
+  drawerBackdrop?.addEventListener('click', closeDrawer);
+
+  mobileDrawer?.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', closeDrawer);
+  });
+
+  // 3. Mobile Bottom Tab Bar Hydration
   if (!document.getElementById('site-mobile-tab-bar')) {
     const mobileTabBar = document.createElement('nav');
     mobileTabBar.id = 'site-mobile-tab-bar';
     mobileTabBar.className = 'mobile-tab-bar';
     mobileTabBar.setAttribute('aria-label', 'Mobile Navigation Tabs');
     mobileTabBar.innerHTML = `
+      <a href="index.html" class="mobile-tab-item ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
+        <i data-lucide="eye"></i>
+        <span>Home</span>
+      </a>
       <a href="scan.html" class="mobile-tab-item ${currentPath === 'scan.html' ? 'active' : ''}">
         <i data-lucide="camera"></i>
         <span>Scan</span>
       </a>
-      <a href="compare.html" class="mobile-tab-item ${currentPath === 'compare.html' || currentPath === 'health-calculator.html' ? 'active' : ''}">
+      <a href="additives.html" class="mobile-tab-item ${currentPath === 'additives.html' ? 'active' : ''}">
+        <i data-lucide="flask-conical"></i>
+        <span>Additives</span>
+      </a>
+      <a href="compare.html" class="mobile-tab-item ${currentPath === 'compare.html' ? 'active' : ''}">
         <i data-lucide="scale"></i>
-        <span>Tools</span>
+        <span>Compare</span>
       </a>
-      <a href="learn.html" class="mobile-tab-item ${currentPath === 'learn.html' || currentPath === 'additives.html' ? 'active' : ''}">
-        <i data-lucide="book-open"></i>
-        <span>Learn</span>
-      </a>
-      <a href="dashboard.html" class="mobile-tab-item ${currentPath === 'dashboard.html' ? 'active' : ''}">
-        <i data-lucide="layout-dashboard"></i>
-        <span>Journal</span>
-      </a>
+      <button type="button" class="mobile-tab-item" id="mobile-tab-menu-btn" style="background: none; border: none; cursor: pointer; padding: 0; font-family: inherit;">
+        <i data-lucide="menu"></i>
+        <span>Menu</span>
+      </button>
     `;
     document.body.appendChild(mobileTabBar);
   }
+
+  // Bind bottom bar menu button to open drawer
+  const tabMenuBtn = document.getElementById('mobile-tab-menu-btn');
+  tabMenuBtn?.addEventListener('click', openDrawer);
 
   // 3. Footer Hydration (if not present)
   if (footerContainer && !footerContainer.querySelector('.site-footer')) {
@@ -207,7 +326,8 @@ export function renderComponents() {
       Search, PieChart, HelpCircle, ArrowRight, ShieldAlert,
       Eye, Columns, LayoutDashboard, Camera, View, UploadCloud,
       RefreshCw, Scan, History, Barcode, AlertTriangle, UserCheck, BookOpen,
-      FileText, Smartphone, Download, X, Scale, Lock
+      FileText, Smartphone, Download, X, Scale, Lock,
+      Code, ChevronLeft, ChevronRight, Sliders, Zap, Plus, PlusCircle, WifiOff, Share2
     }
   });
 
