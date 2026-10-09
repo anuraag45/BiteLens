@@ -58,22 +58,27 @@ import {
 } from 'lucide';
 
 const PAGE_TITLES = {
-  'download.html': 'Download Android App',
-  'app.html': 'Blinkit-Style Mobile App',
-  'features.html': 'App Features',
-  'how-it-works.html': 'How BiteLens Works',
+  'scan.html': 'Live Camera OCR',
+  'additives.html': '150+ INS Trie Search',
+  'compare.html': 'Food Comparison Matchup',
+  'snack-budget.html': 'UPF Daily Allowance Planner',
+  'health-calculator.html': 'BMI & Calorie Calculators (Tabs)',
+  'learn.html': 'How It Works & Science',
+  'faq.html': 'Food Labeling Clarifications',
+  'download.html': 'Download Android App (.APK)',
+  'app.html': 'Blinkit-Style Grocery UI',
+  'dashboard.html': 'Personal Audit & History',
+  'about.html': 'Mission, Team & Contact',
+  'report.html': 'Indus Academic Report',
+  // Backwards-compatible aliases
+  'scanner-demo.html': 'Live Camera OCR',
+  'additive-decoder.html': '150+ INS Trie Search',
   'bmi-calculator.html': 'BMI Calculator',
   'calorie-calculator.html': 'Calorie & TDEE Calculator',
-  'snack-budget.html': 'Snack Budget Simulator',
-  'scanner-demo.html': 'Live Camera Scanner',
-  'additive-decoder.html': 'INS Additive Decoder',
-  'compare.html': 'Food Comparison Tool',
-  'dashboard.html': 'Member Dashboard',
+  'how-it-works.html': 'How BiteLens Works',
   'science.html': 'NOVA & FSSAI Science',
-  'faq.html': 'Food Labeling FAQ',
-  'about.html': 'About Team',
   'contact.html': 'Contact Us',
-  'sgp_report.html': 'Indus SGP Project Report'
+  'sgp_report.html': 'Indus Academic Report'
 };
 
 export function renderComponents() {
@@ -171,127 +176,130 @@ export function renderComponents() {
               Home
             </a>
 
-            <!-- Dropdown 1: Scan & Analysis Studio -->
+            <!-- Column 1: Scan & Analyze -->
             <div class="nav-dropdown-wrapper">
-              <span class="nav-link dropdown-trigger ${currentPath.includes('scanner') || currentPath.includes('decoder') || currentPath.includes('compare') || currentPath.includes('budget') ? 'active' : ''}">
-                <i data-lucide="scan" style="width: 0.95rem; height: 0.95rem;"></i> Scan & Tools <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
+              <span class="nav-link dropdown-trigger ${currentPath.includes('scan') || currentPath.includes('additive') || currentPath.includes('compare') || currentPath.includes('budget') || currentPath.includes('calculator') ? 'active' : ''}">
+                <i data-lucide="scan" style="width: 0.95rem; height: 0.95rem;"></i> Scan & Analyze <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
               </span>
               <div class="dropdown-menu">
-                <a href="scanner-demo.html" class="dropdown-item ${currentPath === 'scanner-demo.html' ? 'active' : ''}">
+                <a href="scan.html" class="dropdown-item ${currentPath === 'scan.html' || currentPath === 'scanner-demo.html' ? 'active' : ''}">
                   <div class="dropdown-icon-box"><i data-lucide="camera"></i></div>
                   <div>
-                    <div class="dropdown-title">Live Camera Scanner</div>
-                    <div class="dropdown-desc">Optical label OCR & instant scoring</div>
+                    <div class="dropdown-title">Live Camera OCR</div>
+                    <div class="dropdown-desc">Real-time optical label scanning & instant score</div>
                   </div>
                 </a>
-                <a href="additive-decoder.html" class="dropdown-item ${currentPath === 'additive-decoder.html' ? 'active' : ''}">
+                <a href="additives.html" class="dropdown-item ${currentPath === 'additives.html' || currentPath === 'additive-decoder.html' ? 'active' : ''}">
                   <div class="dropdown-icon-box"><i data-lucide="search"></i></div>
                   <div>
-                    <div class="dropdown-title">INS Additive Decoder</div>
-                    <div class="dropdown-desc">Trie-indexed FSSAI chemical dictionary</div>
+                    <div class="dropdown-title">150+ INS Trie Search</div>
+                    <div class="dropdown-desc">Instant FSSAI additive & chemical dictionary</div>
                   </div>
                 </a>
                 <a href="compare.html" class="dropdown-item ${currentPath === 'compare.html' ? 'active' : ''}">
                   <div class="dropdown-icon-box"><i data-lucide="columns"></i></div>
                   <div>
-                    <div class="dropdown-title">Food Comparison</div>
-                    <div class="dropdown-desc">Side-by-side processing & goal breakdown</div>
+                    <div class="dropdown-title">Side-by-Side Matchup</div>
+                    <div class="dropdown-desc">Compare processing & goal fit across two items</div>
                   </div>
                 </a>
                 <a href="snack-budget.html" class="dropdown-item ${currentPath === 'snack-budget.html' ? 'active' : ''}">
                   <div class="dropdown-icon-box"><i data-lucide="pie-chart"></i></div>
                   <div>
-                    <div class="dropdown-title">Snack Budget Simulator</div>
-                    <div class="dropdown-desc">Plan daily calories & UPF limits</div>
+                    <div class="dropdown-title">UPF Daily Allowance</div>
+                    <div class="dropdown-desc">Plan daily calories & ultra-processing thresholds</div>
                   </div>
                 </a>
-              </div>
-            </div>
-
-            <!-- Dropdown 2: Calculators -->
-            <div class="nav-dropdown-wrapper">
-              <span class="nav-link dropdown-trigger ${currentPath.includes('calculator') ? 'active' : ''}">
-                <i data-lucide="activity" style="width: 0.95rem; height: 0.95rem;"></i> Calculators <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
-              </span>
-              <div class="dropdown-menu">
-                <a href="bmi-calculator.html" class="dropdown-item ${currentPath === 'bmi-calculator.html' ? 'active' : ''}">
+                <a href="health-calculator.html" class="dropdown-item ${currentPath === 'health-calculator.html' || currentPath.includes('calculator') ? 'active' : ''}">
                   <div class="dropdown-icon-box"><i data-lucide="activity"></i></div>
                   <div>
-                    <div class="dropdown-title">BMI Calculator</div>
-                    <div class="dropdown-desc">Standard WHO & Asian-specific criteria</div>
-                  </div>
-                </a>
-                <a href="calorie-calculator.html" class="dropdown-item ${currentPath === 'calorie-calculator.html' ? 'active' : ''}">
-                  <div class="dropdown-icon-box"><i data-lucide="flame"></i></div>
-                  <div>
-                    <div class="dropdown-title">Calorie & TDEE Calculator</div>
-                    <div class="dropdown-desc">Mifflin-St Jeor metabolic expenditure</div>
+                    <div class="dropdown-title">Health Calculators</div>
+                    <div class="dropdown-desc">BMI (Asian cutoffs) + Calorie TDEE tabs</div>
                   </div>
                 </a>
               </div>
             </div>
 
-            <!-- Dropdown 3: Learn & Science -->
+            <!-- Column 2: Learn -->
             <div class="nav-dropdown-wrapper">
-              <span class="nav-link dropdown-trigger ${currentPath === 'how-it-works.html' || currentPath === 'science.html' || currentPath === 'faq.html' || currentPath === 'about.html' ? 'active' : ''}">
-                <i data-lucide="book-open" style="width: 0.95rem; height: 0.95rem;"></i> Explore <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
+              <span class="nav-link dropdown-trigger ${currentPath === 'learn.html' || currentPath === 'faq.html' || currentPath === 'how-it-works.html' || currentPath === 'science.html' ? 'active' : ''}">
+                <i data-lucide="book-open" style="width: 0.95rem; height: 0.95rem;"></i> Learn <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
               </span>
               <div class="dropdown-menu">
-                <a href="how-it-works.html" class="dropdown-item ${currentPath === 'how-it-works.html' ? 'active' : ''}">
+                <a href="learn.html" class="dropdown-item ${currentPath === 'learn.html' || currentPath === 'how-it-works.html' || currentPath === 'science.html' ? 'active' : ''}">
                   <div class="dropdown-icon-box"><i data-lucide="sparkles"></i></div>
                   <div>
-                    <div class="dropdown-title">How BiteLens Works</div>
-                    <div class="dropdown-desc">Interactive 4-step telemetry laboratory</div>
-                  </div>
-                </a>
-                <a href="science.html" class="dropdown-item ${currentPath === 'science.html' ? 'active' : ''}">
-                  <div class="dropdown-icon-box"><i data-lucide="flask-conical"></i></div>
-                  <div>
-                    <div class="dropdown-title">NOVA & FSSAI Science</div>
-                    <div class="dropdown-desc">Scientific thresholds & nutrient matrix</div>
+                    <div class="dropdown-title">How It Works + Science</div>
+                    <div class="dropdown-desc">4-step telemetry lab & NOVA methodology</div>
                   </div>
                 </a>
                 <a href="faq.html" class="dropdown-item ${currentPath === 'faq.html' ? 'active' : ''}">
                   <div class="dropdown-icon-box"><i data-lucide="help-circle"></i></div>
                   <div>
                     <div class="dropdown-title">Food Labeling FAQ</div>
-                    <div class="dropdown-desc">Consumer myth busting & additive safety</div>
-                  </div>
-                </a>
-                <a href="about.html" class="dropdown-item ${currentPath === 'about.html' ? 'active' : ''}">
-                  <div class="dropdown-icon-box"><i data-lucide="user"></i></div>
-                  <div>
-                    <div class="dropdown-title">About Team</div>
-                    <div class="dropdown-desc">Student researchers & project mission</div>
-                  </div>
-                </a>
-                <a href="sgp_report.html" target="_blank" class="dropdown-item">
-                  <div class="dropdown-icon-box"><i data-lucide="file-text"></i></div>
-                  <div>
-                    <div class="dropdown-title">Indus SGP Report</div>
-                    <div class="dropdown-desc">Academic report & printable PDF format</div>
+                    <div class="dropdown-desc">Consumer clarifications & additive safety</div>
                   </div>
                 </a>
               </div>
             </div>
 
-            <!-- Direct Link: Blinkit-Style Mobile App -->
-            <a href="app.html" class="nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 800; background: rgba(59, 122, 87, 0.08); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; border: 1px solid rgba(59, 122, 87, 0.25);">
-              <i data-lucide="smartphone" style="width: 0.95rem; height: 0.95rem;"></i> Web App
-            </a>
+            <!-- Column 3: Get the App -->
+            <div class="nav-dropdown-wrapper">
+              <span class="nav-link dropdown-trigger ${currentPath === 'download.html' || currentPath === 'app.html' || currentPath === 'dashboard.html' ? 'active' : ''}" style="color: #059669; font-weight: 800;">
+                <i data-lucide="smartphone" style="width: 0.95rem; height: 0.95rem;"></i> Get the App <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
+              </span>
+              <div class="dropdown-menu">
+                <a href="download.html" class="dropdown-item ${currentPath === 'download.html' ? 'active' : ''}" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px;">
+                  <div class="dropdown-icon-box" style="background: #10B981; color: #FFFFFF;"><i data-lucide="download"></i></div>
+                  <div>
+                    <div class="dropdown-title" style="color: #065F46; font-weight: 800;">Direct 1.29 MB APK <span style="font-size: 0.7rem; background: #10B981; color: #fff; padding: 1px 5px; border-radius: 4px; margin-left: 4px;">Android</span></div>
+                    <div class="dropdown-desc">Offline scanner container with local assets</div>
+                  </div>
+                </a>
+                <a href="app.html" class="dropdown-item ${currentPath === 'app.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="shopping-bag"></i></div>
+                  <div>
+                    <div class="dropdown-title">Blinkit-Style Grocery UI</div>
+                    <div class="dropdown-desc">Fast browser-based quick commerce scanner</div>
+                  </div>
+                </a>
+                <a href="dashboard.html" class="dropdown-item ${currentPath === 'dashboard.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="layout-dashboard"></i></div>
+                  <div>
+                    <div class="dropdown-title">Personal Audit & History</div>
+                    <div class="dropdown-desc">Scan telemetry records & clean swaps</div>
+                  </div>
+                </a>
+              </div>
+            </div>
 
-            <!-- Direct Link: Download APK -->
-            <a href="download.html" class="nav-link ${currentPath === 'download.html' ? 'active' : ''}" style="color: #059669; font-weight: 800; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-pill); padding: 0.35rem 0.85rem; border: 1px solid rgba(16, 185, 129, 0.35);" title="Download Android APK">
-              <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> Android APK
-            </a>
+            <!-- Column 4: About -->
+            <div class="nav-dropdown-wrapper">
+              <span class="nav-link dropdown-trigger ${currentPath === 'about.html' || currentPath === 'contact.html' || currentPath === 'report.html' || currentPath === 'sgp_report.html' ? 'active' : ''}">
+                <i data-lucide="info" style="width: 0.95rem; height: 0.95rem;"></i> About <i data-lucide="chevron-down" style="width: 0.85rem; height: 0.85rem;"></i>
+              </span>
+              <div class="dropdown-menu">
+                <a href="about.html" class="dropdown-item ${currentPath === 'about.html' || currentPath === 'contact.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="users"></i></div>
+                  <div>
+                    <div class="dropdown-title">Mission, Team & Contact</div>
+                    <div class="dropdown-desc">Student researchers, guide & inquiries</div>
+                  </div>
+                </a>
+                <a href="report.html" target="_blank" class="dropdown-item ${currentPath === 'report.html' || currentPath === 'sgp_report.html' ? 'active' : ''}">
+                  <div class="dropdown-icon-box"><i data-lucide="file-text"></i></div>
+                  <div>
+                    <div class="dropdown-title">Indus Academic Report</div>
+                    <div class="dropdown-desc">Print-ready Software Group Project thesis</div>
+                  </div>
+                </a>
+              </div>
+            </div>
 
-            <!-- Direct Link: Dashboard -->
-            <a href="dashboard.html" class="nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
-              <i data-lucide="layout-dashboard" style="width: 0.95rem; height: 0.95rem;"></i> Dashboard
+            <!-- Direct CTA: Download APK (Green Highlight) -->
+            <a href="download.html" class="btn btn-primary" style="height: 38px; padding: 0 1.1rem; font-size: 0.85rem; background: linear-gradient(135deg, #10B981, #059669); border-color: #059669; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);" title="Download Android APK (1.29 MB)">
+              <i data-lucide="download" style="width: 0.95rem; height: 0.95rem;"></i> Download APK
             </a>
-
-            <!-- Authentication Controls (Desktop) -->
-            ${authNavHTML}
 
           </nav>
         </div>
@@ -314,74 +322,63 @@ export function renderComponents() {
 
         <div class="mobile-drawer-content">
           
-          <a href="scanner-demo.html" class="btn btn-primary mobile-drawer-cta" style="height: 46px; width: 100%; margin-bottom: 1.25rem; font-size: 0.95rem;">
-            <i data-lucide="camera"></i> Launch Live Scanner
+          <a href="scan.html" class="btn btn-primary mobile-drawer-cta" style="height: 46px; width: 100%; margin-bottom: 1.25rem; font-size: 0.95rem; background: linear-gradient(135deg, #10B981, #059669); border-color: #059669;">
+            <i data-lucide="camera"></i> Launch Live Scanner (/scan)
           </a>
 
+          <!-- Group 1: Scan & Analyze -->
           <div class="mobile-nav-group">
-            <div class="mobile-nav-group-title">Navigation</div>
-            <a href="index.html" class="mobile-nav-link ${currentPath === 'index.html' || currentPath === '' ? 'active' : ''}">
-              <i data-lucide="home"></i> Home Overview
+            <div class="mobile-nav-group-title">Scan & Analyze</div>
+            <a href="scan.html" class="mobile-nav-link ${currentPath === 'scan.html' || currentPath === 'scanner-demo.html' ? 'active' : ''}">
+              <i data-lucide="camera"></i> /scan &bull; Live Camera OCR
             </a>
-            <a href="download.html" class="mobile-nav-link ${currentPath === 'download.html' ? 'active' : ''}" style="color: #059669; font-weight: 800;">
-              <i data-lucide="download"></i> Download Android App (.APK)
-            </a>
-            <a href="app.html" class="mobile-nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 700;">
-              <i data-lucide="smartphone"></i> Blinkit Web App
-            </a>
-            <a href="dashboard.html" class="mobile-nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
-              <i data-lucide="layout-dashboard"></i> Member Dashboard
-            </a>
-          </div>
-
-          <div class="mobile-nav-group">
-            <div class="mobile-nav-group-title">Scan & Telemetry Tools</div>
-            <a href="scanner-demo.html" class="mobile-nav-link ${currentPath === 'scanner-demo.html' ? 'active' : ''}">
-              <i data-lucide="camera"></i> Live Camera Scanner
-            </a>
-            <a href="additive-decoder.html" class="mobile-nav-link ${currentPath === 'additive-decoder.html' ? 'active' : ''}">
-              <i data-lucide="search"></i> INS Additive Decoder
+            <a href="additives.html" class="mobile-nav-link ${currentPath === 'additives.html' || currentPath === 'additive-decoder.html' ? 'active' : ''}">
+              <i data-lucide="search"></i> /additives &bull; 150+ INS Trie Search
             </a>
             <a href="compare.html" class="mobile-nav-link ${currentPath === 'compare.html' ? 'active' : ''}">
-              <i data-lucide="columns"></i> Food Comparison Tool
+              <i data-lucide="columns"></i> /compare &bull; Side-by-Side Matchup
             </a>
             <a href="snack-budget.html" class="mobile-nav-link ${currentPath === 'snack-budget.html' ? 'active' : ''}">
-              <i data-lucide="pie-chart"></i> Snack Budget Simulator
+              <i data-lucide="pie-chart"></i> /snack-budget &bull; UPF Daily Allowance
+            </a>
+            <a href="health-calculator.html" class="mobile-nav-link ${currentPath === 'health-calculator.html' || currentPath.includes('calculator') ? 'active' : ''}">
+              <i data-lucide="activity"></i> /health-calculator &bull; BMI + Calorie (Tabs)
             </a>
           </div>
 
+          <!-- Group 2: Learn -->
           <div class="mobile-nav-group">
-            <div class="mobile-nav-group-title">Health Calculators</div>
-            <a href="bmi-calculator.html" class="mobile-nav-link ${currentPath === 'bmi-calculator.html' ? 'active' : ''}">
-              <i data-lucide="activity"></i> BMI Calculator (Asian Cutoffs)
-            </a>
-            <a href="calorie-calculator.html" class="mobile-nav-link ${currentPath === 'calorie-calculator.html' ? 'active' : ''}">
-              <i data-lucide="flame"></i> Calorie & TDEE Calculator
-            </a>
-          </div>
-
-          <div class="mobile-nav-group">
-            <div class="mobile-nav-group-title">Learn & Science</div>
-            <a href="how-it-works.html" class="mobile-nav-link ${currentPath === 'how-it-works.html' ? 'active' : ''}">
-              <i data-lucide="sparkles"></i> How BiteLens Works
-            </a>
-            <a href="features.html" class="mobile-nav-link ${currentPath === 'features.html' ? 'active' : ''}">
-              <i data-lucide="scan-line"></i> Features Overview
-            </a>
-            <a href="science.html" class="mobile-nav-link ${currentPath === 'science.html' ? 'active' : ''}">
-              <i data-lucide="flask-conical"></i> NOVA & FSSAI Science
+            <div class="mobile-nav-group-title">Learn</div>
+            <a href="learn.html" class="mobile-nav-link ${currentPath === 'learn.html' || currentPath === 'how-it-works.html' || currentPath === 'science.html' ? 'active' : ''}">
+              <i data-lucide="sparkles"></i> /learn &bull; How It Works + Science
             </a>
             <a href="faq.html" class="mobile-nav-link ${currentPath === 'faq.html' ? 'active' : ''}">
-              <i data-lucide="help-circle"></i> Food Labeling FAQ
+              <i data-lucide="help-circle"></i> /faq &bull; Food Labeling Clarifications
             </a>
-            <a href="about.html" class="mobile-nav-link ${currentPath === 'about.html' ? 'active' : ''}">
-              <i data-lucide="user"></i> About Team & Mission
+          </div>
+
+          <!-- Group 3: Get the App -->
+          <div class="mobile-nav-group">
+            <div class="mobile-nav-group-title">Get the App</div>
+            <a href="download.html" class="mobile-nav-link ${currentPath === 'download.html' ? 'active' : ''}" style="color: #059669; font-weight: 800; background: rgba(16, 185, 129, 0.08); border-radius: 8px;">
+              <i data-lucide="download"></i> /download &bull; Direct 1.29 MB APK
             </a>
-            <a href="contact.html" class="mobile-nav-link ${currentPath === 'contact.html' ? 'active' : ''}">
-              <i data-lucide="mail"></i> Contact Us
+            <a href="app.html" class="mobile-nav-link ${currentPath === 'app.html' ? 'active' : ''}" style="color: var(--color-primary); font-weight: 700;">
+              <i data-lucide="shopping-bag"></i> /app &bull; Blinkit-Style Grocery UI
             </a>
-            <a href="sgp_report.html" target="_blank" class="mobile-nav-link">
-              <i data-lucide="file-text"></i> Indus SGP Project Report
+            <a href="dashboard.html" class="mobile-nav-link ${currentPath === 'dashboard.html' ? 'active' : ''}">
+              <i data-lucide="layout-dashboard"></i> /dashboard &bull; Personal Audit & History
+            </a>
+          </div>
+
+          <!-- Group 4: About -->
+          <div class="mobile-nav-group">
+            <div class="mobile-nav-group-title">About</div>
+            <a href="about.html" class="mobile-nav-link ${currentPath === 'about.html' || currentPath === 'contact.html' ? 'active' : ''}">
+              <i data-lucide="users"></i> /about &bull; Mission, Team & Contact
+            </a>
+            <a href="report.html" target="_blank" class="mobile-nav-link ${currentPath === 'report.html' || currentPath === 'sgp_report.html' ? 'active' : ''}">
+              <i data-lucide="file-text"></i> /report &bull; Indus Academic Report
             </a>
           </div>
 
@@ -450,44 +447,42 @@ export function renderComponents() {
             </div>
 
             <div>
-              <div class="footer-col-title">Navigation</div>
+              <div class="footer-col-title">Scan & Analyze</div>
               <ul class="footer-link-list">
-                <li><a href="index.html">Home Overview</a></li>
-                <li><a href="download.html" style="color: #34D399; font-weight: 700;">📲 Download Android (.APK)</a></li>
-                <li><a href="app.html">Blinkit Mobile Web App</a></li>
-                <li><a href="dashboard.html">Member Dashboard</a></li>
-                <li><a href="compare.html">Food Comparison</a></li>
-                <li><a href="how-it-works.html">How BiteLens Works</a></li>
-                <li><a href="about.html">About Team</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="scan.html">/scan &bull; Live Camera OCR</a></li>
+                <li><a href="additives.html">/additives &bull; 150+ INS Search</a></li>
+                <li><a href="compare.html">/compare &bull; Side-by-Side Matchup</a></li>
+                <li><a href="snack-budget.html">/snack-budget &bull; UPF Allowance</a></li>
+                <li><a href="health-calculator.html">/health-calculator &bull; BMI + Calorie</a></li>
               </ul>
             </div>
 
             <div>
-              <div class="footer-col-title">Calculators</div>
+              <div class="footer-col-title">Learn</div>
               <ul class="footer-link-list">
-                <li><a href="bmi-calculator.html">BMI Calculator</a></li>
-                <li><a href="calorie-calculator.html">Calorie Calculator</a></li>
-                <li><a href="snack-budget.html">Snack Budget Simulator</a></li>
+                <li><a href="learn.html">/learn &bull; How It Works + Science</a></li>
+                <li><a href="faq.html">/faq &bull; Labeling Clarifications</a></li>
+                <li><a href="learn.html#fssai">FSSAI Regulation Guidance</a></li>
+                <li><a href="learn.html#citations">Academic Research Citations</a></li>
               </ul>
             </div>
 
             <div>
-              <div class="footer-col-title">Analysis Tools</div>
+              <div class="footer-col-title">Get the App</div>
               <ul class="footer-link-list">
-                <li><a href="scanner-demo.html">Live Camera Scanner</a></li>
-                <li><a href="additive-decoder.html">INS Additive Decoder</a></li>
-                <li><a href="science.html">NOVA & FSSAI Matrix</a></li>
-                <li><a href="faq.html">Food Labeling FAQ</a></li>
+                <li><a href="download.html" style="color: #34D399; font-weight: 700;">/download &bull; Android APK (1.29 MB)</a></li>
+                <li><a href="app.html">/app &bull; Blinkit-Style Grocery UI</a></li>
+                <li><a href="dashboard.html">/dashboard &bull; Personal Audit & History</a></li>
               </ul>
             </div>
 
             <div>
-              <div class="footer-col-title">Academic & Legal</div>
+              <div class="footer-col-title">About</div>
               <ul class="footer-link-list">
-                <li><a href="sgp_report.html" target="_blank">Indus SGP Report (PDF)</a></li>
-                <li><span style="color: #64748B;">Version 2.4.0 (Go Microservice)</span></li>
-                <li><span style="color: #64748B;">DPDP Act Minor Protection</span></li>
+                <li><a href="about.html">/about &bull; Mission, Team & Contact</a></li>
+                <li><a href="report.html" target="_blank">/report &bull; Indus Academic Report</a></li>
+                <li><a href="about.html#contact">Send Feedback</a></li>
+                <li><span style="color: #64748B;">Version 2.4.0 (Go Gin Backend)</span></li>
               </ul>
             </div>
 
@@ -510,9 +505,9 @@ export function renderComponents() {
               © 2026 ${CONFIG.BRAND_NAME}. Built with Go (Golang) & Vite. All rights reserved.
             </div>
             <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-              <a href="sgp_report.html" target="_blank" style="color: #94A3B8; font-size: 0.85rem;">Indus University SGP Report</a>
-              <a href="about.html" style="color: #94A3B8; font-size: 0.85rem;">Project Credits</a>
-              <a href="contact.html" style="color: #94A3B8; font-size: 0.85rem;">Support</a>
+              <a href="report.html" target="_blank" style="color: #94A3B8; font-size: 0.85rem;">Indus University SGP Report</a>
+              <a href="about.html" style="color: #94A3B8; font-size: 0.85rem;">Project Credits & Team</a>
+              <a href="about.html#contact" style="color: #94A3B8; font-size: 0.85rem;">Contact & Feedback</a>
             </div>
           </div>
 

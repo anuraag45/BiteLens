@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INS Additive Search Decoder — BiteLens Food Telemetry</title>
+  <meta name="description" content="Search and decode 20+ INS and E-number food additive codes into plain language with FSSAI regulatory notes.">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+
+  <div id="site-header-container"></div>
+
+  <main>
+    <section class="hero" style="padding: 3.5rem 0 2rem 0;">
+      <div class="container hero-content" style="text-align: center;">
+        <h1 class="hero-title">INS Additive Search Decoder</h1>
+        <p class="hero-subtitle">
+          Type any INS code or chemical additive to reveal its plain-language explanation, functional class, and FSSAI regulatory status.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container" id="additive-decoder-app">
+        <!-- Injected dynamically via additive-database.js -->
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-container"></div>
+
+  <script type="module" src="./js/components.js"></script>
+  <script type="module" src="./js/additive-database.js"></script>
+</body>
+</html>

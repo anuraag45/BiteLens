@@ -7,6 +7,11 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        scan: resolve(__dirname, 'scan.html'),
+        additives: resolve(__dirname, 'additives.html'),
+        healthCalculator: resolve(__dirname, 'health-calculator.html'),
+        learn: resolve(__dirname, 'learn.html'),
+        report: resolve(__dirname, 'report.html'),
         features: resolve(__dirname, 'features.html'),
         howItWorks: resolve(__dirname, 'how-it-works.html'),
         bmiCalculator: resolve(__dirname, 'bmi-calculator.html'),

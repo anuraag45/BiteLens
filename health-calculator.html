@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Calculators — BMI & Calorie TDEE (Tabs) — BiteLens</title>
+  <meta name="description" content="Interactive health calculators: Body Mass Index (BMI) with South Asian cutoffs and Mifflin-St Jeor Calorie & TDEE expenditure.">
+  <link rel="stylesheet" href="./styles/main.css">
+  <style>
+    .calc-tabs-header {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      background: rgba(15, 23, 42, 0.05);
+      padding: 0.4rem;
+      border-radius: var(--radius-pill);
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid var(--color-border);
+    }
+    .calc-tab-btn {
+      flex: 1;
+      padding: 0.65rem 1.25rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      color: var(--color-text-muted);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .calc-tab-btn.active {
+      background: #FFFFFF;
+      color: var(--color-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .calc-tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .calc-tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-header-container"></div>
+
+  <main>
+    <section class="hero" style="padding: 3.5rem 0 2rem 0;">
+      <div class="container hero-content" style="text-align: center;">
+        <div class="hero-pill" style="margin-bottom: 1rem;">
+          <i data-lucide="activity"></i> Dual Metabolic Suite
+        </div>
+        <h1 class="hero-title">Health & Metabolic Calculators</h1>
+        <p class="hero-subtitle" style="max-width: 600px; margin: 0 auto;">
+          Calculate your Body Mass Index (with South Asian specific cutoffs) and estimate your resting & active caloric burn via the clinically validated Mifflin-St Jeor formula.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top: 1rem;">
+      <div class="container">
+
+        <!-- Tab Switcher Navigation -->
+        <div class="calc-tabs-header">
+          <button type="button" class="calc-tab-btn active" id="tab-btn-bmi" onclick="switchCalcTab('bmi')">
+            <i data-lucide="scale"></i> BMI Calculator
+          </button>
+          <button type="button" class="calc-tab-btn" id="tab-btn-calorie" onclick="switchCalcTab('calorie')">
+            <i data-lucide="flame"></i> Calorie & TDEE
+          </button>
+        </div>
+
+        <!-- TAB 1: BMI CALCULATOR -->
+        <div class="calc-tab-content active" id="tab-content-bmi">
+          <div class="calculator-card">
+            
+            <form id="bmi-form" onsubmit="return false;">
+              
+              <!-- Unit Toggles -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                  <label class="form-label">Weight Unit</label>
+                  <div class="toggle-group" id="weight-unit-toggle">
+                    <button type="button" class="toggle-btn active" data-unit="kg">Metric (kg)</button>
+                    <button type="button" class="toggle-btn" data-unit="lb">Imperial (lb)</button>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="form-label">Height Unit</label>
+                  <div class="toggle-group" id="height-unit-toggle">
+                    <button type="button" class="toggle-btn active" data-unit="cm">Centimeters (cm)</button>
+                    <button type="button" class="toggle-btn" data-unit="ftin">Feet & Inches</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Weight Input -->
+              <div class="form-group">
+                <label class="form-label" for="bmi-weight">Weight (<span id="weight-unit-label">KG</span>)</label>
+                <input type="number" id="bmi-weight" class="form-input" placeholder="e.g. 70" step="0.1" min="1" max="500" inputmode="decimal" required>
+              </div>
+
+              <!-- Height Inputs -->
+              <div class="form-group" id="height-cm-group">
+                <label class="form-label" for="bmi-height-cm">Height (cm)</label>
+                <input type="number" id="bmi-height-cm" class="form-input" placeholder="e.g. 175" step="0.1" min="30" max="300" inputmode="decimal">
+              </div>
+
+              <div class="form-group" id="height-ftin-group" style="display: none; gap: 1rem;">
+                <div style="flex: 1;">
+                  <label class="form-label" for="bmi-height-ft">Feet</label>
+                  <input type="number" id="bmi-height-ft" class="form-input" placeholder="5" min="1" max="8" inputmode="numeric">
+                </div>
+                <div style="flex: 1;">
+                  <label class="form-label" for="bmi-height-in">Inches</label>
+                  <input type="number" id="bmi-height-in" class="form-input" placeholder="9" min="0" max="11.9" step="0.1" inputmode="decimal">
+                </div>
+              </div>
+
+              <!-- Asian Cutoffs Toggle -->
+              <div class="form-group" style="margin-top: 1.5rem; background: var(--color-surface-alt); padding: 1rem; border-radius: var(--radius-sm);">
+                <label class="switch-label">
+                  <input type="checkbox" id="asian-cutoff-toggle" class="switch-input">
+                  <span>Use Asian-specific BMI cutoffs</span>
+                </label>
+                <p style="font-size: 0.83rem; margin-top: 0.4rem; color: var(--color-text-muted);">
+                  WHO Expert Consultations indicate that standard cutoffs may underestimate health risks for South Asian body compositions. Toggling this applies lower risk thresholds (e.g. Overweight from 23.0).
+                </p>
+              </div>
+
+            </form>
+
+            <!-- Inline Error -->
+            <div id="bmi-error" class="error-message"></div>
+
+            <!-- Result Display -->
+            <div id="bmi-result" class="result-box" style="display: none;">
+              <div style="font-size: 0.9rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Your Calculated BMI</div>
+              <div class="result-val" id="bmi-value">--</div>
+              <div class="badge" id="bmi-category-badge">Category</div>
+              <p id="bmi-explanation" style="font-size: 0.95rem; color: var(--color-text-main); font-weight: 500;"></p>
+            </div>
+
+            <!-- Screening Disclaimer -->
+            <div class="disclaimer-box">
+              <strong>Disclaimer:</strong> BMI is a general population screening measure, not a diagnostic medical tool. It does not directly differentiate between muscle mass, bone density, or fat distribution.
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 2: CALORIE & TDEE CALCULATOR -->
+        <div class="calc-tab-content" id="tab-content-calorie">
+          <div class="calculator-card">
+            
+            <form id="calorie-form" onsubmit="return false;">
+
+              <!-- Unit Toggles -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                  <label class="form-label">Weight Unit</label>
+                  <div class="toggle-group" id="cal-weight-unit">
+                    <button type="button" class="toggle-btn active" data-unit="kg">Metric (kg)</button>
+                    <button type="button" class="toggle-btn" data-unit="lb">Imperial (lb)</button>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="form-label">Height Unit</label>
+                  <div class="toggle-group" id="cal-height-unit">
+                    <button type="button" class="toggle-btn active" data-unit="cm">Centimeters (cm)</button>
+                    <button type="button" class="toggle-btn" data-unit="ftin">Feet & Inches</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sex & Age -->
+              <div class="grid-2" style="margin-bottom: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="cal-sex">Biological Sex</label>
+                  <select id="cal-sex" class="form-select">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  <p style="font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.3rem;">
+                    *Required for physiological metabolic equation.
+                  </p>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="cal-age">Age (years)</label>
+                  <input type="number" id="cal-age" class="form-input" placeholder="e.g. 30" min="15" max="110" inputmode="numeric" required>
+                </div>
+              </div>
+
+              <!-- Weight & Height -->
+              <div class="grid-2" style="margin-bottom: 1rem;">
+                <div class="form-group">
+                  <label class="form-label" for="cal-weight">Weight (<span id="cal-weight-unit-label">KG</span>)</label>
+                  <input type="number" id="cal-weight" class="form-input" placeholder="e.g. 70" step="0.1" min="1" max="500" inputmode="decimal" required>
+                </div>
+
+                <div class="form-group" id="cal-height-cm-group">
+                  <label class="form-label" for="cal-height-cm">Height (cm)</label>
+                  <input type="number" id="cal-height-cm" class="form-input" placeholder="e.g. 175" step="0.1" min="30" max="300" inputmode="decimal">
+                </div>
+
+                <div class="form-group" id="cal-height-ftin-group" style="display: none; gap: 0.5rem;">
+                  <div style="flex: 1;">
+                    <label class="form-label" for="cal-height-ft">Feet</label>
+                    <input type="number" id="cal-height-ft" class="form-input" placeholder="5" min="1" max="8" inputmode="numeric">
+                  </div>
+                  <div style="flex: 1;">
+                    <label class="form-label" for="cal-height-in">Inches</label>
+                    <input type="number" id="cal-height-in" class="form-input" placeholder="9" min="0" max="11.9" step="0.1" inputmode="decimal">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Activity Level -->
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" for="cal-activity">Physical Activity Level</label>
+                <select id="cal-activity" class="form-select">
+                  <option value="sedentary">Sedentary (desk job, little to no exercise)</option>
+                  <option value="light">Lightly Active (light exercise 1–3 days/week)</option>
+                  <option value="moderate" selected>Moderately Active (moderate exercise 3–5 days/week)</option>
+                  <option value="very_active">Very Active (hard exercise 6–7 days/week)</option>
+                  <option value="extra_active">Extremely Active (hard daily training / physical job)</option>
+                </select>
+              </div>
+
+              <!-- Target Goal -->
+              <div class="form-group">
+                <label class="form-label" for="cal-goal">Target Nutrition Goal</label>
+                <select id="cal-goal" class="form-select">
+                  <option value="maintain">Maintain Current Weight</option>
+                  <option value="deficit">Mild Fat Loss Deficit (-500 kcal/day)</option>
+                  <option value="surplus">Muscle Building Surplus (+300 kcal/day)</option>
+                </select>
+              </div>
+
+            </form>
+
+            <div id="cal-error" class="error-message"></div>
+
+            <!-- Calorie Result Container -->
+            <div id="cal-result" class="result-box" style="display: none;">
+              <div style="font-size: 0.9rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Estimated Daily Energy Expenditure</div>
+              <div class="result-val" id="tdee-value">--</div>
+              <div style="font-size: 0.95rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: 0.75rem;">Calories / Day (TDEE)</div>
+
+              <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 1rem; flex-wrap: wrap;">
+                <div>
+                  <span style="font-size: 0.8rem; color: var(--color-text-muted);">Basal Metabolic Rate (BMR):</span>
+                  <div style="font-size: 1.15rem; font-weight: 800; color: var(--color-primary);" id="bmr-value">-- kcal</div>
+                </div>
+                <div id="goal-calories-group">
+                  <span style="font-size: 0.8rem; color: var(--color-text-muted);">Goal Target Intake:</span>
+                  <div style="font-size: 1.15rem; font-weight: 800; color: #10B981;" id="goal-cal-value">-- kcal</div>
+                </div>
+              </div>
+
+              <!-- Suggested Macro Distribution -->
+              <div style="margin-top: 1.25rem; background: var(--color-surface); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+                <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--color-text-main);">Suggested Daily Macronutrient Target:</div>
+                <div style="display: flex; justify-content: space-around; text-align: center; font-size: 0.85rem;">
+                  <div>
+                    <div style="color: var(--color-text-muted);">Protein (30%)</div>
+                    <div style="font-weight: 700; font-size: 1rem; color: #3B82F6;" id="macro-protein">--g</div>
+                  </div>
+                  <div>
+                    <div style="color: var(--color-text-muted);">Fat (25%)</div>
+                    <div style="font-weight: 700; font-size: 1rem; color: #F59E0B;" id="macro-fat">--g</div>
+                  </div>
+                  <div>
+                    <div style="color: var(--color-text-muted);">Carbs (45%)</div>
+                    <div style="font-weight: 700; font-size: 1rem; color: #10B981;" id="macro-carb">--g</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer-box">
+              <strong>Disclaimer:</strong> Caloric expenditure models are estimates based on standardized population regression formulas (Mifflin-St Jeor, 1990). Individual metabolism varies based on hormonal profile, genetics, and lean muscle mass.
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-container"></div>
+
+  <script type="module" src="./js/components.js"></script>
+  <script type="module" src="./js/calculators.js"></script>
+  <script>
+    function switchCalcTab(tab) {
+      document.querySelectorAll('.calc-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.calc-tab-content').forEach(c => c.classList.remove('active'));
+
+      if (tab === 'bmi') {
+        document.getElementById('tab-btn-bmi').classList.add('active');
+        document.getElementById('tab-content-bmi').classList.add('active');
+      } else {
+        document.getElementById('tab-btn-calorie').classList.add('active');
+        document.getElementById('tab-content-calorie').classList.add('active');
+      }
+    }
+
+    // Auto-switch tab if URL has hash (e.g. #calorie or #bmi)
+    if (window.location.hash === '#calorie' || window.location.hash === '#tdee') {
+      switchCalcTab('calorie');
+    }
+  </script>
+</body>
+</html>

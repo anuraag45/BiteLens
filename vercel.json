@@ -5,6 +5,14 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/login(.*)", "destination": "/app", "permanent": false },
-    { "source": "/signup(.*)", "destination": "/app", "permanent": false }
+    { "source": "/signup(.*)", "destination": "/app", "permanent": false },
+    { "source": "/scanner-demo", "destination": "/scan", "permanent": false },
+    { "source": "/additive-decoder", "destination": "/additives", "permanent": false },
+    { "source": "/bmi-calculator", "destination": "/health-calculator", "permanent": false },
+    { "source": "/calorie-calculator", "destination": "/health-calculator", "permanent": false },
+    { "source": "/how-it-works", "destination": "/learn", "permanent": false },
+    { "source": "/science", "destination": "/learn", "permanent": false },
+    { "source": "/contact", "destination": "/about", "permanent": false },
+    { "source": "/sgp_report", "destination": "/report", "permanent": false }
   ]
 }
