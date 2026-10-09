@@ -3,7 +3,6 @@
    ========================================================================== */
 
 import { getUserSession } from './auth.js';
-import { scanAPI } from './api.js';
 
 const MOCK_SCAN_HISTORY = [
   { id: 1, name: "Roasted Masala Makhana", cat: "Indian Snack", nova: 2, healthScore: 92, goalScore: 90, date: "Today, 11:30 AM", hash: "a7b3...f912" },

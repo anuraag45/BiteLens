@@ -118,13 +118,18 @@ func TestEmpirical_Product_HardDelete_Cascades_ScanHistory(t *testing.T) {
 // TestEmpirical_InitDB_SQLite_Missing_PRAGMA_Foreign_Keys demonstrates that InitDB does NOT enable PRAGMA foreign_keys for SQLite.
 func TestEmpirical_InitDB_SQLite_Missing_PRAGMA_Foreign_Keys(t *testing.T) {
 	tempDBFile := "test_fk_temp.db"
-	defer os.Remove(tempDBFile)
 
 	// Initialize DB via InitDB
 	dbHandle, err := db.InitDB(tempDBFile)
 	if err != nil {
 		t.Fatalf("InitDB failed: %v", err)
 	}
+	defer func() {
+		if sqlDB, err := dbHandle.DB(); err == nil {
+			sqlDB.Close()
+		}
+		os.Remove(tempDBFile)
+	}()
 	if err := db.AutoMigrate(dbHandle); err != nil {
 		t.Fatalf("AutoMigrate failed: %v", err)
 	}

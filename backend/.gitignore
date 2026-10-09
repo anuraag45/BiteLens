@@ -1,4 +1,4 @@
 api.exe
-api
+/api
 *.db
 *.db-journal

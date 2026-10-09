@@ -120,7 +120,7 @@ function renderComparison(data) {
   document.getElementById('verdict-prod-a').innerHTML = prodA.verdict;
 
   // Render Product B
-  document.getElementById('name-prod-b').textContent = prodA.name === prodB.name ? prodB.name : prodB.name;
+  document.getElementById('name-prod-b').textContent = prodB.name;
   document.getElementById('cat-prod-b').textContent = prodB.cat;
   document.getElementById('icon-prod-b').textContent = prodB.icon;
   document.getElementById('health-prod-b').textContent = `${prodB.healthScore}/100`;

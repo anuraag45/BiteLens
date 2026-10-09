@@ -36,7 +36,7 @@ export async function loginUser(email, password, goal = 'Fat Loss Deficit') {
   if (!validateEmail(cleanEmail)) {
     throw new Error("Please enter a valid email address.");
   }
-  if (!password || password.length < 6) {
+  if (!validatePassword(password)) {
     throw new Error("Password must be at least 6 characters.");
   }
 
@@ -73,9 +73,8 @@ export async function registerUser(data) {
   if (!validateEmail(cleanEmail)) {
     throw new Error("Please enter a valid email address.");
   }
-  const passCheck = validatePassword(data.password);
-  if (!passCheck.isValid) {
-    throw new Error(passCheck.message);
+  if (!validatePassword(data.password)) {
+    throw new Error("Password must be at least 6 characters.");
   }
 
   const birthDate = data.birthDate || "2000-01-01";
@@ -115,90 +114,4 @@ export async function registerUser(data) {
 export async function logoutUser() {
   await authAPI.logout();
   clearUserSession();
-}
-
-export function initAuthForms() {
-  const loginForm = document.getElementById('login-form');
-  const signupForm = document.getElementById('signup-form');
-  const googleBtn = document.getElementById('google-login-btn') || document.getElementById('google-auth-btn');
-
-  if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const emailInput = document.getElementById('login-email') || document.getElementById('email');
-      const passInput = document.getElementById('login-password') || document.getElementById('password');
-      const goalInput = document.getElementById('login-goal');
-      const errBox = document.getElementById('auth-error');
-
-      try {
-        if (errBox) errBox.style.display = 'none';
-        const email = emailInput ? emailInput.value : '';
-        const pass = passInput ? passInput.value : '';
-        const goal = goalInput ? goalInput.value : 'Fat Loss Deficit';
-
-        await loginUser(email, pass, goal);
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        if (errBox) {
-          errBox.textContent = err.message;
-          errBox.style.display = 'block';
-        }
-      }
-    });
-  }
-
-  if (signupForm) {
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nameInput = document.getElementById('signup-name') || document.getElementById('name');
-      const emailInput = document.getElementById('signup-email') || document.getElementById('email');
-      const passInput = document.getElementById('signup-password') || document.getElementById('password');
-      const goalInput = document.getElementById('signup-goal');
-      const errBox = document.getElementById('auth-error');
-
-      try {
-        if (errBox) errBox.style.display = 'none';
-        const name = nameInput ? nameInput.value : '';
-        const email = emailInput ? emailInput.value : '';
-        const pass = passInput ? passInput.value : '';
-        const goal = goalInput ? goalInput.value : 'Fat Loss Deficit';
-
-        await registerUser({
-          fullName: name,
-          email: email,
-          password: pass,
-          weightGoal: goal,
-          muscleGoal: "High Protein"
-        });
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        if (errBox) {
-          errBox.textContent = err.message;
-          errBox.style.display = 'block';
-        }
-      }
-    });
-  }
-
-  if (googleBtn) {
-    googleBtn.addEventListener('click', async () => {
-      const mockGoogleUser = {
-        id: "g-user-" + Date.now(),
-        email: "google.user@example.com",
-        fullName: "Google Health Member",
-        avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=bitelens",
-        authProvider: "google",
-        weightGoal: "Fat Loss Deficit",
-        muscleGoal: "High Protein",
-        isMinor: false,
-        createdAt: new Date().toISOString()
-      };
-      setUserSession(mockGoogleUser);
-      window.location.href = 'dashboard.html';
-    });
-  }
-}
-
-if (typeof document !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', initAuthForms);
 }

@@ -35,8 +35,6 @@ import {
   ArrowRight,
   ShieldAlert,
   LogOut,
-  LogIn,
-  UserPlus,
   Eye,
   Columns,
   LayoutDashboard,
@@ -528,8 +526,8 @@ export function renderComponents() {
     icons: {
       ScanLine, Sparkles, ShieldCheck, Target, Activity, Flame, FlaskConical,
       Database, User, Mail, ChevronDown, Menu, Info, CheckCircle2, Cpu,
-      Search, PieChart, HelpCircle, ArrowRight, ShieldAlert, LogOut, LogIn,
-      UserPlus, Eye, Columns, LayoutDashboard, Camera, View, UploadCloud,
+      Search, PieChart, HelpCircle, ArrowRight, ShieldAlert, LogOut,
+      Eye, Columns, LayoutDashboard, Camera, View, UploadCloud,
       RefreshCw, Scan, History, Barcode, AlertTriangle, UserCheck, BookOpen,
       FileText, ArrowLeft, ChevronLeft, Home, Smartphone, Download, X
     }

@@ -70,16 +70,31 @@ func TestInitDBFallback(t *testing.T) {
 	if err := fallbackDB.AutoMigrate(&models.User{}); err != nil {
 		t.Fatalf("Failed to AutoMigrate fallback DB: %v", err)
 	}
+
+	defer func() {
+		if sqlDB, err := fallbackDB.DB(); err == nil {
+			sqlDB.Close()
+		}
+		if sqlDB, err := defaultDB.DB(); err == nil {
+			sqlDB.Close()
+		}
+		os.Remove("app.db")
+	}()
 }
 
 func TestInitDBSQLitePragma(t *testing.T) {
 	tempDBFile := "test_pragma_init.db"
-	defer os.Remove(tempDBFile)
 
 	dbHandle, err := db.InitDB(tempDBFile)
 	if err != nil {
 		t.Fatalf("InitDB failed: %v", err)
 	}
+	defer func() {
+		if sqlDB, err := dbHandle.DB(); err == nil {
+			sqlDB.Close()
+		}
+		os.Remove(tempDBFile)
+	}()
 
 	var fkStatus int
 	if err := dbHandle.Raw("PRAGMA foreign_keys;").Scan(&fkStatus).Error; err != nil {
