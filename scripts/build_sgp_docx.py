@@ -686,7 +686,7 @@ def generate_report_docx(template_path, output_path):
         ["Route / View", "HTML Artifact", "Visual UI Layout & Interactive Functionality"],
         [
             ["Home Showcase", "index.html", "Interactive smartphone scanner mockup with live food presets (Oats Crisp, Greek Yogurt, Makhana), animated scan beams, and dual score badges."],
-            ["Scanner Studio", "scanner-demo.html", "Interactive label analysis simulator displaying camera viewport, live OCR text extraction stream, and real-time decoded additive breakdown."],
+            ["Scanner Studio", "scan.html", "Interactive label analysis simulator displaying camera viewport, live OCR text extraction stream, and real-time decoded additive breakdown."],
             ["Telemetry Lab", "how-it-works.html", "Interactive 4-step walkthrough lab allowing users to inspect camera OCR tokens, compare raw vs decoded labels, examine NOVA group tiers, and simulate goal trade-offs."],
             ["HUD Decoder", "additive-decoder.html", "Futuristic search workbench featuring debounced live lookup, category filters, and regulatory safety status badges."],
             ["Product Compare", "compare.html", "Side-by-side nutritional telemetry comparison tool evaluating two packaged items across NOVA rating, calorie density, and Goal Fit."],

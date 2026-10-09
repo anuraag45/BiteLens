@@ -32,7 +32,7 @@ The following matrix provides a verifiable breakdown of individual contributions
 | **INS Fuzzy Regex Tokenizer** | Harshil Mehta | Pinak Pipaliya | `handlers/scan.go` (`NormalizeINSTokens`), `models/additive.go` |
 | **Dual-Scoring Telemetry Math** | Harshil Mehta | Anuraag Sharma | `internal/telemetry/telemetry.go`, `verify_math.js` |
 | **Frontend Design System & UI** | Pinak Pipaliya | Vedant Kundaliya | `styles/*.css`, `index.html`, `features.html`, `how-it-works.html` |
-| **Interactive Telemetry Lab HUD** | Pinak Pipaliya | Harshil Mehta | `additive-decoder.html`, `scanner-demo.html`, `compare.html` |
+| **Interactive Telemetry Lab HUD** | Pinak Pipaliya | Harshil Mehta | `additives.html`, `scan.html`, `compare.html` |
 | **Nutritional Calculators** | Pinak Pipaliya | Harshil Mehta | `bmi-calculator.html`, `calorie-calculator.html`, `js/calculators.js` |
 | **Android APK Container & Build** | Vedant Kundaliya | Pinak Pipaliya | `android/*`, `dist/downloads/bitelens.apk`, `download.html` |
 | **Unit & Integration Test Suites** | Vedant Kundaliya | Anuraag Sharma | `backend/*/*_test.go` (28 test suites across all 7 packages) |

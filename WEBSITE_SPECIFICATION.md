@@ -458,7 +458,6 @@ The platform is configured with production routing rules in `vercel.json` to gua
   "redirects": [
     { "source": "/login(.*)", "destination": "/app", "permanent": false },
     { "source": "/signup(.*)", "destination": "/app", "permanent": false },
-    { "source": "/scanner-demo", "destination": "/scan", "permanent": false },
     { "source": "/additive-decoder", "destination": "/additives", "permanent": false },
     { "source": "/bmi-calculator", "destination": "/health-calculator", "permanent": false },
     { "source": "/calorie-calculator", "destination": "/health-calculator", "permanent": false },
@@ -471,7 +470,7 @@ The platform is configured with production routing rules in `vercel.json` to gua
 ```
 * `"cleanUrls": true`: Strips `.html` extensions from all URLs in the browser bar, delivering clean RESTful paths (e.g., `/scan` instead of `/scan.html`).
 * `"trailingSlash": false`: Normalizes trailing slashes, preventing duplicate indexing across search engines.
-* Legacy 307 redirects ensure that older academic links (such as `/how-it-works` or `/scanner-demo`) redirect seamlessly to their consolidated locations.
+* Legacy 307 redirects ensure that older academic links (such as `/how-it-works`) redirect seamlessly to their consolidated locations.
 
 ---
 
@@ -507,7 +506,7 @@ The platform is configured with production routing rules in `vercel.json` to gua
 * **FSSAI Status Badging:** Renders statutory FSSAI regulatory status alongside objective scientific evidence concerns, avoiding conflation of regulatory legality with health impact.
 * **DOM Mounting:** Injects the interactive search bar, category filter pills, risk summary counts, and dynamic additive cards directly into `#additive-decoder-app`.
 
-### 6.5 `js/scanner-demo.js`
+### 6.5 `js/hero-scanner.js`
 * **File Purpose & Role:** The interactive scanner showcase controller managing optical analysis demonstrations on `/index`.
 * **Preset Grocery Items:** Includes pre-loaded grocery packages (Kurkure, Oats, Noodles, Makhana) linked to the unified products catalog.
 * **Additive Extraction:** Uses token normalization and the INS normalizer to detect INS codes and display transparent BiteLens score breakdowns.
@@ -755,7 +754,7 @@ The build process is managed by an automated PowerShell script that compiles the
 │   ├── data-structures.js                     # Custom Trie, LRU Cache, Ring Buffer & INS Normalizer
 │   ├── landing.js                             # Scroll-driven label decoder & WhatsApp share card
 │   ├── scan-studio.js                         # Optical OCR bounding box overlays & camera studio
-│   ├── scanner-demo.js                        # Unified interactive scanner showcase controller
+│   ├── hero-scanner.js                        # Unified interactive scanner showcase controller
 │   ├── security.js                            # Input sanitization & XSS prevention utilities (DOMPurify)
 │   ├── swaps.js                               # Single consolidated clean swap recommendation engine
 │   ├── telemetry-lab.js                       # 4-step interactive telemetry walkthrough engine

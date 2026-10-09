@@ -280,7 +280,7 @@ BiteLens utilizes a decoupled, three-tier client-server architecture ensuring hi
 
 The BiteLens frontend comprises 14 dedicated routes compiled via Vite, featuring elevated white card surfaces, soft drop shadows, and Lucide vector icons:
 1. **Home Interactive Showcase (`index.html`):** Features an interactive smartphone scanner mockup with live food sample presets (Oats Crisp, Greek Yogurt, Roasted Makhana), animated scan beams, and dual score badges.
-2. **Scanner Demonstration Studio (`scanner-demo.html`):** Interactive label analysis simulator displaying camera viewport, live OCR text extraction stream, and real-time decoded additive breakdown.
+2. **Optical Label Scanner (`scan.html`):** Interactive label analysis studio displaying camera viewport, live OCR text extraction stream, and real-time decoded additive breakdown.
 3. **Telemetry Laboratory (`how-it-works.html`):** An interactive 4-step walkthrough lab allowing users to inspect camera OCR tokens, compare raw vs decoded labels, examine NOVA group tiers, and simulate goal trade-offs.
 4. **HUD Additive Decoder (`additive-decoder.html`):** Search workbench featuring real-time debounce searching, category filtering (preservatives, colors, sweeteners, emulsifiers), and regulatory safety status indicators.
 5. **Product Comparison Matrix (`compare.html`):** Side-by-side nutritional telemetry comparison tool evaluating two packaged items across NOVA rating, calorie density, and Goal Fit.

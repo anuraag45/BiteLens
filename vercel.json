@@ -4,7 +4,6 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/scanner-demo", "destination": "/scan", "permanent": true },
     { "source": "/additive-decoder", "destination": "/additives", "permanent": true },
     { "source": "/bmi-calculator", "destination": "/health-calculator#bmi", "permanent": true },
     { "source": "/calorie-calculator", "destination": "/health-calculator#calorie", "permanent": true },
