@@ -3,165 +3,225 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Label Scanner Studio — BiteLens</title>
-  <meta name="description" content="Use your camera or upload a food packaging label to decode INS additives and get instant NOVA Health and Goal Fit scores.">
+  <title>Live Label Scanner & Telemetry Studio — BiteLens</title>
+  <meta name="description" content="Capture food packaging labels or barcodes to decode INS additives with real OCR bounding box overlays, FSSAI regulatory status, and transparent BiteLens scores.">
   <link rel="stylesheet" href="./styles/main.css">
+  <link rel="manifest" href="./manifest.json">
 </head>
 <body>
-  <div id="bitelens-splash-screen"></div>
+
+  <!-- Shared Navigation Mount -->
   <div id="site-header-container"></div>
 
   <main>
-    <section class="section">
+    <section class="section" style="padding-top: 2rem;">
       <div class="container">
         
-        <div class="section-header">
+        <div class="section-header" style="margin-bottom: 1.75rem;">
           <div class="hero-pill">
-            <i data-lucide="camera"></i> Live Optical Scanner Studio
+            <i data-lucide="camera"></i> Optical Character Recognition & Barcode Studio
           </div>
-          <h1 class="section-title">Scan Any Food Label in Real-Time</h1>
+          <h1 class="section-title">Optical Label Scanner Studio</h1>
           <p class="section-subtitle">
-            Point your camera at the ingredients list on the back of any packaged food, or upload a photo to decode hidden INS additives and compute instant processing scores.
+            Point your camera at the ingredients list, upload a label photo, or scan a barcode to decode hidden INS additives and calculate transparent BiteLens scores.
           </p>
         </div>
 
-        <!-- Interactive Scanner Studio Layout -->
+        <!-- Scanner Studio Master Grid -->
         <div class="scanner-studio-grid">
           
-          <!-- Left Column: Camera Viewport / Upload Controls -->
+          <!-- LEFT COLUMN: Optical Viewfinder & Input Controls -->
           <div class="card hud-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem;">
-              <h3 style="font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <i data-lucide="view" style="color: var(--color-primary);"></i> Optical Viewfinder
+            
+            <!-- Viewfinder Mode Switcher Tabs -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+              <h3 style="font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 0.4rem;">
+                <i data-lucide="view" style="color: var(--color-primary);"></i> Viewfinder
               </h3>
-              <div class="toggle-group" style="max-width: 220px;">
+              <div class="toggle-group" style="max-width: 360px;">
                 <button type="button" class="toggle-btn active" id="mode-camera-btn">📷 Camera</button>
-                <button type="button" class="toggle-btn" id="mode-upload-btn">📁 Upload</button>
+                <button type="button" class="toggle-btn" id="mode-upload-btn">📁 Photo</button>
+                <button type="button" class="toggle-btn" id="mode-barcode-btn">📶 Barcode</button>
+                <button type="button" class="toggle-btn" id="mode-lab-btn">🔬 Lab</button>
               </div>
             </div>
 
-            <!-- Live Camera Viewport -->
-            <div id="camera-viewport-container" style="position: relative; background: #0F172A; border-radius: var(--radius-md); overflow: hidden; min-height: 320px; display: flex; align-items: center; justify-content: center; border: 2px solid #334155;">
-              <video id="scanner-video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-              <canvas id="scanner-canvas" style="display: none;"></canvas>
-              
-              <!-- Reticle Viewfinder Overlay -->
-              <div class="hud-reticle-overlay" style="position: absolute; inset: 20px; border: 2px dashed rgba(59, 122, 87, 0.7); border-radius: 12px; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between;">
-                <div style="display: flex; justify-content: space-between; padding: 6px;">
-                  <span style="width: 16px; height: 16px; border-top: 3px solid var(--color-primary); border-left: 3px solid var(--color-primary);"></span>
-                  <span style="width: 16px; height: 16px; border-top: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary);"></span>
+            <!-- 1. Live Camera Viewport Section -->
+            <div id="camera-viewport-section">
+              <div style="position: relative; background: #0F172A; border-radius: var(--radius-md); overflow: hidden; min-height: 320px; display: flex; align-items: center; justify-content: center; border: 2px solid #334155;">
+                <video id="camera-stream-video" autoplay playsinline style="width: 100%; height: 100%; min-height: 320px; object-fit: cover;"></video>
+                
+                <!-- Reticle Retinal Targeting Box -->
+                <div class="hud-reticle-overlay" style="position: absolute; inset: 24px; border: 2px dashed rgba(59, 122, 87, 0.75); border-radius: 12px; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div style="display: flex; justify-content: space-between; padding: 6px;">
+                    <span style="width: 16px; height: 16px; border-top: 3px solid var(--color-primary); border-left: 3px solid var(--color-primary);"></span>
+                    <span style="width: 16px; height: 16px; border-top: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary);"></span>
+                  </div>
+                  <div style="text-align: center; color: rgba(255,255,255,0.85); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(15, 23, 42, 0.75); padding: 4px 8px; border-radius: 6px; align-self: center;">
+                    Align Back-of-Pack Ingredients Inside Box
+                  </div>
+                  <div style="display: flex; justify-content: space-between; padding: 6px;">
+                    <span style="width: 16px; height: 16px; border-bottom: 3px solid var(--color-primary); border-left: 3px solid var(--color-primary);"></span>
+                    <span style="width: 16px; height: 16px; border-bottom: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary);"></span>
+                  </div>
                 </div>
-                <div style="text-align: center; color: rgba(255,255,255,0.75); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(15, 23, 42, 0.7); padding: 4px 8px; border-radius: 6px; align-self: center;">
-                  Align Ingredients Box Inside Reticle
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 6px;">
-                  <span style="width: 16px; height: 16px; border-bottom: 3px solid var(--color-primary); border-left: 3px solid var(--color-primary);"></span>
-                  <span style="width: 16px; height: 16px; border-bottom: 3px solid var(--color-primary); border-right: 3px solid var(--color-primary);"></span>
-                </div>
+
+                <div class="cyber-scan-beam" id="active-scan-beam"></div>
               </div>
 
-              <!-- Animated Scan Beam -->
-              <div class="cyber-scan-beam" id="active-scan-beam"></div>
-            </div>
-
-            <!-- Upload Dropzone (Hidden by Default) -->
-            <div id="upload-dropzone-container" style="display: none; border: 2px dashed var(--color-border); border-radius: var(--radius-md); padding: 3rem 1.5rem; text-align: center; background: #FAF8F5; cursor: pointer;">
-              <div class="icon-badge" style="margin: 0 auto 1rem auto;">
-                <i data-lucide="upload-cloud"></i>
+              <!-- Camera Controls -->
+              <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                <button type="button" class="btn btn-primary" id="snap-photo-btn" style="flex: 1; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                  <i data-lucide="camera"></i> Snapshot & Run OCR
+                </button>
+                <button type="button" class="btn btn-outline" id="switch-cam-btn" title="Flip Camera" style="height: 44px; width: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center;">
+                  <i data-lucide="refresh-cw"></i>
+                </button>
               </div>
-              <h4 style="margin-bottom: 0.25rem;">Drop label photo here, or click to browse</h4>
-              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Supports JPG, PNG, WEBP from your phone or computer</p>
-              <input type="file" id="label-file-input" accept="image/*" style="display: none;">
-              <button type="button" class="btn btn-outline" onclick="document.getElementById('label-file-input').click()">
-                Select Photo File
-              </button>
             </div>
 
-            <!-- Action Controls -->
-            <div style="display: flex; gap: 0.75rem; margin-top: 1.25rem;">
-              <button type="button" class="btn btn-primary" id="capture-scan-btn" style="flex: 1;">
-                <i data-lucide="scan"></i> Capture & Decode Label
-              </button>
-              <button type="button" class="btn btn-outline" id="toggle-camera-btn" title="Switch Camera">
-                <i data-lucide="refresh-cw"></i>
-              </button>
+            <!-- 2. Photo Upload Dropzone Section (Hidden by default) -->
+            <div id="upload-dropzone-section" style="display: none;">
+              <div style="border: 2px dashed var(--color-border); border-radius: var(--radius-md); padding: 3rem 1.5rem; text-align: center; background: #FAF8F5; cursor: pointer;" onclick="document.getElementById('label-file-input').click()">
+                <div class="icon-badge" style="margin: 0 auto 1rem auto;"><i data-lucide="upload-cloud"></i></div>
+                <h4 style="margin-bottom: 0.25rem;">Drop your label photo here, or browse</h4>
+                <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.25rem;">Supports JPG, PNG, WEBP from your camera or files</p>
+                <input type="file" id="label-file-input" accept="image/*" style="display: none;">
+                <button type="button" class="btn btn-outline">Select Food Label Image</button>
+              </div>
             </div>
 
-            <!-- Sample Preset Shortcuts -->
+            <!-- 3. Barcode Scanner Section (Hidden by default) -->
+            <div id="barcode-scanner-section" style="display: none;">
+              <div id="barcode-reader-region" style="width: 100%; border-radius: var(--radius-md); overflow: hidden; background: #0F172A; min-height: 280px;"></div>
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); text-align: center; margin-top: 0.5rem;">
+                Align product barcode within frame. Cross-references local catalog & Open Food Facts.
+              </p>
+            </div>
+
+            <!-- 4. Guided Lab Mode Section (Hidden by default) -->
+            <div id="guided-lab-section" style="display: none;">
+              <div style="display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline lab-step-trigger active" style="font-size: 0.78rem; height: 32px; padding: 0 0.6rem;">1. Reticle</button>
+                <button type="button" class="btn btn-outline lab-step-trigger" style="font-size: 0.78rem; height: 32px; padding: 0 0.6rem;">2. Confusion Map</button>
+                <button type="button" class="btn btn-outline lab-step-trigger" style="font-size: 0.78rem; height: 32px; padding: 0 0.6rem;">3. FSSAI Rules</button>
+                <button type="button" class="btn btn-outline lab-step-trigger" style="font-size: 0.78rem; height: 32px; padding: 0 0.6rem;">4. Aggregation</button>
+              </div>
+              <div id="lab-step-content" style="background: #FAF8F5; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--color-border); font-size: 0.85rem;">
+                <h4>Stage 1: Optical Tokenization</h4>
+                <p style="margin: 0; color: var(--color-text-muted);">High-resolution edge detection isolates bounding reticles around back-of-pack ingredients text boxes.</p>
+              </div>
+            </div>
+
+            <!-- Real OCR Progress Bar -->
+            <div id="ocr-progress-container" style="display: none; margin-top: 1rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.35rem;">
+                <span id="ocr-progress-text">Running Optical Character Recognition...</span>
+              </div>
+              <div style="background: #E2E8F0; height: 6px; border-radius: 99px; overflow: hidden;">
+                <div id="ocr-progress-bar" style="width: 0%; height: 100%; background: var(--color-primary); transition: width 0.2s ease;"></div>
+              </div>
+            </div>
+
+            <!-- Annotated Image Canvas Container with Bounding Boxes -->
+            <div id="annotated-image-container" style="display: none; margin-top: 1.25rem;"></div>
+
+            <!-- Preset Shortcut Chips -->
             <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--color-border);">
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
-                Or test with sample product labels:
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+                Or test with verified food labels:
               </div>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <button type="button" class="btn btn-outline" style="height: 32px; font-size: 0.8rem; padding: 0 0.75rem;" data-sample-test="oats">🥣 Oats Crisp</button>
-                <button type="button" class="btn btn-outline" style="height: 32px; font-size: 0.8rem; padding: 0 0.75rem;" data-sample-test="yogurt">🍓 Berry Yogurt</button>
-                <button type="button" class="btn btn-outline" style="height: 32px; font-size: 0.8rem; padding: 0 0.75rem;" data-sample-test="makhana">🫘 Roasted Makhana</button>
-                <button type="button" class="btn btn-outline" style="height: 32px; font-size: 0.8rem; padding: 0 0.75rem;" data-sample-test="noodles">🍜 Instant Noodles</button>
+              <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
+                <button type="button" class="preset-chip-btn active" data-scan-preset="kurkure-masala-munch">🌶️ Kurkure Munch</button>
+                <button type="button" class="preset-chip-btn" data-scan-preset="masala-instant-noodles">🍜 Masala Noodles</button>
+                <button type="button" class="preset-chip-btn" data-scan-preset="multigrain-oats-crisp">🥣 Oats Crisp</button>
+                <button type="button" class="preset-chip-btn" data-scan-preset="roasted-masala-makhana">🫘 Roasted Makhana</button>
+                <button type="button" class="preset-chip-btn" data-scan-preset="berry-flavored-yogurt">🍓 Berry Yogurt</button>
               </div>
             </div>
 
           </div>
 
-          <!-- Right Column: Live Decoded Telemetry Results -->
-          <div class="card hud-card" id="scan-results-card">
+          <!-- RIGHT COLUMN: Decoded Telemetry Dossier & BiteLens Score Reveal -->
+          <div class="card hud-card" id="scan-dossier-card">
             
             <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem; margin-bottom: 1rem;">
-              <h3 style="font-size: 1.15rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <i data-lucide="activity" style="color: var(--color-secondary);"></i> Live Telemetry Analysis
+              <h3 style="font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="activity" style="color: var(--color-secondary);"></i> Telemetry Dossier
               </h3>
-              <span class="hud-code-tag" id="product-status-tag">Ready to Scan</span>
+              
+              <!-- Language Pills -->
+              <div style="display: flex; gap: 0.3rem;">
+                <button type="button" class="lang-pill-btn active" data-lang="en">EN</button>
+                <button type="button" class="lang-pill-btn" data-lang="hi">हिंदी</button>
+                <button type="button" class="lang-pill-btn" data-lang="gu">ગુજરાતી</button>
+              </div>
             </div>
 
-            <!-- Product Header Info -->
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
-              <div id="res-product-icon" style="font-size: 2.5rem; width: 64px; height: 64px; background: #FAF8F5; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-border);">🥣</div>
+            <!-- Product Header -->
+            <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1.25rem;">
+              <div id="dossier-prod-icon" style="font-size: 2.2rem; width: 56px; height: 56px; background: #FAF8F5; border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-border);">
+                🌶️
+              </div>
               <div>
-                <h3 id="res-product-name" style="font-size: 1.2rem; margin-bottom: 0.2rem;">Multigrain Oats Crisp</h3>
-                <p id="res-product-cat" style="font-size: 0.85rem; color: var(--color-text-muted); margin: 0;">Packaged Breakfast Cereal</p>
+                <h3 id="dossier-prod-name" style="font-size: 1.2rem; margin: 0 0 0.2rem 0;">Kurkure Masala Munch</h3>
+                <div id="dossier-prod-cat" style="font-size: 0.82rem; color: var(--color-text-muted);">PepsiCo India • Extruded Savory Snack</div>
               </div>
             </div>
 
-            <!-- Dual Score Cards -->
-            <div class="score-badge-group" style="margin-bottom: 1.25rem;">
-              <div class="score-box score-box-health" id="res-health-box">
-                <div style="font-size: 0.68rem; font-weight: 800; font-family: var(--font-family-display); color: #E11D48; text-transform: uppercase;">
-                  HEALTH SCORE
+            <!-- Unified Headline Score Meter -->
+            <div style="background: #FFFFFF; border: 1.5px solid var(--color-border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow-sm);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+                <div>
+                  <div style="font-size: 0.72rem; font-weight: 800; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+                    HEADLINE BITELENS SCORE
+                  </div>
+                  <div style="display: flex; align-items: baseline; gap: 0.35rem;">
+                    <span id="dossier-score-val" style="font-size: 2.6rem; font-weight: 800; font-family: var(--font-family-display); color: #B91C1C;">26</span>
+                    <span style="font-size: 1rem; font-weight: 700; color: var(--color-text-muted);">/ 100</span>
+                  </div>
                 </div>
-                <div class="score-number" id="res-health-score" style="color: #E11D48;">72/100</div>
-                <div id="res-health-badge" style="font-size: 0.72rem; font-weight: 700; color: #991B1B; background: #FEE2E2; padding: 0.25rem 0.5rem; border-radius: 6px; margin-top: 0.25rem;">
-                  NOVA Group 3 (Processed)
+
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;">
+                  <span id="dossier-tier-badge" style="font-size: 0.78rem; font-weight: 800; background: #FEE2E2; color: #B91C1C; padding: 0.3rem 0.75rem; border-radius: 99px;">
+                    Avoid / Heavy UPF
+                  </span>
+                  <span id="dossier-nova-badge" style="font-size: 0.72rem; color: var(--color-text-muted); font-weight: 700;">
+                    NOVA Group 4
+                  </span>
                 </div>
               </div>
 
-              <div class="score-box score-box-goal" id="res-goal-box">
-                <div style="font-size: 0.68rem; font-weight: 800; font-family: var(--font-family-display); color: #0284C7; text-transform: uppercase;">
-                  GOAL FIT SCORE
-                </div>
-                <div class="score-number" id="res-goal-score" style="color: #0284C7;">88/100</div>
-                <div id="res-goal-badge" style="font-size: 0.72rem; font-weight: 700; color: #075985; background: #E0F2FE; padding: 0.25rem 0.5rem; border-radius: 6px; margin-top: 0.25rem;">
-                  High Fit (Protein & Fiber)
-                </div>
-              </div>
+              <!-- Stacked Ingredient Order Bar -->
+              <div id="dossier-stacked-bar"></div>
             </div>
 
-            <!-- Extracted Additive Codes & Warnings -->
-            <div style="margin-bottom: 1rem;">
-              <div style="font-size: 0.78rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-text-main); text-transform: uppercase; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
-                <span>Decoded INS Additives:</span>
-                <span id="res-additive-count" style="color: var(--color-primary); font-weight: 700;">2 Detected</span>
+            <!-- Itemized Transparent Deductions Breakdown -->
+            <div style="margin-bottom: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+                Itemized Score Rationale (100 - Published Weights):
               </div>
-              <div id="res-additives-list" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 180px; overflow-y: auto;">
+              <div id="dossier-breakdown-list" style="background: #FAF8F5; border-radius: var(--radius-sm); padding: 0.5rem 0.85rem; border: 1px solid var(--color-border);">
                 <!-- Populated dynamically -->
               </div>
             </div>
 
-            <!-- Scientific Rationale Callout -->
-            <div style="background: #FAF8F5; border-radius: var(--radius-sm); padding: 0.85rem 1rem; border: 1px solid var(--color-border); font-size: 0.82rem;">
-              <strong style="color: var(--color-text-main);">FSSAI & NOVA Summary:</strong>
-              <p id="res-summary-text" style="color: var(--color-text-muted); margin-top: 0.25rem; line-height: 1.4;">
-                Contains moderate added sodium and emulsifier INS 322. Suitable for daily dietary goals with balanced whole grains.
-              </p>
+            <!-- Decoded Additives List (Multi-Language Explanations) -->
+            <div id="dossier-additives-section" style="margin-bottom: 1.25rem;"></div>
+
+            <!-- Optical Raw Text View -->
+            <div style="margin-bottom: 1rem;">
+              <details style="font-size: 0.82rem; background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem;">
+                <summary style="cursor: pointer; font-weight: 700; color: var(--color-primary);">View Raw Extracted Ingredients</summary>
+                <p id="dossier-raw-ingredients" style="margin-top: 0.5rem; color: var(--color-text-muted); line-height: 1.5; font-size: 0.78rem;"></p>
+              </details>
             </div>
+
+            <!-- Healthy Alternative Swaps Container -->
+            <div id="dossier-swap-container"></div>
+
+            <!-- WhatsApp Share Card Action -->
+            <div id="dossier-share-section" style="margin-top: 1.25rem;"></div>
 
           </div>
 
@@ -171,9 +231,10 @@
     </section>
   </main>
 
+  <!-- Shared Footer Mount -->
   <div id="site-footer-container"></div>
 
   <script type="module" src="./js/components.js"></script>
-  <script type="module" src="./js/scanner-demo.js"></script>
+  <script type="module" src="./js/scan-studio.js"></script>
 </body>
 </html>

@@ -4,15 +4,19 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/login(.*)", "destination": "/app", "permanent": false },
-    { "source": "/signup(.*)", "destination": "/app", "permanent": false },
-    { "source": "/scanner-demo", "destination": "/scan", "permanent": false },
-    { "source": "/additive-decoder", "destination": "/additives", "permanent": false },
-    { "source": "/bmi-calculator", "destination": "/health-calculator", "permanent": false },
-    { "source": "/calorie-calculator", "destination": "/health-calculator", "permanent": false },
-    { "source": "/how-it-works", "destination": "/learn", "permanent": false },
-    { "source": "/science", "destination": "/learn", "permanent": false },
-    { "source": "/contact", "destination": "/about", "permanent": false },
-    { "source": "/sgp_report", "destination": "/report", "permanent": false }
+    { "source": "/scanner-demo", "destination": "/scan", "permanent": true },
+    { "source": "/additive-decoder", "destination": "/additives", "permanent": true },
+    { "source": "/bmi-calculator", "destination": "/health-calculator#bmi", "permanent": true },
+    { "source": "/calorie-calculator", "destination": "/health-calculator#calorie", "permanent": true },
+    { "source": "/how-it-works", "destination": "/learn", "permanent": true },
+    { "source": "/science", "destination": "/learn", "permanent": true },
+    { "source": "/contact", "destination": "/about", "permanent": true },
+    { "source": "/sgp_report", "destination": "/report", "permanent": true },
+    { "source": "/features", "destination": "/index", "permanent": true },
+    { "source": "/app", "destination": "/scan", "permanent": true },
+    { "source": "/snack-budget", "destination": "/dashboard#journal", "permanent": true },
+    { "source": "/faq", "destination": "/learn#faq", "permanent": true },
+    { "source": "/login(.*)", "destination": "/dashboard", "permanent": true },
+    { "source": "/signup(.*)", "destination": "/dashboard", "permanent": true }
   ]
 }

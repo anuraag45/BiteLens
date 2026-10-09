@@ -2,7 +2,7 @@
    BiteLens Data Structures Verification & Stress Test Suite
    ========================================================================== */
 
-import { Trie, LRUCache, FuzzyMatcher, CircularBuffer } from '../js/data-structures.js';
+import { Trie, LRUCache, FuzzyMatcher, INSNormalizer, CircularBuffer } from '../js/data-structures.js';
 
 function assert(condition, message) {
   if (!condition) {
@@ -56,6 +56,43 @@ assert(simExact === 1.0, "Similarity of identical strings is 1.0");
 
 const simTypo = FuzzyMatcher.similarity("Monosodum Glutamae", "Monosodium Glutamate");
 assert(simTypo > 0.85, `Similarity with typos is high (${simTypo.toFixed(2)})`);
+
+console.log("\n=== 3b. TESTING INS NORMALIZER & OCR CONFUSION MAP ===");
+// Test canonical INS code resolutions requested in spec: 150d, 160a(i), E 322, INS-621
+const norm150d = INSNormalizer.normalizeCode("150d");
+assert(norm150d.number === "150d" && norm150d.canonical === "INS 150d", "INSNormalizer parses '150d'");
+
+const norm160a = INSNormalizer.normalizeCode("160a(i)");
+assert(norm160a.number === "160a(i)" && norm160a.canonical === "INS 160a(i)", "INSNormalizer parses '160a(i)'");
+
+const normE322 = INSNormalizer.normalizeCode("E 322");
+assert(normE322.number === "322" && normE322.canonical === "INS 322", "INSNormalizer parses 'E 322'");
+
+const normIns621 = INSNormalizer.normalizeCode("INS-621");
+assert(normIns621.number === "621" && normIns621.canonical === "INS 621", "INSNormalizer parses 'INS-621'");
+
+// Test OCR confusion map substitutions (I/l->1, O->0, S->5, B->8)
+const ocrTypo1 = INSNormalizer.normalizeCode("INS-62I"); // I -> 1
+assert(ocrTypo1.number === "621", "OCR confusion map resolves 'INS-62I' -> 621");
+
+const ocrTypo2 = INSNormalizer.normalizeCode("INS S00(ii)"); // S -> 5, O -> 0
+const norm150D = INSNormalizer.normalizeCode("150D");
+assert(norm150D.number === "150d" && norm150D.canonical === "INS 150d", "INSNormalizer parses uppercase '150D' preserving suffix");
+
+// Import and test full text extraction pipeline on complex ingredient string
+const { extractAdditivesFromText } = await import('../js/analyze.js');
+const extracted = extractAdditivesFromText("Contains 150d, 160a(i), E 322, INS-621, MSG, Tartrazine");
+const extractedCodes = extracted.map(e => e.code);
+assert(extractedCodes.includes("INS 150d"), "extractAdditivesFromText detected '150d'");
+assert(extractedCodes.includes("INS 160a(i)"), "extractAdditivesFromText detected '160a(i)'");
+assert(extractedCodes.includes("INS 322"), "extractAdditivesFromText detected 'E 322'");
+assert(extractedCodes.includes("INS 621"), "extractAdditivesFromText detected 'INS-621' & 'MSG'");
+assert(extractedCodes.includes("INS 102"), "extractAdditivesFromText detected 'Tartrazine'");
+// CRITICAL CORRECTNESS TEST: Verify 621 does NOT match 622, 627, or 631
+assert(INSNormalizer.matchCode("INS 621", "INS-621") === true, "INS 621 matches INS-621");
+assert(INSNormalizer.matchCode("INS 621", "INS 622") === false, "CRITICAL: INS 621 does NOT match INS 622");
+assert(INSNormalizer.matchCode("INS 621", "INS 627") === false, "CRITICAL: INS 621 does NOT match INS 627");
+assert(INSNormalizer.matchCode("INS 621", "INS 631") === false, "CRITICAL: INS 621 does NOT match INS 631");
 
 console.log("\n=== 4. TESTING CIRCULAR BUFFER (RING BUFFER) ===");
 const ring = new CircularBuffer(3);

@@ -80,8 +80,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        // Load local assets or dev endpoint
-        webView.loadUrl("file:///android_asset/app.html");
+        // Load local assets: camera scanner studio
+        webView.loadUrl("file:///android_asset/scan.html");
     }
 
     @Override

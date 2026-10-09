@@ -5,6 +5,13 @@ node_modules/
 # Production Build
 dist/
 
+# Database & Signature Binaries
+backend/app.db
+*.db
+*.db-journal
+*.idsig
+public/downloads/*.idsig
+
 # Environment & Agent Temp
 .DS_Store
 *.log

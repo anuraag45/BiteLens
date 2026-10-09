@@ -5,10 +5,23 @@
 
 $ErrorActionPreference = "Stop"
 
-$sdkDir = "C:\Users\anura\AppData\Local\Android\Sdk"
+$sdkDir = if ($env:ANDROID_HOME -and (Test-Path $env:ANDROID_HOME)) {
+    $env:ANDROID_HOME
+} elseif ($env:LOCALAPPDATA -and (Test-Path "$env:LOCALAPPDATA\Android\Sdk")) {
+    "$env:LOCALAPPDATA\Android\Sdk"
+} else {
+    "$env:LOCALAPPDATA\Android\Sdk"
+}
 $buildToolsDir = "$sdkDir\build-tools\35.0.0"
 $platformJar = "$sdkDir\platforms\android-36\android.jar"
-$jbrHome = "C:\Program Files\Android\Android Studio\jbr"
+
+$jbrHome = if ($env:JAVA_HOME -and (Test-Path "$env:JAVA_HOME\bin\javac.exe")) {
+    $env:JAVA_HOME
+} elseif (Test-Path "C:\Program Files\Android\Android Studio\jbr\bin\javac.exe") {
+    "C:\Program Files\Android\Android Studio\jbr"
+} else {
+    "C:\Program Files\Android\Android Studio\jbr"
+}
 $jbrBin = "$jbrHome\bin"
 
 # Point JAVA_HOME and PATH to JBR (Java 21/25) so d8.bat and apksigner use modern JVM
@@ -48,7 +61,7 @@ Write-Host "==> 1b. Packaging All Web Pages & Assets into APK Container..." -For
 Get-ChildItem -Path "dist" | Where-Object { $_.Name -ne "downloads" } | ForEach-Object {
     Copy-Item -Recurse -Force -Path $_.FullName -Destination "$workDir\assets"
 }
-# Ensure uncompiled js/ and images/ are present for static references (like html5-qrcode.min.js)
+# Ensure uncompiled js/ and images/ are present for runtime assets
 if (Test-Path "js") {
     if (-not (Test-Path "$workDir\assets\js")) {
         New-Item -ItemType Directory -Force -Path "$workDir\assets\js" | Out-Null
@@ -137,6 +150,18 @@ if (Test-Path "dist") {
 }
 
 $apkItem = Get-Item $outputApk
-$apkSizeMB = [math]::Round($apkItem.Length / 1MB, 2)
+$apkBytes = $apkItem.Length
+$apkSizeMB = [math]::Round($apkBytes / 1MB, 2)
+$apkHash = (Get-FileHash -Algorithm SHA256 $outputApk).Hash
+
+Write-Host "==> 9. Updating download.html with generated APK checksum & size..." -ForegroundColor Cyan
+if (Test-Path "download.html") {
+    $dlContent = Get-Content "download.html" -Raw
+    $dlContent = $dlContent -replace '\d+\.\d+ MB \(\d+[\d,]* bytes\)', "$apkSizeMB MB ($($apkBytes.ToString('N0')) bytes)"
+    $dlContent = $dlContent -replace '[0-9A-Fa-f]{64}', $apkHash
+    Set-Content "download.html" -Value $dlContent -NoNewline
+}
+
 Write-Host "==> SUCCESS: Standalone Android APK compiled & signed successfully!" -ForegroundColor Green
-Write-Host "    File: $outputApk ($apkSizeMB MB)" -ForegroundColor Green
+Write-Host "    File: $outputApk ($apkSizeMB MB / $apkBytes bytes)" -ForegroundColor Green
+Write-Host "    SHA-256: $apkHash" -ForegroundColor Green

@@ -4,160 +4,277 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BiteLens — Optical Food Label Decoding & Health Telemetry</title>
-  <meta name="description" content="BiteLens decodes Indian packaged food labels, ingredient lists, and additive codes into plain language with Health & Goal Fit telemetry.">
+  <meta name="description" content="Decode Indian packaged food labels, ingredient lists, and hidden INS additive codes into plain language with transparent BiteLens scores.">
   <link rel="stylesheet" href="./styles/main.css">
+  <link rel="manifest" href="./manifest.json">
 </head>
 <body>
 
-  <!-- Shared Navigation Container -->
+  <!-- Shared Navigation Mount -->
   <div id="site-header-container"></div>
 
   <main>
-    <!-- Futuristic Hero Section with Interactive Cyber Scanner HUD -->
-    <section class="section hero" style="padding-top: 3.5rem;">
+    <!-- Hero Section -->
+    <section class="section hero" style="padding-top: 3rem; padding-bottom: 2rem;">
       <div class="container hero-wrapper">
         
         <!-- Hero Text & Value Proposition -->
         <div class="hero-left">
-          <div class="hero-pill">
-            <i data-lucide="sparkles"></i> Futuristic Concept & Telemetry Demo
+          <div id="hero-onboarding-chip" style="margin-bottom: 0.75rem;">
+            <div class="hero-pill">
+              <i data-lucide="sparkles"></i> 100% On-Device • Zero Sign-Up Required
+            </div>
           </div>
+
           <h1 class="hero-title">Decode what’s actually in your food, in plain language.</h1>
           <p class="hero-subtitle">
-            BiteLens translates complex INS additive codes and nutrition labels into simple insights while scoring foods against your personal fitness goals.
+            BiteLens translates complex INS additive codes and nutrition labels into simple insights while evaluating foods against your personal dietary targets.
           </p>
-          <div class="hero-ctas">
-            <a href="download.html" class="btn btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #059669; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
-              <i data-lucide="download"></i> Download Android App (.APK)
+
+          <div class="hero-ctas" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="scan.html" class="btn btn-primary" style="height: 44px; padding: 0 1.25rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="camera"></i> Launch Label Scanner
             </a>
-            <a href="features.html" class="btn btn-secondary">
-              <i data-lucide="scan-line"></i> Explore Features
+            <a href="additives.html" class="btn btn-secondary" style="height: 44px; padding: 0 1.1rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="search"></i> Search INS Directory
             </a>
-            <a href="bmi-calculator.html" class="btn btn-outline">
-              <i data-lucide="activity"></i> Try BMI Calculator
+            <a href="health-calculator.html" class="btn btn-outline" style="height: 44px; padding: 0 1.1rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="activity"></i> Personalize for You
             </a>
+          </div>
+
+          <div style="margin-top: 1.5rem; display: flex; gap: 1.5rem; font-size: 0.82rem; color: var(--color-text-muted);">
+            <span>✓ FSSAI 2011 Verified</span>
+            <span>✓ NOVA Classification</span>
+            <span>✓ Real Client-Side OCR</span>
           </div>
         </div>
 
-        <!-- Interactive Cyber Mobile App Scanner Showcase Widget -->
+        <!-- Interactive Hero Showcase Phone Mockup -->
         <div class="hero-right" id="hero-scanner-container">
-          <!-- Injected dynamically via scanner-demo.js -->
+          <!-- Populated dynamically via scanner-demo.js -->
         </div>
 
       </div>
     </section>
 
-    <!-- Problem / Gap Section -->
-    <section class="section section-alt">
+    <!-- SECTION: Scroll-Driven Interactive Kurkure Label Progressive Decoder -->
+    <section class="scroll-decode-section">
       <div class="container">
-        <div class="section-header">
-          <h2>The Label Decoding Gap in India</h2>
-          <p class="section-subtitle">
-            While nutrition labels are mandatory in India, cryptic INS numbers and complex functional classes make true ingredients hard to understand. Most global tracking apps lack deep coverage for regional packaged products. BiteLens bridges this gap by decoding ingredients into clear, everyday language.
+        
+        <div class="section-header" style="text-align: center; margin-bottom: 2.5rem;">
+          <div class="hero-pill" style="margin: 0 auto 0.75rem auto;">
+            <i data-lucide="scan-line"></i> Interactive Live Telemetry
+          </div>
+          <h2>Watch a Label Decode Step-by-Step</h2>
+          <p class="section-subtitle" style="max-width: 650px; margin: 0 auto;">
+            See how BiteLens analyzes a real pack of <strong>Kurkure Masala Munch</strong>, identifying chemical additives, nutrient density, and calculating the final BiteLens score.
           </p>
         </div>
+
+        <div class="decode-pinned-grid">
+          
+          <!-- Sticky Visual Label Viewfinder -->
+          <div class="decode-label-sticky">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.5rem;">🌶️</span>
+                <div>
+                  <h3 style="font-size: 1.1rem; margin: 0;">Kurkure Masala Munch</h3>
+                  <div style="font-size: 0.75rem; color: var(--color-text-muted);">Extruded Savory Snack (PepsiCo India)</div>
+                </div>
+              </div>
+              <span class="hud-code-tag" id="decode-status-badge">Raw Label Captured</span>
+            </div>
+
+            <!-- Optical Ingredients Box -->
+            <div style="background: #FAF8F5; border: 1.5px dashed var(--color-border); border-radius: var(--radius-sm); padding: 1.1rem; margin-bottom: 1.25rem;">
+              <div style="font-size: 0.72rem; font-weight: 800; color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 0.5rem;">
+                Back-of-Pack Ingredients List (Optical Read):
+              </div>
+              <p id="kurkure-ingredients-view" style="font-size: 0.88rem; line-height: 1.6; color: var(--color-text-main); margin: 0;">
+                Rice Meal (52.8%), Edible Vegetable Oil (Palmolein Oil), Corn Meal (19.8%), Gram Meal (3.3%), Spices and Condiments, Salt, Sugar, Acidity Regulator (INS 330), Flavor Enhancer (INS 627), Flavor Enhancer (INS 631).
+              </p>
+            </div>
+
+            <!-- BiteLens Headline Score Meter -->
+            <div style="display: flex; align-items: center; justify-content: space-between; background: #FFFFFF; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 1rem;">
+              <div>
+                <div style="font-size: 0.75rem; font-weight: 800; color: var(--color-text-muted); text-transform: uppercase;">
+                  BiteLens Processing Score
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 0.3rem; margin-top: 0.2rem;">
+                  <span id="decode-gauge-val" style="font-size: 2.2rem; font-weight: 800; color: #B91C1C; font-family: var(--font-family-display);">--</span>
+                  <span style="font-size: 0.9rem; color: var(--color-text-muted); font-weight: 700;">/ 100</span>
+                </div>
+              </div>
+
+              <!-- Instant Swap Teaser -->
+              <div id="decode-swap-box" style="display: none; text-align: right;">
+                <div style="font-size: 0.72rem; font-weight: 800; color: #065F46; text-transform: uppercase;">✨ Recommended Swap</div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: var(--color-primary); margin-top: 0.15rem;">
+                  Roasted Masala Makhana (+66 pts)
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Progressive Scroll Step Cards -->
+          <div class="decode-steps-timeline">
+            
+            <div class="decode-step-card active" data-step-index="0">
+              <div style="display: flex; align-items: center; margin-bottom: 0.4rem;">
+                <span class="decode-step-indicator">1</span>
+                <h4 style="margin: 0;">Optical Recognition & Ingredient Extraction</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 0; line-height: 1.45;">
+                Client-side OCR isolates the back-of-pack ingredients box and tokenizes strings into canonical ingredient entities.
+              </p>
+            </div>
+
+            <div class="decode-step-card" data-step-index="1">
+              <div style="display: flex; align-items: center; margin-bottom: 0.4rem;">
+                <span class="decode-step-indicator">2</span>
+                <h4 style="margin: 0;">INS 330 (Citric Acid) Identified</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 0; line-height: 1.45;">
+                FSSAI-permitted natural acidity regulator. Natural citrus fruit intermediate (Low Concern, 0 penalty points).
+              </p>
+            </div>
+
+            <div class="decode-step-card" data-step-index="2">
+              <div style="display: flex; align-items: center; margin-bottom: 0.4rem;">
+                <span class="decode-step-indicator">3</span>
+                <h4 style="margin: 0;">Dual Flavor Potentiators Detected (INS 627, 631)</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 0; line-height: 1.45;">
+                Disodium Guanylate and Inosinate: high-potency savory flavor multipliers that mask refined oil bases and trigger craving loops (-16 points).
+              </p>
+            </div>
+
+            <div class="decode-step-card" data-step-index="3">
+              <div style="display: flex; align-items: center; margin-bottom: 0.4rem;">
+                <span class="decode-step-indicator">4</span>
+                <h4 style="margin: 0;">Final Score Reveal & Clean Indian Swap</h4>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 0; line-height: 1.45;">
+                Ultra-processed deep frying in palmolein with 860mg sodium drops the score to <strong>26/100 (NOVA 4)</strong>. BiteLens immediately suggests <strong>Roasted Makhana (92/100)</strong>.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
     </section>
 
-    <!-- Three-Feature Highlight Strip -->
+    <!-- SECTION: WhatsApp Share Card Generator (Indian Growth Loop) -->
     <section class="section">
+      <div class="container" style="max-width: 960px;">
+        
+        <div class="card hud-card" style="padding: 2.5rem 2rem; background: #FFFFFF; border-color: var(--color-border);">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center;">
+            
+            <div>
+              <div class="hero-pill" style="margin-bottom: 0.75rem;">
+                <i data-lucide="smartphone"></i> India Growth Loop
+              </div>
+              <h2 style="font-size: 1.7rem; margin-bottom: 0.75rem;">Share Food Truths Directly on WhatsApp</h2>
+              <p style="color: var(--color-text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem;">
+                Help your family and WhatsApp groups see through deceptive marketing. Generate high-resolution, on-device graphic cards showing verified FSSAI additive flags and healthy swaps.
+              </p>
+
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <button type="button" class="btn btn-primary" id="share-whatsapp-direct-btn" style="height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                  <i data-lucide="smartphone"></i> Send Report to WhatsApp
+                </button>
+                <button type="button" class="btn btn-outline" id="generate-whatsapp-card-btn" style="height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                  <i data-lucide="download"></i> Download PNG Share Card
+                </button>
+              </div>
+            </div>
+
+            <!-- Canvas Card Preview -->
+            <div style="text-align: center;">
+              <canvas id="whatsapp-preview-canvas" style="width: 100%; max-width: 380px; height: auto; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); border: 1px solid var(--color-border);"></canvas>
+              <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                Live 1080×1080 canvas graphic generated client-side
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: Core Platform Navigation Strip -->
+    <section class="section section-alt">
       <div class="container">
-        <div class="section-header">
-          <h2>Core Intelligence</h2>
-          <p class="section-subtitle">Designed to help you make informed decisions in seconds.</p>
+        
+        <div class="section-header" style="text-align: center; margin-bottom: 2.5rem;">
+          <h2>Explore BiteLens Tools</h2>
+          <p class="section-subtitle">A cohesive suite built for independent food literacy in India.</p>
         </div>
 
         <div class="grid-3">
+          
           <div class="card hud-card">
-            <div class="icon-badge">
-              <i data-lucide="scan-line"></i>
-            </div>
-            <h3>Scan & Decode</h3>
-            <p>Instantly turn barcode scans or label photographs into plain-language ingredient breakdowns and INS code translations.</p>
-            <a href="features.html#scan" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">Learn More</a>
-          </div>
-
-          <div class="card hud-card">
-            <div class="icon-badge">
-              <i data-lucide="shield-check"></i>
-            </div>
-            <h3>Health Score</h3>
-            <p>An informational heuristic assessing overall processing levels (NOVA framework) and nutrient thresholds like sugar, salt, and fats.</p>
-            <a href="features.html#health-score" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">Learn More</a>
+            <div class="icon-badge"><i data-lucide="camera"></i></div>
+            <h3>Optical Scanner Studio</h3>
+            <p>Live camera and photo upload with bounding box overlays drawing red, amber, and green boxes directly on detected INS codes.</p>
+            <a href="scan.html" class="btn btn-outline" style="margin-top: 1rem; width: 100%; text-decoration: none;">Launch Scanner →</a>
           </div>
 
           <div class="card hud-card">
-            <div class="icon-badge">
-              <i data-lucide="target"></i>
-            </div>
-            <h3>Goal Fit Score</h3>
-            <p>A separate score tailored to your personal fitness objective (weight loss, muscle gain, or maintenance), evaluated independently of processing level.</p>
-            <a href="features.html#goal-score" class="btn btn-outline" style="margin-top: 1rem; width: 100%;">Learn More</a>
+            <div class="icon-badge"><i data-lucide="database"></i></div>
+            <h3>FSSAI Additives Directory</h3>
+            <p>Search food additives by common name, alias (e.g. MSG, Tartrazine), or INS code with permitted FSSAI category limits and Hindi/Gujarati explanations.</p>
+            <a href="additives.html" class="btn btn-outline" style="margin-top: 1rem; width: 100%; text-decoration: none;">Search Additives →</a>
           </div>
+
+          <div class="card hud-card">
+            <div class="icon-badge"><i data-lucide="scale"></i></div>
+            <h3>Comparison & Swaps</h3>
+            <p>Side-by-side matchups pitting ultra-processed snacks against clean Indian alternatives with exact calorie, sugar, and sodium deltas.</p>
+            <a href="compare.html" class="btn btn-outline" style="margin-top: 1rem; width: 100%; text-decoration: none;">Compare Foods →</a>
+          </div>
+
+          <div class="card hud-card">
+            <div class="icon-badge"><i data-lucide="activity"></i></div>
+            <h3>Health & BMI Profile</h3>
+            <p>Calculate TDEE and BMI using Indian Consensus Guidelines (Misra et al. 2009) with adolescent pediatric gating.</p>
+            <a href="health-calculator.html" class="btn btn-outline" style="margin-top: 1rem; width: 100%; text-decoration: none;">Setup Profile →</a>
+          </div>
+
+          <div class="card hud-card">
+            <div class="icon-badge"><i data-lucide="book-open"></i></div>
+            <h3>Science & Methodology</h3>
+            <p>Understand the 4 NOVA processing tiers, WHO free sugar guidelines (&lt;10%), and debunking food labeling myths.</p>
+            <a href="learn.html" class="btn btn-outline" style="margin-top: 1rem; width: 100%; text-decoration: none;">Read Science →</a>
+          </div>
+
+          <div class="card hud-card">
+            <div class="icon-badge"><i data-lucide="layout-dashboard"></i></div>
+            <h3>Nutritional Journal</h3>
+            <p>Track your daily allowance for UPF snacks, sodium, and added sugar on your personal on-device audit ledger.</p>
+            <a href="dashboard.html" class="btn btn-outline" style="margin-top: 1rem; width: 100%; text-decoration: none;">Open Journal →</a>
+          </div>
+
         </div>
+
       </div>
     </section>
 
-    <!-- How It Works Teaser -->
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-header">
-          <h2>How BiteLens Works</h2>
-          <p class="section-subtitle">Three quick steps from barcode to clarity.</p>
-        </div>
-
-        <div class="stepper-grid" style="grid-template-columns: repeat(3, 1fr);">
-          <div class="step-card">
-            <div class="step-number">1</div>
-            <h3>Scan</h3>
-            <p>Capture a barcode or photo of any packaged food item's back label.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">2</div>
-            <h3>Understand</h3>
-            <p>BiteLens decodes additive codes and calculates independent Health & Goal scores.</p>
-          </div>
-          <div class="step-card">
-            <div class="step-number">3</div>
-            <h3>Decide</h3>
-            <p>Make an informed choice based on transparent, plain-language insights.</p>
-          </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 2.5rem;">
-          <a href="how-it-works.html" class="btn btn-secondary">View Detailed Walkthrough →</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Closing Banner CTA -->
-    <section class="section">
-      <div class="container">
-        <div class="card hud-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.95) 100%); text-align: center; padding: 3.5rem 2rem; border-color: var(--color-neon-emerald);">
-          <h2 style="margin-bottom: 1rem; color: #FFFFFF;">Experience Smart Nutrition Insights</h2>
-          <p style="max-width: 540px; margin: 0 auto 2rem auto;">
-            Explore our interactive BMI and Calorie tools to see how BiteLens structures personalized nutritional guidance.
-          </p>
-          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="download.html" class="btn btn-primary" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #059669;">
-              <i data-lucide="download"></i> Download Android App (.APK)
-            </a>
-            <a href="calorie-calculator.html" class="btn btn-secondary">
-              <i data-lucide="flame"></i> Try Calorie Calculator
-            </a>
-            <a href="science.html" class="btn btn-outline">
-              <i data-lucide="flask-conical"></i> Read Science & Methodology
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <!-- Shared Footer Container -->
+  <!-- Shared Footer Mount -->
   <div id="site-footer-container"></div>
 
   <script type="module" src="./js/components.js"></script>
   <script type="module" src="./js/scanner-demo.js"></script>
+  <script type="module" src="./js/landing.js"></script>
 </body>
 </html>

@@ -3,34 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Telemetry Dashboard — BiteLens</title>
-  <meta name="description" content="View your personal dietary telemetry, past food label scans, average NOVA processing score, and clean snack goals.">
+  <title>Dashboard & Journal — BiteLens</title>
+  <meta name="description" content="View your personal dietary telemetry, past food label scans, average NOVA processing score, and track your daily snack budget against FSSAI and WHO limits.">
   <link rel="stylesheet" href="./styles/main.css">
+  <style>
+    .dashboard-tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .dash-tab-btn {
+      padding: 0.75rem 1.25rem;
+      font-weight: 700;
+      font-family: var(--font-family-display);
+      font-size: 0.95rem;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+    .dash-tab-btn:hover {
+      color: var(--color-primary);
+    }
+    .dash-tab-btn.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+      background: rgba(59, 122, 87, 0.05);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    }
+    .journal-snack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .journal-snack-item {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .journal-snack-item:hover {
+      border-color: var(--color-primary);
+      background-color: #FAF8F5;
+    }
+  </style>
 </head>
 <body>
-  <div id="bitelens-splash-screen"></div>
+
   <div id="site-header-container"></div>
 
   <main>
-    <section class="section">
+    <section class="section" style="padding-top: 2rem;">
       <div class="container">
         
         <!-- Dashboard Top Greeting Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
           <div>
-            <div class="hero-pill">
-              <i data-lucide="shield-check"></i> Member Telemetry Portal
+            <div class="hero-pill" style="margin-bottom: 0.5rem;">
+              <i data-lucide="shield-check"></i> On-Device Telemetry Portal
             </div>
-            <h1 style="font-size: 2.25rem; margin-bottom: 0.25rem;">
-              Welcome back, <span id="dash-user-name" style="color: var(--color-primary);">Health Explorer</span>
+            <h1 style="font-size: 2.15rem; margin-bottom: 0.25rem;">
+              Welcome, <span id="dash-user-name" style="color: var(--color-primary);">Health Explorer</span>
             </h1>
-            <p style="color: var(--color-text-muted); font-size: 0.95rem; margin: 0;">
-              Here is your personal nutritional audit, scan history, and NOVA processing analytics.
+            <p style="color: var(--color-text-muted); font-size: 0.92rem; margin: 0;">
+              Here is your personal nutritional audit, scan history, and NOVA processing analytics stored 100% on your device.
             </p>
           </div>
           
-          <div style="display: flex; gap: 0.75rem;">
-            <a href="scanner-demo.html" class="btn btn-primary">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="scan.html" class="btn btn-primary">
               <i data-lucide="scan"></i> Scan New Label
             </a>
             <a href="compare.html" class="btn btn-outline">
@@ -40,65 +93,65 @@
         </div>
 
         <!-- 4-Column Metric Cards Grid -->
-        <div class="grid-4" style="margin-bottom: 2.5rem;">
+        <div class="grid-4" style="margin-bottom: 2rem;">
           
-          <div class="card hud-card" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Average Health Score</span>
-              <div class="icon-badge" style="width: 36px; height: 36px; margin: 0;">
-                <i data-lucide="activity" style="width: 1rem; height: 1rem;"></i>
+          <div class="card hud-card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Average Health Score</span>
+              <div class="icon-badge" style="width: 32px; height: 32px; margin: 0;">
+                <i data-lucide="activity" style="width: 0.95rem; height: 0.95rem;"></i>
               </div>
             </div>
-            <div style="font-size: 2rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-primary);" id="stat-avg-score">
-              76/100
+            <div style="font-size: 1.85rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-primary);" id="stat-avg-score">
+              --/100
             </div>
-            <p style="font-size: 0.78rem; color: #166534; font-weight: 600; margin: 0.25rem 0 0 0;">
-              ▲ 8% cleaner than last week (NOVA Avg: Tier 2.4)
+            <p style="font-size: 0.75rem; color: #166534; font-weight: 600; margin: 0.25rem 0 0 0;" id="stat-avg-subtext">
+              Across your verified scans
             </p>
           </div>
 
-          <div class="card hud-card" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Total Products Scanned</span>
-              <div class="icon-badge" style="width: 36px; height: 36px; margin: 0; background: rgba(2, 132, 199, 0.1); color: var(--color-secondary); border-color: rgba(2, 132, 199, 0.25);">
-                <i data-lucide="barcode" style="width: 1rem; height: 1rem;"></i>
+          <div class="card hud-card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Total Products Scanned</span>
+              <div class="icon-badge" style="width: 32px; height: 32px; margin: 0; background: rgba(2, 132, 199, 0.1); color: var(--color-secondary); border-color: rgba(2, 132, 199, 0.25);">
+                <i data-lucide="barcode" style="width: 0.95rem; height: 0.95rem;"></i>
               </div>
             </div>
-            <div style="font-size: 2rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-secondary);" id="stat-total-scans">
-              24 Scans
+            <div style="font-size: 1.85rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-secondary);" id="stat-total-scans">
+              0 Scans
             </div>
-            <p style="font-size: 0.78rem; color: var(--color-text-muted); margin: 0.25rem 0 0 0;">
-              Across 12 food categories
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0.25rem 0 0 0;" id="stat-categories-subtext">
+              Saved in local telemetry log
             </p>
           </div>
 
-          <div class="card hud-card" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Ultra-Processed Ratio</span>
-              <div class="icon-badge" style="width: 36px; height: 36px; margin: 0; background: rgba(225, 29, 72, 0.1); color: var(--color-accent); border-color: rgba(225, 29, 72, 0.25);">
-                <i data-lucide="alert-triangle" style="width: 1rem; height: 1rem;"></i>
+          <div class="card hud-card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Ultra-Processed Ratio</span>
+              <div class="icon-badge" style="width: 32px; height: 32px; margin: 0; background: rgba(225, 29, 72, 0.1); color: var(--color-accent); border-color: rgba(225, 29, 72, 0.25);">
+                <i data-lucide="alert-triangle" style="width: 0.95rem; height: 0.95rem;"></i>
               </div>
             </div>
-            <div style="font-size: 2rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-accent);" id="stat-upf-ratio">
-              25% UPF
+            <div style="font-size: 1.85rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-accent);" id="stat-upf-ratio">
+              0% UPF
             </div>
-            <p style="font-size: 0.78rem; color: var(--color-text-muted); margin: 0.25rem 0 0 0;">
-              6 of 24 items in NOVA Group 4
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0.25rem 0 0 0;" id="stat-upf-subtext">
+              Products in NOVA Group 4
             </p>
           </div>
 
-          <div class="card hud-card" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-              <span style="font-size: 0.8rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Active Goal Fit</span>
-              <div class="icon-badge" style="width: 36px; height: 36px; margin: 0; background: rgba(217, 119, 6, 0.1); color: var(--color-warning); border-color: rgba(217, 119, 6, 0.25);">
-                <i data-lucide="target" style="width: 1rem; height: 1rem;"></i>
+          <div class="card hud-card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;">Target Calorie Budget</span>
+              <div class="icon-badge" style="width: 32px; height: 32px; margin: 0; background: rgba(217, 119, 6, 0.1); color: var(--color-warning); border-color: rgba(217, 119, 6, 0.25);">
+                <i data-lucide="target" style="width: 0.95rem; height: 0.95rem;"></i>
               </div>
             </div>
-            <div style="font-size: 1.25rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-text-main); margin-top: 0.4rem;" id="stat-user-goal">
-              Weight Loss (Deficit)
+            <div style="font-size: 1.45rem; font-weight: 800; font-family: var(--font-family-display); color: var(--color-text-main); margin-top: 0.2rem;" id="stat-user-goal">
+              2,000 kcal / day
             </div>
-            <p style="font-size: 0.78rem; color: var(--color-primary); font-weight: 600; margin: 0.25rem 0 0 0;">
-              Target: &lt; 2,050 kcal / day
+            <p style="font-size: 0.75rem; color: var(--color-primary); font-weight: 600; margin: 0.25rem 0 0 0;" id="stat-goal-name">
+              Standard Daily Intake
             </p>
           </div>
 
@@ -107,42 +160,132 @@
         <!-- Main Dashboard Split Layout -->
         <div class="dashboard-main-grid">
           
-          <!-- Left Column: Scan Audit History Table -->
-          <div class="card hud-card">
+          <!-- Left Column: Tabbed Views (Scan Telemetry Log vs Snack Budget Journal) -->
+          <div class="card hud-card" style="padding: 1.5rem;">
             
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
-              <h2 style="font-size: 1.35rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
-                <i data-lucide="history" style="color: var(--color-primary);"></i> Food Scan Telemetry Log
-              </h2>
-              
-              <div style="display: flex; gap: 0.5rem;">
-                <select id="history-filter-select" class="form-select" style="padding: 0.4rem 0.75rem; font-size: 0.85rem; width: auto;">
-                  <option value="all">All NOVA Groups</option>
-                  <option value="1">NOVA 1 (Unprocessed)</option>
-                  <option value="2">NOVA 2 (Culinary)</option>
-                  <option value="3">NOVA 3 (Processed)</option>
-                  <option value="4">NOVA 4 (Ultra-Processed)</option>
-                </select>
+            <!-- Tab Buttons -->
+            <div class="dashboard-tabs">
+              <button class="dash-tab-btn active" id="tab-btn-history">
+                <i data-lucide="history"></i> Scan Telemetry Log
+              </button>
+              <button class="dash-tab-btn" id="tab-btn-journal">
+                <i data-lucide="book-open"></i> Snack Budget Journal
+              </button>
+            </div>
+
+            <!-- VIEW 1: Scan Telemetry History -->
+            <div id="view-scan-history">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                <p style="color: var(--color-text-muted); font-size: 0.88rem; margin: 0;">
+                  Chronological record of packages analyzed with client-side OCR and barcode lookup.
+                </p>
+                
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <select id="history-filter-select" class="form-select" style="padding: 0.35rem 0.65rem; font-size: 0.82rem; width: auto;">
+                    <option value="all">All NOVA Groups</option>
+                    <option value="1">NOVA 1 (Unprocessed)</option>
+                    <option value="2">NOVA 2 (Culinary)</option>
+                    <option value="3">NOVA 3 (Processed)</option>
+                    <option value="4">NOVA 4 (Ultra-Processed)</option>
+                  </select>
+                  <button id="clear-history-btn" class="btn btn-outline" style="padding: 0.35rem 0.65rem; font-size: 0.78rem;">
+                    Clear
+                  </button>
+                </div>
+              </div>
+
+              <!-- Table Container -->
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+                  <thead>
+                    <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
+                      <th style="padding: 0.65rem 0.5rem; font-family: var(--font-family-display);">Product Name</th>
+                      <th style="padding: 0.65rem 0.5rem; font-family: var(--font-family-display);">Category</th>
+                      <th style="padding: 0.65rem 0.5rem; font-family: var(--font-family-display);">NOVA Tier</th>
+                      <th style="padding: 0.65rem 0.5rem; font-family: var(--font-family-display);">Health Score</th>
+                      <th style="padding: 0.65rem 0.5rem; font-family: var(--font-family-display);">Goal Fit</th>
+                      <th style="padding: 0.65rem 0.5rem; font-family: var(--font-family-display); text-align: right;">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="scan-history-tbody">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <!-- Table Container -->
-            <div style="overflow-x: auto;">
-              <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
-                <thead>
-                  <tr style="border-bottom: 2px solid var(--color-border); text-align: left;">
-                    <th style="padding: 0.75rem 0.5rem; font-family: var(--font-family-display);">Product Name</th>
-                    <th style="padding: 0.75rem 0.5rem; font-family: var(--font-family-display);">Category</th>
-                    <th style="padding: 0.75rem 0.5rem; font-family: var(--font-family-display);">NOVA Tier</th>
-                    <th style="padding: 0.75rem 0.5rem; font-family: var(--font-family-display);">Health Score</th>
-                    <th style="padding: 0.75rem 0.5rem; font-family: var(--font-family-display);">Goal Fit</th>
-                    <th style="padding: 0.75rem 0.5rem; font-family: var(--font-family-display); text-align: right;">Date</th>
-                  </tr>
-                </thead>
-                <tbody id="scan-history-tbody">
-                  <!-- Dynamically populated -->
-                </tbody>
-              </table>
+            <!-- VIEW 2: Packaged Snack Budget Journal (Merged from snack-budget) -->
+            <div id="view-snack-journal" style="display: none;">
+              <div style="margin-bottom: 1.25rem;">
+                <h3 style="margin-bottom: 0.25rem; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <i data-lucide="scale" style="color: var(--color-primary);"></i> Daily Nutritional Budget Simulator
+                </h3>
+                <p style="color: var(--color-text-muted); font-size: 0.86rem; margin: 0;">
+                  Evaluate how packaged snacks consume your statutory daily allowances for calories, sodium (FSSAI 2,000mg upper limit), and added sugars (WHO 25g guideline).
+                </p>
+              </div>
+
+              <div class="form-group" style="max-width: 320px; margin-bottom: 1.25rem;">
+                <label class="form-label" for="daily-cal-limit" style="font-size: 0.85rem;">Target Daily Calorie Allowance</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <input type="number" id="daily-cal-limit" class="form-input" value="2000" min="1000" max="5000" style="padding: 0.45rem 0.75rem;">
+                  <span style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600;">kcal</span>
+                </div>
+              </div>
+
+              <div style="font-size: 0.82rem; font-weight: 700; font-family: var(--font-family-display); color: var(--color-primary); text-transform: uppercase; margin-bottom: 0.65rem;">
+                Select Packaged Snacks Consumed Today:
+              </div>
+
+              <!-- Snack Item Selection Checkboxes -->
+              <div class="journal-snack-grid" id="journal-snack-list">
+                <!-- Dynamically populated with defaults & scanned items -->
+              </div>
+
+              <!-- Result Progress Bars -->
+              <div class="result-box" style="display: block; background: #FAF8F5; border-color: var(--color-border); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; font-size: 1rem;">Daily Budget Consumption:</h4>
+
+                <!-- Calorie Bar -->
+                <div style="margin-bottom: 1.15rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span>Calories Consumed</span>
+                    <span id="journal-cal-text">0 / 2,000 kcal (0%)</span>
+                  </div>
+                  <div style="background: #E2E8F0; height: 12px; border-radius: 6px; overflow: hidden;">
+                    <div id="journal-cal-fill" style="width: 0%; height: 100%; background: #166534; transition: width 0.3s ease;"></div>
+                  </div>
+                </div>
+
+                <!-- Sodium Bar -->
+                <div style="margin-bottom: 1.15rem;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span>Sodium (FSSAI Limit: 2,000 mg)</span>
+                    <span id="journal-sod-text">0 / 2,000 mg (0%)</span>
+                  </div>
+                  <div style="background: #E2E8F0; height: 12px; border-radius: 6px; overflow: hidden;">
+                    <div id="journal-sod-fill" style="width: 0%; height: 100%; background: #0284C7; transition: width 0.3s ease;"></div>
+                  </div>
+                </div>
+
+                <!-- Added Sugar Bar -->
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">
+                    <span>Added Sugar (WHO Guideline: 25 g / ~6 tsp)</span>
+                    <span id="journal-sug-text">0 / 25 g (0%)</span>
+                  </div>
+                  <div style="background: #E2E8F0; height: 12px; border-radius: 6px; overflow: hidden;">
+                    <div id="journal-sug-fill" style="width: 0%; height: 100%; background: #D97706; transition: width 0.3s ease;"></div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Regulatory Citation Box -->
+              <div class="callout-box" style="font-size: 0.82rem; margin: 0; padding: 0.85rem 1rem;">
+                <strong>Regulatory Benchmarks:</strong> FSSAI statutory guideline sets 2,000 mg/day (approx. 5g table salt) as the maximum safe threshold for sodium. WHO Guideline (2015) strongly recommends keeping free sugars below 10% of total energy, and conditionally below 25g/day for optimal dental and metabolic health.
+              </div>
+
             </div>
 
           </div>
@@ -151,57 +294,79 @@
           <div style="display: flex; flex-direction: column; gap: 1.5rem;">
             
             <!-- Profile HUD Card -->
-            <div class="card hud-card">
-              <h3 style="font-size: 1.15rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i data-lucide="user-check" style="color: var(--color-primary);"></i> Health Identity
-              </h3>
+            <div class="card hud-card" style="padding: 1.25rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <h3 style="font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 0.45rem;">
+                  <i data-lucide="user-check" style="color: var(--color-primary);"></i> Health Identity
+                </h3>
+                <a href="health-calculator.html" class="btn btn-outline" style="padding: 0.25rem 0.55rem; font-size: 0.75rem;">
+                  Edit
+                </a>
+              </div>
               
-              <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border);">
-                <div style="width: 48px; height: 48px; border-radius: 50%; background: #FAF8F5; border: 1.5px solid var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--color-border);">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #FAF8F5; border: 1.5px solid var(--color-primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
                   🥗
                 </div>
                 <div>
-                  <div style="font-weight: 800; font-family: var(--font-family-display);" id="hud-profile-name">Health Explorer</div>
-                  <div style="font-size: 0.78rem; color: var(--color-text-muted);" id="hud-profile-email">explorer@bitelens.app</div>
+                  <div style="font-weight: 800; font-family: var(--font-family-display); font-size: 0.95rem;" id="hud-profile-name">Health Explorer</div>
+                  <div style="font-size: 0.76rem; color: var(--color-text-muted);" id="hud-profile-email">100% On-Device Local Profile</div>
                 </div>
               </div>
 
-              <div style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.82rem;">
                 <div style="display: flex; justify-content: space-between;">
                   <span style="color: var(--color-text-muted);">Age Status:</span>
                   <span style="font-weight: 700; color: #166534;" id="hud-profile-age">Adult (Verified)</span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                   <span style="color: var(--color-text-muted);">Weight Goal:</span>
-                  <span style="font-weight: 700;" id="hud-profile-weight-goal">Fat Loss Deficit</span>
+                  <span style="font-weight: 700;" id="hud-profile-weight-goal">Maintenance</span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                  <span style="color: var(--color-text-muted);">Muscle Goal:</span>
-                  <span style="font-weight: 700;" id="hud-profile-muscle-goal">Hypertrophy (High Protein)</span>
+                  <span style="color: var(--color-text-muted);">TDEE Intake:</span>
+                  <span style="font-weight: 700;" id="hud-profile-tdee">2,000 kcal</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--color-text-muted);">Pediatric Gating:</span>
+                  <span style="font-weight: 700; color: #0284C7;" id="hud-pediatric-gate">Inactive</span>
                 </div>
               </div>
             </div>
 
             <!-- Clean Snack Recommendations -->
-            <div class="card hud-card">
-              <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
-                <i data-lucide="sparkles" style="color: var(--color-primary);"></i> Clean Snack Swaps
+            <div class="card hud-card" style="padding: 1.25rem;">
+              <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.45rem;">
+                <i data-lucide="sparkles" style="color: var(--color-primary);"></i> Smart Clean Swaps
               </h3>
-              <p style="font-size: 0.82rem; color: var(--color-text-muted); margin-bottom: 1rem;">
-                Healthier alternatives based on your recent ultra-processed scans:
+              <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+                Recommended alternatives to reduce NOVA 4 additives and industrial sodium:
               </p>
 
-              <div style="display: flex; flex-direction: column; gap: 0.65rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.65rem;" id="dashboard-swaps-list">
                 <div style="background: #F0FDF4; border: 1px solid rgba(59, 122, 87, 0.25); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; font-size: 0.82rem;">
-                  <div style="font-weight: 700; color: #166534;">Swap Chips ➔ Roasted Makhana</div>
-                  <div style="font-size: 0.75rem; color: var(--color-text-muted);">Saves 14g saturated fat & zero INS 621.</div>
+                  <div style="font-weight: 700; color: #166534;">Swap Fried Chips ➔ Roasted Makhana</div>
+                  <div style="font-size: 0.75rem; color: var(--color-text-muted);">Saves 14g saturated palm fat & avoids INS 621 flavor enhancer.</div>
                 </div>
 
                 <div style="background: #F0FDF4; border: 1px solid rgba(59, 122, 87, 0.25); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; font-size: 0.82rem;">
-                  <div style="font-weight: 700; color: #166534;">Swap Fruit Yogurt ➔ Plain Greek + Berries</div>
-                  <div style="font-size: 0.75rem; color: var(--color-text-muted);">Cuts 16g added syrup & synthetic color INS 120.</div>
+                  <div style="font-weight: 700; color: #166534;">Swap Sweetened Curd ➔ Plain Greek Curd</div>
+                  <div style="font-size: 0.75rem; color: var(--color-text-muted);">Cuts 18g added sucrose & synthetic color INS 124.</div>
+                </div>
+
+                <div style="background: #F0FDF4; border: 1px solid rgba(59, 122, 87, 0.25); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; font-size: 0.82rem;">
+                  <div style="font-weight: 700; color: #166534;">Swap Instant Noodles ➔ Whole Oats Porridge</div>
+                  <div style="font-size: 0.75rem; color: var(--color-text-muted);">Cuts 720mg sodium and avoids INS 150d caramel color.</div>
                 </div>
               </div>
+            </div>
+
+            <!-- Privacy Guarantee Card -->
+            <div class="card hud-card" style="padding: 1rem; background: #FAF8F5; border-color: var(--color-border); font-size: 0.78rem; color: var(--color-text-muted);">
+              <div style="font-weight: 700; color: var(--color-text-main); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+                <i data-lucide="lock" style="width: 0.85rem; height: 0.85rem; color: var(--color-primary);"></i> 100% On-Device Storage
+              </div>
+              BiteLens stores your scan audit and snack journal exclusively inside your browser's local storage. No health telemetry or consumption history is ever synchronized to external servers.
             </div>
 
           </div>

@@ -12,8 +12,7 @@
    - Android Touch & Mobile View Optimization
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
-
+/* Privacy-Preserving Zero-Cloud Typography Stack */
 :root {
   /* Color Palette - Clean Elevated Wellness */
   --color-bg-space: #FAF8F5;         /* Warm Off-White Cream Background */
@@ -26,7 +25,7 @@
   --color-accent: #E11D48;          /* Rose Coral Accent */
   
   --color-text-main: #1E293B;       /* Deep Slate Charcoal */
-  --color-text-muted: #64748B;      /* Soft Slate Gray */
+  --color-text-muted: #475569;      /* Accessible Slate Gray (>= 6.5:1 on #FAF8F5) */
   --color-border: rgba(226, 232, 240, 0.95); /* Clean Subtle Border */
   --color-border-hover: rgba(59, 122, 87, 0.35);
 
@@ -36,9 +35,9 @@
   --color-warning: #D97706;
   --color-warning-bg: #FEF3C7;
 
-  /* Typography Stack */
-  --font-family-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-family-display: 'Space Grotesk', var(--font-family-sans);
+  /* Typography Stack - 100% On-Device System Fallback (Zero external Google Font requests) */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* Multi-Layered Elevated Shadows */
   --shadow-sm: 0 2px 8px rgba(30, 41, 59, 0.04);
@@ -145,9 +144,9 @@ button {
 }
 
 @keyframes splashPulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 122, 87, 0.3); }
-  50% { transform: scale(1.05); box-shadow: 0 0 0 14px rgba(59, 122, 87, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 122, 87, 0); }
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
 }
 
 .splash-progress-track {
@@ -639,9 +638,8 @@ a:hover {
   border: 3px solid #334155;
   width: 100%;
   max-width: 440px;
-  height: 590px; /* STRICT STATIC LOCKED HEIGHT */
-  min-height: 590px;
-  max-height: 590px;
+  min-height: 520px;
+  height: auto;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -715,8 +713,7 @@ a:hover {
 
 #hero-ins-list {
   min-height: 114px;
-  height: 114px;
-  max-height: 114px;
+  max-height: 220px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -946,9 +943,9 @@ a:hover {
 }
 
 @keyframes scanSweep {
-  0% { top: 0%; opacity: 0.2; }
-  50% { top: 95%; opacity: 1; }
-  100% { top: 0%; opacity: 0.2; }
+  0% { transform: translateY(0); opacity: 0.2; }
+  50% { transform: translateY(320px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 0.2; }
 }
 
 .product-presets-bar {
@@ -1417,7 +1414,7 @@ a:hover {
   align-items: center;
   padding-top: 1.5rem;
   font-size: 0.85rem;
-  color: #64748B;
+  color: var(--color-text-muted);
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -1453,44 +1450,11 @@ a:hover {
   height: 18px;
   border-radius: 50%;
   font-size: 0.65rem;
-  color: #64748B;
+  color: var(--color-text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Floating Background Control Widget */
-.bg-control-widget {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: #FFFFFF;
-  border: 1px solid var(--color-border);
-  padding: 0.35rem 0.5rem;
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-md);
-}
-
-.bg-ctrl-btn {
-  background: transparent;
-  border: none;
-  font-size: 0.78rem;
-  font-weight: 700;
-  font-family: var(--font-family-display);
-  color: var(--color-text-muted);
-  padding: 0.35rem 0.7rem;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-}
-
-.bg-ctrl-btn:hover, .bg-ctrl-btn.active {
-  background: rgba(59, 122, 87, 0.12);
-  color: var(--color-primary);
 }
 
 /* ==========================================================================
@@ -1841,8 +1805,8 @@ body.mobile-drawer-open {
 
   #hero-ins-list {
     min-height: 102px;
-    height: 102px;
-    max-height: 102px;
+    max-height: 220px;
+    overflow-y: auto;
   }
 
   .score-badge-group {
@@ -1851,8 +1815,7 @@ body.mobile-drawer-open {
   }
 
   .subpage-back-nav {
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    display: none; /* Breadcrumbs removed per spec */
   }
 
   .footer-compliance-card {
@@ -1865,4 +1828,200 @@ body.mobile-drawer-open {
     gap: 0.75rem;
     text-align: center;
   }
+}
+
+/* ==========================================================================
+   Cross-Document View Transitions (@view-transition)
+   Native app-like page changes supported in modern Chromium and Safari
+   ========================================================================== */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.22s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Mobile Bottom Tab Bar (Scan · Tools · Learn · Journal)
+   Replaces cumbersome hamburger drawer with native app tab bar on mobile
+   ========================================================================== */
+.mobile-tab-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 62px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--color-border);
+  z-index: 998;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.05);
+}
+
+@media (max-width: 768px) {
+  .mobile-tab-bar {
+    display: flex;
+  }
+  body {
+    padding-bottom: 68px !important;
+  }
+}
+
+.mobile-tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  gap: 3px;
+  flex: 1;
+  height: 100%;
+  transition: color var(--transition-fast);
+}
+
+.mobile-tab-item i,
+.mobile-tab-item svg {
+  width: 20px;
+  height: 20px;
+}
+
+.mobile-tab-item.active,
+.mobile-tab-item:hover {
+  color: var(--color-primary);
+}
+
+/* ==========================================================================
+   OCR Bounding Box Overlays on Uploaded Label Images
+   ========================================================================== */
+.ocr-canvas-container {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.ocr-bounding-box {
+  position: absolute;
+  border: 2px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ocr-bounding-box:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.ocr-box-badge {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: #FFFFFF;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   Scroll-Driven Interactive Kurkure Label Decode (Landing Page)
+   ========================================================================== */
+.scroll-decode-section {
+  position: relative;
+  padding: 4rem 0;
+  background: #FAF8F5;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.decode-pinned-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .decode-pinned-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.decode-label-sticky {
+  position: sticky;
+  top: 100px;
+  background: #FFFFFF;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.decode-step-card {
+  background: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.decode-step-card.active {
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 24px rgba(59, 122, 87, 0.15);
+  transform: translateX(6px);
+}
+
+.decode-step-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 99px;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-right: 0.5rem;
+}
+
+/* Multi-language Pill Switcher */
+.lang-pill-btn {
+  background: #FAF8F5;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.lang-pill-btn.active,
+.lang-pill-btn:hover {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
 }

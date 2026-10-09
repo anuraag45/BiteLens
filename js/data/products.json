@@ -1,0 +1,262 @@
+[
+  {
+    "id": "kurkure-masala-munch",
+    "name": "Kurkure Masala Munch",
+    "brand": "PepsiCo India",
+    "category": "Extruded Savory Snack",
+    "barcode": "8901491101837",
+    "icon": "🌶️",
+    "ingredientsRaw": "Rice Meal (52.8%), Edible Vegetable Oil (Palmolein Oil), Corn Meal (19.8%), Gram Meal (3.3%), Spices and Condiments (Chilli Powder, Onion Powder, Fennel Powder, Garlic Powder, Black Pepper Powder, Cumin Powder, Amchur), Salt, Sugar, Acidity Regulator (INS 330), Flavor Enhancers (INS 627, INS 631).",
+    "detectedAdditives": ["INS 330", "INS 627", "INS 631"],
+    "novaGroup": 4,
+    "macrosPer100g": {
+      "calories": 558,
+      "protein": 6.2,
+      "carbs": 55.4,
+      "sugar": 2.1,
+      "addedSugar": 1.8,
+      "fat": 34.6,
+      "sodium": 860
+    },
+    "biteLensScore": 26,
+    "fssaiVerified": {
+      "source": "FSSAI Regulated Package Declaration & Open Food Facts India",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": ["roasted-masala-makhana", "roasted-chana-turmeric"]
+  },
+  {
+    "id": "roasted-masala-makhana",
+    "name": "Roasted Masala Makhana",
+    "brand": "Farm Fresh Superfoods",
+    "category": "Traditional Puffed Lotus Seeds",
+    "barcode": "8906012345012",
+    "icon": "🫘",
+    "ingredientsRaw": "Fox Nuts (Makhana) (88%), Cold-Pressed Groundnut Oil (7%), Rock Salt (Sendha Namak), Cumin Powder, Black Pepper, Turmeric.",
+    "detectedAdditives": [],
+    "novaGroup": 2,
+    "macrosPer100g": {
+      "calories": 360,
+      "protein": 9.8,
+      "carbs": 64.0,
+      "sugar": 0.5,
+      "addedSugar": 0.0,
+      "fat": 6.2,
+      "sodium": 180
+    },
+    "biteLensScore": 92,
+    "fssaiVerified": {
+      "source": "FSSAI Standard Label & Clean Label Verification",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": []
+  },
+  {
+    "id": "masala-instant-noodles",
+    "name": "Masala Instant Noodles",
+    "brand": "Nestle India",
+    "category": "Instant Convenience Food",
+    "barcode": "8901058852219",
+    "icon": "🍜",
+    "ingredientsRaw": "Refined Wheat Flour (Maida), Palm Oil, Salt, Wheat Gluten, Acidity Regulators (INS 500(i), INS 501(i)), Thickener (INS 412). Tastemaker: Hydrolysed Groundnut Protein, Mixed Spices, Flavor Enhancer (INS 635), Caramel (INS 150d), Mineral Salt.",
+    "detectedAdditives": ["INS 500(i)", "INS 412", "INS 635", "INS 150d"],
+    "novaGroup": 4,
+    "macrosPer100g": {
+      "calories": 425,
+      "protein": 8.0,
+      "carbs": 63.5,
+      "sugar": 2.2,
+      "addedSugar": 1.2,
+      "fat": 15.7,
+      "sodium": 1120
+    },
+    "biteLensScore": 36,
+    "fssaiVerified": {
+      "source": "FSSAI License Label Declaration & Open Food Facts IN",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": ["multigrain-oats-crisp", "roasted-chana-turmeric"]
+  },
+  {
+    "id": "multigrain-oats-crisp",
+    "name": "Multigrain Oats Crisp",
+    "brand": "NutriBite Whole Foods",
+    "category": "Packaged Breakfast Cereal",
+    "barcode": "8904012349876",
+    "icon": "🥣",
+    "ingredientsRaw": "Rolled Oats (65%), Whole Wheat (20%), Jaggery (8%), Sunflower Seeds (4%), Soy Lecithin (INS 322), Leavening Agent (INS 500(ii)).",
+    "detectedAdditives": ["INS 322", "INS 500(ii)"],
+    "novaGroup": 3,
+    "macrosPer100g": {
+      "calories": 385,
+      "protein": 11.5,
+      "carbs": 68.0,
+      "sugar": 6.5,
+      "addedSugar": 5.0,
+      "fat": 7.0,
+      "sodium": 140
+    },
+    "biteLensScore": 76,
+    "fssaiVerified": {
+      "source": "FSSAI Packaged Food Label Inspection",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": []
+  },
+  {
+    "id": "classic-salted-potato-chips",
+    "name": "Classic Salted Potato Chips",
+    "brand": "Frito-Lay India",
+    "category": "Fried Potato Snack",
+    "barcode": "8901491102049",
+    "icon": "🍟",
+    "ingredientsRaw": "Potato (66%), Edible Vegetable Oil (Palmolein), Iodized Salt (1.5%).",
+    "detectedAdditives": [],
+    "novaGroup": 3,
+    "macrosPer100g": {
+      "calories": 544,
+      "protein": 7.0,
+      "carbs": 51.0,
+      "sugar": 0.5,
+      "addedSugar": 0.0,
+      "fat": 34.5,
+      "sodium": 680
+    },
+    "biteLensScore": 52,
+    "fssaiVerified": {
+      "source": "FSSAI Ingredients Audit",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": ["roasted-masala-makhana"]
+  },
+  {
+    "id": "berry-flavored-yogurt",
+    "name": "Berry Flavored Yogurt Cup",
+    "brand": "Epigamia Dairy",
+    "category": "Dairy Dessert Product",
+    "barcode": "8908007204011",
+    "icon": "🍓",
+    "ingredientsRaw": "Pasteurized Double Toned Milk, Sugar, Strawberry Fruit Crush (10%), Milk Solids, Stabilizer (Pectin INS 440), Natural Red Color (Carmine INS 120), Active Lactic Cultures.",
+    "detectedAdditives": ["INS 440", "INS 120"],
+    "novaGroup": 4,
+    "macrosPer100g": {
+      "calories": 118,
+      "protein": 5.5,
+      "carbs": 17.5,
+      "sugar": 15.0,
+      "addedSugar": 11.5,
+      "fat": 2.8,
+      "sodium": 75
+    },
+    "biteLensScore": 58,
+    "fssaiVerified": {
+      "source": "Open Food Facts IN & FSSAI Dairy Norms",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": ["plain-greek-yogurt"]
+  },
+  {
+    "id": "plain-greek-yogurt",
+    "name": "Plain Greek Yogurt (Zero Added Sugar)",
+    "brand": "MilkyMist Organics",
+    "category": "Fresh Cultured Dairy",
+    "barcode": "8904001928374",
+    "icon": "🥛",
+    "ingredientsRaw": "Pasteurized Toned Milk, Live Probiotic Cultures (Lactobacillus bulgaricus, Streptococcus thermophilus).",
+    "detectedAdditives": [],
+    "novaGroup": 1,
+    "macrosPer100g": {
+      "calories": 78,
+      "protein": 9.2,
+      "carbs": 4.5,
+      "sugar": 4.0,
+      "addedSugar": 0.0,
+      "fat": 2.5,
+      "sodium": 45
+    },
+    "biteLensScore": 95,
+    "fssaiVerified": {
+      "source": "FSSAI Dairy Standards",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": []
+  },
+  {
+    "id": "roasted-chana-turmeric",
+    "name": "Spiced Roasted Bengal Gram (Chana)",
+    "brand": "Desi Crunch",
+    "category": "Traditional Roasted Pulse",
+    "barcode": "8906019928114",
+    "icon": "🥜",
+    "ingredientsRaw": "Whole Roasted Bengal Gram (Chickpeas) (92%), Cold-Pressed Mustard Oil (4%), Turmeric, Black Salt, Cumin.",
+    "detectedAdditives": [],
+    "novaGroup": 1,
+    "macrosPer100g": {
+      "calories": 380,
+      "protein": 19.5,
+      "carbs": 58.0,
+      "sugar": 1.5,
+      "addedSugar": 0.0,
+      "fat": 6.8,
+      "sodium": 220
+    },
+    "biteLensScore": 94,
+    "fssaiVerified": {
+      "source": "FSSAI Traditional Food Certification",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": []
+  },
+  {
+    "id": "cola-soft-drink",
+    "name": "Carbonated Cola Soft Drink",
+    "brand": "Coca-Cola India",
+    "category": "Carbonated Beverage",
+    "barcode": "8901764012234",
+    "icon": "🥤",
+    "ingredientsRaw": "Carbonated Water, Sugar, Acidity Regulator (INS 338), Caramel Color (INS 150d), Flavors (Natural Flavoring Substances), Caffeine.",
+    "detectedAdditives": ["INS 150d"],
+    "novaGroup": 4,
+    "macrosPer100g": {
+      "calories": 44,
+      "protein": 0.0,
+      "carbs": 11.0,
+      "sugar": 10.6,
+      "addedSugar": 10.6,
+      "fat": 0.0,
+      "sodium": 15
+    },
+    "biteLensScore": 28,
+    "fssaiVerified": {
+      "source": "FSSAI Soft Drinks Regulatory Declaration",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": ["unsweetened-coconut-water"]
+  },
+  {
+    "id": "unsweetened-coconut-water",
+    "name": "Pure Tender Coconut Water",
+    "brand": "Raw Pressery",
+    "category": "Natural Fruit Beverage",
+    "barcode": "8906059281122",
+    "icon": "🥥",
+    "ingredientsRaw": "Natural Tender Coconut Water (99.9%), Bio-Antioxidant (Vitamin C INS 300).",
+    "detectedAdditives": [],
+    "novaGroup": 1,
+    "macrosPer100g": {
+      "calories": 20,
+      "protein": 0.5,
+      "carbs": 4.8,
+      "sugar": 4.2,
+      "addedSugar": 0.0,
+      "fat": 0.1,
+      "sodium": 25
+    },
+    "biteLensScore": 96,
+    "fssaiVerified": {
+      "source": "FSSAI Fresh Beverage Standard",
+      "verifiedDate": "2026-03-15"
+    },
+    "swaps": []
+  }
+]

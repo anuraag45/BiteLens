@@ -4,11 +4,20 @@
    and validates input integrity across all form fields.
    ========================================================================== */
 
+import DOMPurify from 'dompurify';
+
 /**
- * Escapes HTML characters to prevent Cross-Site Scripting (XSS) attacks.
+ * Escapes / sanitizes HTML characters using DOMPurify to prevent Cross-Site Scripting (XSS).
  */
 export function sanitizeInput(str) {
   if (typeof str !== 'string') return str;
+  try {
+    if (DOMPurify && typeof DOMPurify.sanitize === 'function') {
+      return DOMPurify.sanitize(str, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] });
+    }
+  } catch (e) {
+    // Fallback if running outside DOM environment
+  }
   return str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

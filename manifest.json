@@ -2,7 +2,7 @@
   "name": "BiteLens - Smart Food & Barcode Scanner",
   "short_name": "BiteLens",
   "description": "Blinkit-speed food barcode scanner & FSSAI nutritional telemetry.",
-  "start_url": "/app.html",
+  "start_url": "/scan.html",
   "display": "standalone",
   "background_color": "#F8FAF7",
   "theme_color": "#3B7A57",

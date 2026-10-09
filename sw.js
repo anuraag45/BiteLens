@@ -1,17 +1,29 @@
 /* ==========================================================================
-   BiteLens Mobile PWA Service Worker (v1.0.0)
-   Enables 100% offline barcode scanning & catalog lookup in grocery aisles.
+   BiteLens Mobile PWA Service Worker (v2.4.0)
+   Enables 100% offline barcode scanning, OCR analysis & catalog lookup
+   across all 10 production routes:
+   index · scan · additives · compare · health-calculator · learn · dashboard · download · about · report
    ========================================================================== */
 
-const CACHE_NAME = 'bitelens-pwa-v1';
+const CACHE_NAME = 'bitelens-pwa-v2.4';
 const PRECACHE_ASSETS = [
-  '/',
-  '/app.html',
-  '/manifest.json',
-  '/js/mobileApp.js',
-  '/js/html5-qrcode.min.js',
-  '/js/data/indianProductsCatalog.js',
-  'https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js'
+  './',
+  './index.html',
+  './scan.html',
+  './additives.html',
+  './compare.html',
+  './health-calculator.html',
+  './learn.html',
+  './dashboard.html',
+  './download.html',
+  './about.html',
+  './report.html',
+  './manifest.json',
+  './styles/main.css',
+  './js/components.js',
+  './js/analyze.js',
+  './js/additive-database.js',
+  './js/data/products.json'
 ];
 
 self.addEventListener('install', (event) => {
@@ -37,23 +49,23 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
-  // For Open Food Facts API, use Network-First
-  if (request.url.includes('openfoodfacts.org')) {
+  // For Open Food Facts API, use Network-First with cache fallback
+  if (request.url.includes('world.openfoodfacts.org')) {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => caches.match(request))
+      fetch(request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        }
+        return networkResponse;
+      }).catch(() => {
+        return caches.match(request);
+      })
     );
     return;
   }
 
-  // Cache-First strategy for local scripts, styles, catalog
+  // Cache-first for core app shell assets
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {
@@ -68,7 +80,7 @@ self.addEventListener('fetch', (event) => {
       }).catch(() => {
         // Fallback for HTML navigations
         if (request.mode === 'navigate') {
-          return caches.match('/app.html');
+          return caches.match('./scan.html') || caches.match('./index.html');
         }
       });
     })

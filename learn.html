@@ -4,8 +4,55 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Learn — How BiteLens Works & Scientific Methodology</title>
-  <meta name="description" content="Explore how BiteLens works: 4-step optical telemetry laboratory, the peer-reviewed NOVA classification framework, and FSSAI regulatory transparency.">
+  <meta name="description" content="Explore how BiteLens works: 4-step optical telemetry laboratory, peer-reviewed NOVA classification framework, FSSAI regulatory standards, and food additive science FAQ.">
   <link rel="stylesheet" href="./styles/main.css">
+  <style>
+    .faq-accordion {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: #FFFFFF;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .faq-accordion:hover {
+      border-color: var(--color-primary);
+    }
+    .faq-accordion summary {
+      padding: 1.15rem 1.25rem;
+      font-weight: 700;
+      font-family: var(--font-family-display);
+      font-size: 1.02rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      color: var(--color-text-main);
+      background: #FAF8F5;
+    }
+    .faq-accordion summary::-webkit-details-marker {
+      display: none;
+    }
+    .faq-accordion summary::after {
+      content: "+";
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      transition: transform 0.2s ease;
+    }
+    .faq-accordion[open] summary::after {
+      content: "−";
+    }
+    .faq-content {
+      padding: 1.25rem;
+      font-size: 0.92rem;
+      color: var(--color-text-main);
+      line-height: 1.65;
+      border-top: 1px solid var(--color-border);
+      background: #FFFFFF;
+    }
+  </style>
 </head>
 <body>
 
@@ -18,8 +65,8 @@
           <i data-lucide="sparkles"></i> Educational & Telemetry Portal
         </div>
         <h1 class="hero-title">How It Works & The Science</h1>
-        <p class="hero-subtitle" style="max-width: 650px; margin: 0 auto;">
-          From camera barcode capture to transparent health scoring: explore our 4-step telemetry pipeline and the peer-reviewed scientific methodology behind BiteLens.
+        <p class="hero-subtitle" style="max-width: 680px; margin: 0 auto;">
+          From on-device camera OCR capture to transparent nutritional scoring: explore our 4-step telemetry pipeline, peer-reviewed NOVA classification, FSSAI regulatory standards, and additive safety science.
         </p>
       </div>
     </section>
@@ -42,78 +89,237 @@
     <!-- SECTION 2: The NOVA Classification Framework -->
     <section class="section section-alt">
       <div class="container" style="max-width: 900px;">
-        <article style="margin-bottom: 3rem;">
+        <article style="margin-bottom: 3.5rem;">
           <div class="section-header" style="text-align: left; margin-bottom: 1.5rem;">
             <h2 style="display: flex; align-items: center; gap: 0.6rem;">
-              <i data-lucide="flask-conical" style="color: var(--color-neon-emerald);"></i> 2. The NOVA Classification Framework
+              <i data-lucide="flask-conical" style="color: var(--color-primary);"></i> 2. The NOVA Classification Framework
             </h2>
             <p class="section-subtitle">Peer-reviewed food processing tiers developed by researchers at the University of São Paulo.</p>
           </div>
           <p>
-            BiteLens’s <strong>Health Processing Score (0–100)</strong> utilizes the internationally recognized <strong>NOVA Food Classification System</strong> (Monteiro et al.). NOVA evaluates foods by the extent and purpose of industrial processing rather than isolated calories:
+            BiteLens’s <strong>Health Processing Score (0–100)</strong> utilizes the internationally recognized <strong>NOVA Food Classification System</strong> (Monteiro et al.). Rather than judging a food purely on isolated calories, NOVA categorizes foods based on the nature, extent, and purpose of industrial physical, chemical, and biological processing:
           </p>
           
           <div class="grid-2" style="margin: 1.5rem 0;">
             <div class="card hud-card" style="padding: 1.25rem;">
-              <h4 style="color: var(--color-neon-emerald);">NOVA Group 1: Unprocessed</h4>
-              <p style="font-size: 0.88rem; margin-top: 0.4rem;">Fresh fruits, raw grains, vegetables, whole pulses, fresh milk, and eggs. (Baseline: 100/100)</p>
+              <h4 style="color: #166534; font-size: 1.05rem;">NOVA Group 1: Unprocessed or Minimally Processed</h4>
+              <p style="font-size: 0.88rem; margin-top: 0.4rem; color: var(--color-text-main);">
+                Fresh fruits, vegetables, whole pulses, raw grains, nuts, seeds, fresh milk, plain curd, and chilled meats. Physical processes like cleaning, grinding, pasteurizing, or freezing without added substances. (Base Score: 100/100)
+              </p>
             </div>
             <div class="card hud-card" style="padding: 1.25rem;">
-              <h4 style="color: var(--color-cyber-cyan);">NOVA Group 2: Culinary Ingredients</h4>
-              <p style="font-size: 0.88rem; margin-top: 0.4rem;">Oils, butter, honey, sugar, and salt used to prepare home-cooked meals. (Baseline: 90/100)</p>
+              <h4 style="color: #0284C7; font-size: 1.05rem;">NOVA Group 2: Processed Culinary Ingredients</h4>
+              <p style="font-size: 0.88rem; margin-top: 0.4rem; color: var(--color-text-main);">
+                Substances obtained directly from Group 1 foods by pressing, refining, or mining: cold-pressed oils, butter, honey, jaggery, salt, and table sugar. Used in domestic kitchens to prepare home meals. (Base Score: 90/100)
+              </p>
             </div>
             <div class="card hud-card" style="padding: 1.25rem;">
-              <h4 style="color: #D97706;">NOVA Group 3: Processed Foods</h4>
-              <p style="font-size: 0.88rem; margin-top: 0.4rem;">Canned vegetables, artisanal breads, salted nuts, and cheese. (Baseline: 75/100)</p>
+              <h4 style="color: #D97706; font-size: 1.05rem;">NOVA Group 3: Processed Foods</h4>
+              <p style="font-size: 0.88rem; margin-top: 0.4rem; color: var(--color-text-main);">
+                Simple products made by adding Group 2 ingredients (salt, oil, sugar) to Group 1 foods to enhance preservation or palatability: canned vegetables, freshly baked bread, cheeses, and salted nuts. (Base Score: 75/100)
+              </p>
             </div>
             <div class="card hud-card" style="padding: 1.25rem;">
-              <h4 style="color: #E11D48;">NOVA Group 4: Ultra-Processed (UPFs)</h4>
-              <p style="font-size: 0.88rem; margin-top: 0.4rem;">Industrial formulations with emulsifiers, synthetic dyes, artificial sweeteners, and extruded starches. (Baseline: 50/100)</p>
+              <h4 style="color: #E11D48; font-size: 1.05rem;">NOVA Group 4: Ultra-Processed Foods (UPFs)</h4>
+              <p style="font-size: 0.88rem; margin-top: 0.4rem; color: var(--color-text-main);">
+                Industrial formulations typically containing 5+ ingredients not found in home kitchens: inverted sugar syrups, hydrolyzed proteins, hydrogenated oils, emulsifiers (INS 322, 471), synthetic flavor enhancers (INS 621, 627, 631), and artificial colorings. (Base Score: 60/100, heavily penalized)
+              </p>
             </div>
           </div>
         </article>
 
         <!-- SECTION 3: Regulatory Landscape in India -->
-        <article style="margin-bottom: 3rem;">
+        <article style="margin-bottom: 3.5rem;">
           <h2 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;">
-            <i data-lucide="shield-check" style="color: var(--color-neon-emerald);"></i> 3. Regulatory Landscape & FSSAI Standards
+            <i data-lucide="shield-check" style="color: var(--color-primary);"></i> 3. Regulatory Landscape & FSSAI Standards
           </h2>
           
+          <p>
+            In India, food manufacturing and labeling are governed by the <strong>Food Safety and Standards Authority of India (FSSAI)</strong> under two core frameworks:
+          </p>
+          <ul style="margin: 0.75rem 0 1.25rem 1.5rem; font-size: 0.92rem; line-height: 1.6;">
+            <li><strong>FSSAI Food Safety and Standards (Food Products Standards and Food Additives) Regulations, 2011:</strong> Specifies permissible classes of food additives, maximum usage levels (GMP or numeric limits in mg/kg), and functional categories across food product classes.</li>
+            <li><strong>FSSAI Food Safety and Standards (Labeling and Display) Regulations, 2020:</strong> Mandates nutritional information panels per 100g or per serve (including energy, protein, carbohydrate, total sugars, added sugars, dietary fiber, total fat, saturated fat, trans fat, and sodium) alongside mandatory declaration of food additives via INS numbers.</li>
+          </ul>
+
           <div class="callout-box" style="margin: 1.5rem 0;">
-            <h3 style="margin-bottom: 0.5rem;">Independent Heuristic Notice</h3>
-            <p>
-              <strong>India does not currently enforce a mandatory front-of-pack nutrition rating (FOPL) label.</strong> 
-              While the Food Safety and Standards Authority of India (FSSAI) has published draft guidelines, packaging labels rely on cryptic International Numbering System (INS) codes. BiteLens bridges this regulatory information gap by decoding these numbers directly into everyday plain English.
+            <h3 style="margin-bottom: 0.5rem; color: var(--color-primary);">The Front-of-Pack Information Gap</h3>
+            <p style="margin: 0;">
+              <strong>India does not currently mandate a front-of-pack nutrition rating (FOPL) or warning label system.</strong> While FSSAI has circulated draft concepts for an Indian Nutrition Rating (INR) star system, mandatory color-coded warning badges (such as Chile's warning stop-signs or the UK traffic-light system) are not yet in force. As a result, consumers are forced to decipher tiny, complex International Numbering System (INS) codes on back labels. BiteLens bridges this regulatory information gap by decoding these codes in real time on-device.
             </p>
           </div>
         </article>
 
         <!-- SECTION 4: Dual-Score Decoupling -->
-        <article style="margin-bottom: 3rem;">
+        <article style="margin-bottom: 3.5rem;">
           <h2 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;">
-            <i data-lucide="scale" style="color: var(--color-neon-emerald);"></i> 4. Decoupled Dual-Scoring Philosophy
+            <i data-lucide="scale" style="color: var(--color-primary);"></i> 4. Decoupled Dual-Scoring Philosophy
           </h2>
           <p>
-            Most legacy apps mix calories with processing into an opaque single score. BiteLens explicitly separates these into two independent dimensions:
+            Most legacy fitness applications confound chemical processing with macronutrient calories into an opaque, single composite score. BiteLens explicitly separates these into two independent dimensions:
           </p>
-          <ul>
-            <li style="margin-bottom: 0.5rem;">
-              <strong>Health Processing Score (0–100):</strong> Objective, population-wide measure of industrial chemical processing based on NOVA and additive risks.
-            </li>
-            <li>
-              <strong>Personal Goal Fit Score (0–100):</strong> Personalized alignment with individual dietary requirements (e.g. caloric deficit for fat loss vs. high protein density for muscle hypertrophy).
-            </li>
-          </ul>
+          <div class="grid-2" style="margin: 1.25rem 0;">
+            <div class="card hud-card" style="padding: 1.25rem;">
+              <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;">Health Processing Score (0–100)</h4>
+              <p style="font-size: 0.88rem; color: var(--color-text-main); margin: 0;">
+                An objective, population-wide evaluation of industrial modification. It starts at a base of 100, deducts for NOVA processing tier (-10 for NOVA 2, -25 for NOVA 3, -40 for NOVA 4), and applies itemized penalty deductions for documented additive risk tiers (high -6 to -8 pts, medium -3 to -4 pts), high sodium (-4 to -12 pts), and saturated fat (-3 to -6 pts).
+              </p>
+            </div>
+            <div class="card hud-card" style="padding: 1.25rem;">
+              <h4 style="color: #0284C7; margin-bottom: 0.5rem;">Personal Goal Fit Score (0–100)</h4>
+              <p style="font-size: 0.88rem; color: var(--color-text-main); margin: 0;">
+                A personalized alignment metric based on your on-device health profile (e.g. caloric deficit for fat loss, high protein density for muscle maintenance, or diabetic carbohydrate containment). A product can have a low Health Score (due to ultra-processing) while having a high Goal Fit Score for protein, allowing users to make transparent trade-offs.
+              </p>
+            </div>
+          </div>
         </article>
 
-        <!-- Academic References -->
-        <article>
+        <!-- SECTION 5: Additive Science & Carrageenan Controversy -->
+        <article style="margin-bottom: 3.5rem;">
+          <h2 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;">
+            <i data-lucide="shield-alert" style="color: #D97706;"></i> 5. Food Additive Science & The Evidence Spectrum
+          </h2>
+          <p>
+            BiteLens distinguishes between <strong>FSSAI Regulatory Approval</strong> (which establishes legal manufacturing compliance) and <strong>Emerging Scientific Evidence</strong> (which evaluates long-term epidemiological and microbiome health effects).
+          </p>
+
+          <div class="card hud-card" style="padding: 1.25rem; margin-top: 1rem;">
+            <h4 style="color: #B45309; margin-bottom: 0.5rem;">Case Study: Carrageenan (INS 407) & Poligeenan Distinction</h4>
+            <p style="font-size: 0.9rem; color: var(--color-text-main); margin-bottom: 0.75rem;">
+              Carrageenan is an FSSAI-approved seaweed-derived polysaccharide widely used as an emulsifier and gelling agent in dairy desserts, plant milks, and processed meats. However, scientific literature presents a nuanced, contested debate:
+            </p>
+            <ul style="font-size: 0.88rem; line-height: 1.6; margin-left: 1.25rem; margin-bottom: 0.75rem;">
+              <li><strong>Food-Grade Undegraded Carrageenan:</strong> Possesses high molecular weight (>100 kDa) and is deemed safe by JECFA (Joint FAO/WHO Expert Committee on Food Additives), EFSA, and FSSAI within established acceptable daily intakes (ADI).</li>
+              <li><strong>Degraded Carrageenan (Poligeenan):</strong> Possesses low molecular weight (&lt;20 kDa) and is known in clinical research to trigger acute intestinal inflammation and ulceration. Poligeenan is strictly prohibited in food formulations.</li>
+              <li><strong>The Contested Literature:</strong> Peer-reviewed studies (e.g., Bhattacharyya et al., 2017) hypothesize that even food-grade carrageenan may interact with gut microbiota, alter tight junction permeability, or degrade during digestion under specific pH conditions, potentially exacerbating inflammatory bowel symptoms in sensitive individuals.</li>
+            </ul>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin: 0; font-style: italic;">
+              BiteLens does not falsely claim that Carrageenan is "banned" or "toxic"; rather, we assign it a moderate caution flag, transparently linking the regulatory approval alongside peer-reviewed gastrointestinal studies so consumers can make informed choices.
+            </p>
+          </div>
+        </article>
+
+        <!-- SECTION 6: Dietary Sugar Guidelines -->
+        <article style="margin-bottom: 3.5rem;">
+          <h2 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;">
+            <i data-lucide="activity" style="color: #E11D48;"></i> 6. Added Sugars & WHO Dietary Guidelines
+          </h2>
+          <p>
+            In evaluating packaged snack foods, BiteLens adheres to the authoritative <strong>World Health Organization (WHO) Guideline: Sugars intake for adults and children (2015)</strong>:
+          </p>
+          <div class="callout-box" style="margin: 1.25rem 0;">
+            <p style="margin-bottom: 0.5rem; font-weight: 700; color: #991B1B;">
+              WHO Recommendation on Free Sugars:
+            </p>
+            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+              • <strong>Strong Recommendation:</strong> In both adults and children, the intake of free sugars should be reduced to <strong>less than 10% of total energy intake</strong> (approximately 50g or 12 level teaspoons for a 2,000 kcal diet).
+            </p>
+            <p style="font-size: 0.9rem; margin: 0;">
+              • <strong>Conditional Recommendation:</strong> A further reduction of free sugars to <strong>less than 5% of total energy intake</strong> (approximately 25g or 6 level teaspoons) provides additional health benefits, especially in preventing dental caries and mitigating metabolic syndrome.
+            </p>
+          </div>
+          <p style="font-size: 0.9rem;">
+            <em>Note on Terminology:</em> <strong>Free sugars</strong> include monosaccharides and disaccharides added to foods and beverages by the manufacturer, cook, or consumer, plus sugars naturally present in honey, syrups, fruit juices, and fruit juice concentrates. They do not include intrinsic sugars found in whole, intact fresh fruits, vegetables, and unflavored milk.
+          </p>
+        </article>
+
+        <!-- SECTION 7: FAQ & Myth Buster -->
+        <section id="faq" style="margin-bottom: 3.5rem; scroll-margin-top: 5rem;">
+          <div class="section-header" style="text-align: left; margin-bottom: 1.5rem;">
+            <h2 style="display: flex; align-items: center; gap: 0.6rem;">
+              <i data-lucide="help-circle" style="color: var(--color-primary);"></i> 7. Frequently Asked Questions & Myth Buster
+            </h2>
+            <p class="section-subtitle">Plain-English answers to common questions regarding INS codes, scoring mathematics, and privacy.</p>
+          </div>
+
+          <!-- FAQ 1 -->
+          <details class="faq-accordion">
+            <summary>What is an INS number, and how does it relate to European E-numbers?</summary>
+            <div class="faq-content">
+              <strong>They represent the identical international index.</strong> INS stands for the <em>International Numbering System for Food Additives</em>, formulated by the Codex Alimentarius Commission (FAO/WHO). India’s FSSAI adopts INS codes directly. In Europe, the exact same additives are prefixed with "E" (e.g., European <code>E322</code> for soy lecithin is completely identical to Indian <code>INS 322</code>).
+            </div>
+          </details>
+
+          <!-- FAQ 2 -->
+          <details class="faq-accordion">
+            <summary>How is the BiteLens Health Processing Score computed mathematically?</summary>
+            <div class="faq-content">
+              Every food item starts at a baseline of <strong>100 points</strong>. Deductions are subtracted based on documented criteria:
+              <ul style="margin: 0.5rem 0 0.5rem 1.25rem;">
+                <li><strong>NOVA Processing Tier:</strong> Group 1 (0 pts), Group 2 (-10 pts), Group 3 (-25 pts), Group 4 (-40 pts).</li>
+                <li><strong>Additive Risk Tiers:</strong> Each high-risk additive (e.g., INS 150d caramel with 4-MEI residue, synthetic dyes) deducts 6 to 8 pts; moderate additives deduct 3 to 4 pts.</li>
+                <li><strong>Excess Sodium:</strong> Deducts up to 12 points for items exceeding 600mg sodium per 100g.</li>
+                <li><strong>Saturated / Industrial Fats:</strong> Deducts up to 6 points for high saturated palm oil or hydrogenated fats.</li>
+              </ul>
+              The resulting score is clamped between 0 and 100.
+            </div>
+          </details>
+
+          <!-- FAQ 3 -->
+          <details class="faq-accordion">
+            <summary>Why can a high-protein fitness bar receive a low BiteLens Health Score?</summary>
+            <div class="faq-content">
+              This reflects BiteLens’s <strong>Decoupled Dual Scoring Principle</strong>. A packaged protein bar might supply 20g of protein (high Goal Fit Score), but if its matrix is composed of ultra-processed soy protein isolates, artificial sweeteners (INS 955 sucralose), humectants (INS 422), and chemical emulsifiers (INS 471), it belongs in NOVA Group 4. BiteLens presents both scores side-by-side so you can evaluate the trade-off between macronutrients and chemical processing.
+            </div>
+          </details>
+
+          <!-- FAQ 4 -->
+          <details class="faq-accordion">
+            <summary>Is any photo, camera feed, or personal data sent to cloud servers?</summary>
+            <div class="faq-content">
+              <strong>No. 100% of data processing is on-device.</strong> Optical character recognition (OCR) runs locally inside your browser via client-side WebAssembly (Tesseract.js), and nutritional audits are matched against a local catalog. Your camera feed never leaves your device, and no accounts, cookies, or remote tracking are used.
+            </div>
+          </details>
+
+          <!-- FAQ 5 -->
+          <details class="faq-accordion">
+            <summary>What is the difference between "Total Sugars" and "Added Sugars" on Indian food labels?</summary>
+            <div class="faq-content">
+              Under FSSAI’s 2020 Labeling and Display Regulations:
+              <ul style="margin: 0.5rem 0 0.5rem 1.25rem;">
+                <li><strong>Total Sugars:</strong> The sum of all sugars naturally present in whole ingredients (e.g., lactose in milk, fructose in fruit pulp) PLUS added sugars.</li>
+                <li><strong>Added Sugars:</strong> Free sugars added during industrial preparation, such as sucrose, invert sugar syrup, liquid glucose, or high-fructose corn syrup. Added sugars are what WHO recommends limiting to under 25g/day.</li>
+              </ul>
+            </div>
+          </details>
+
+          <!-- FAQ 6 -->
+          <details class="faq-accordion">
+            <summary>Does India have an official mandatory front-of-pack star rating system?</summary>
+            <div class="faq-content">
+              <strong>No.</strong> Although FSSAI proposed draft guidelines for an Indian Nutrition Rating (INR) half-star to 5-star scoring system, it has not been enacted as mandatory law. BiteLens provides an independent academic heuristic to empower consumers directly until mandatory front-of-pack regulations arrive.
+            </div>
+          </details>
+
+          <!-- FAQ 7 -->
+          <details class="faq-accordion">
+            <summary>How does BiteLens handle OCR errors on crinkled snack packets?</summary>
+            <div class="faq-content">
+              Packaged food packets (such as shiny foil pouches) often produce optical OCR character confusion. BiteLens incorporates a specialized <strong>INS Digit Normalization Matrix</strong> that automatically resolves common OCR character substitutions (such as <code>I / l → 1</code>, <code>O → 0</code>, <code>S → 5</code>, <code>B → 8</code>, <code>Z → 2</code>). This enables robust detection of codes like <code>INS-62I</code> to <code>INS 621</code> while strictly preventing false collisions (e.g., ensuring <code>621</code> never collides with <code>622</code>, <code>627</code>, or <code>631</code>).
+            </div>
+          </details>
+
+          <!-- FAQ 8 -->
+          <details class="faq-accordion">
+            <summary>If an additive is approved by FSSAI, why does BiteLens flag it?</summary>
+            <div class="faq-content">
+              FSSAI approval confirms that an additive is legally permitted for commercial use within statutory upper limits. However, modern nutritional science evaluates cumulative exposure, gut microbiome effects, and cocktail interactions. When credible peer-reviewed toxicology or epidemiological studies indicate concerns (such as 4-MEI in Caramel IV INS 150d or hyperactive sensitivities with Tartrazine INS 102), BiteLens flags these transparently so consumers have complete visibility.
+            </div>
+          </details>
+        </section>
+
+        <!-- Academic References & Literature -->
+        <article style="border-top: 1px solid var(--color-border); padding-top: 2rem;">
           <h3 style="margin-bottom: 0.75rem; color: var(--color-text-muted);">Key Scientific Literature & Citations</h3>
-          <ul style="font-size: 0.88rem; color: var(--color-text-muted); line-height: 1.6;">
-            <li>Monteiro, C. A., et al. (2010). "A new classification of foods based on the extent and purpose of their processing." <em>Cadernos de Saúde Pública</em>, 26(11).</li>
-            <li>Monteiro, C. A., et al. (2019). "Ultra-processed foods: what they are and how to identify them." <em>Public Health Nutrition</em>, 22(5).</li>
-            <li>Mifflin, M. D., et al. (1990). "A new predictive equation for resting energy expenditure in healthy individuals." <em>The American Journal of Clinical Nutrition</em>, 51(2).</li>
-            <li>WHO Expert Consultation (2004). "Appropriate body-mass index for Asian populations and its implications for policy and intervention strategies." <em>The Lancet</em>, 363(9403).</li>
+          <ul style="font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.65;">
+            <li>Monteiro, C. A., Cannon, G., Levy, R. B., et al. (2019). "Ultra-processed foods: what they are and how to identify them." <em>Public Health Nutrition</em>, 22(5), 936–941.</li>
+            <li>Monteiro, C. A., et al. (2010). "A new classification of foods based on the extent and purpose of their processing." <em>Cadernos de Saúde Pública</em>, 26(11), 2039–2049.</li>
+            <li>World Health Organization (2015). <em>Guideline: Sugars intake for adults and children</em>. Geneva: World Health Organization.</li>
+            <li>Food Safety and Standards Authority of India (2020). <em>Food Safety and Standards (Labeling and Display) Regulations, 2020</em>. Gazette of India.</li>
+            <li>Food Safety and Standards Authority of India (2011). <em>Food Safety and Standards (Food Products Standards and Food Additives) Regulations, 2011</em>.</li>
+            <li>Misra, A., Chowbey, P., Makkar, B. M., et al. (2009). "Consensus statement for diagnosis of obesity, abdominal obesity and the metabolic syndrome for Asian Indians." <em>Journal of the Association of Physicians of India</em>, 57, 163–170.</li>
+            <li>Mifflin, M. D., St Jeor, S. T., Hill, L. A., et al. (1990). "A new predictive equation for resting energy expenditure in healthy individuals." <em>The American Journal of Clinical Nutrition</em>, 51(2), 241–247.</li>
+            <li>Bhattacharyya, S., Shumard, T., Xie, H., et al. (2017). "A randomized trial of the effects of the carrageenan-free diet on western diet-induced inflammation." <em>Nutrition and Healthy Aging</em>, 4(2), 181–192.</li>
           </ul>
         </article>
 

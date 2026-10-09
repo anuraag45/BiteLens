@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BiteLens — Software Group Project Report (Indus University)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #1E3A8A;
@@ -416,6 +413,7 @@
     
     <!-- Action Bar -->
     <div class="print-controls">
+      <a href="index.html" class="btn-print" style="text-decoration: none; background: #3B7A57;">← Back to App</a>
       <button class="btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
     </div>
 
@@ -1016,13 +1014,19 @@ func (u *User) IsMinor(atDate time.Time) bool {
 
       <h2>3.3 Screenshots & Functionality Overview</h2>
       <p>
-        The frontend comprises 14 dedicated routes compiled via Vite, featuring elevated white card surfaces, soft drop shadows, and Lucide vector icons:
+        The frontend comprises 10 consolidated production routes compiled via Vite, featuring elevated card surfaces, accessible typography, and Lucide vector icons:
       </p>
       <ul>
-        <li><strong>`index.html` (Home Interactive Showcase):</strong> Features an interactive smartphone scanner mockup with live food sample presets (Oats Crisp, Yogurt, Makhana), animated scan beams, and dual score badges.</li>
-        <li><strong>`how-it-works.html` (Telemetry Laboratory):</strong> An interactive 4-step walkthrough lab allowing users to inspect camera OCR tokens, compare raw vs decoded labels, examine NOVA group tiers, and simulate goal trade-offs.</li>
-        <li><strong>`additive-decoder.html` (HUD Tools Studio):</strong> A futuristic telemetry workbench with search bars, category filters, and live regulatory compliance badges.</li>
-        <li><strong>`bmi-calculator.html` & `calorie-calculator.html`:</strong> Dynamic client-side calculators with metric/imperial toggle buttons and instant category feedback.</li>
+        <li><strong>`index.html` (Interactive Telemetry Hub):</strong> Features scroll-driven Kurkure packet decodes, live food sample presets, animated scan beams, and canvas WhatsApp share card generator.</li>
+        <li><strong>`scan.html` (Scan Studio):</strong> Client-side Tesseract.js OCR with interactive bounding box overlays, barcode scanner with Open Food Facts fallback, and animated BiteLens score dial.</li>
+        <li><strong>`additives.html` (Additive Database):</strong> Comprehensive FSSAI INS additive directory with regulatory status vs. scientific evidence concerns, category limits, and multi-language explanations.</li>
+        <li><strong>`compare.html` (Compare Arena):</strong> Side-by-side nutritional showdowns with instant delta badges and healthy swap recommendations.</li>
+        <li><strong>`health-calculator.html` (Health & BMI Engine):</strong> Mifflin-St Jeor TDEE calculator, Indian consensus BMI cutoffs (Misra et al. 2009), and adolescent pediatric gating.</li>
+        <li><strong>`learn.html` (Educational Portal):</strong> Interactive 4-step telemetry lab, NOVA classification tiers, FSSAI regulatory standards, WHO sugar guidelines, and merged myth-buster FAQ.</li>
+        <li><strong>`dashboard.html` (Dashboard & Journal):</strong> 100% on-device scan telemetry history and integrated snack budget simulator tracking calories, sodium, and sugars.</li>
+        <li><strong>`download.html` (Mobile Distribution):</strong> Standalone Android APK downloads with SHA-256 verification and Progressive Web App (PWA) installation guide.</li>
+        <li><strong>`about.html` (Mission & Privacy):</strong> Academic mission, project research team credits, and 100% on-device privacy guarantee.</li>
+        <li><strong>`report.html` (Academic Report):</strong> Complete Software Group Project report and scientific documentation.</li>
       </ul>
 
       <h2>3.4 Results and Analysis</h2>

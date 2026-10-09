@@ -178,8 +178,10 @@ export class LRUCache {
 }
 
 /**
- * 3. FuzzyMatcher (Levenshtein Distance & Typo Tolerance)
- * Calculates minimum edit distance between OCR strings and canonical additive dictionaries.
+ * 3. FuzzyMatcher (Levenshtein Distance & Typo Tolerance for NAMES ONLY)
+ * Calculates minimum edit distance between ingredient/additive NAMES.
+ * NOTE: Never use edit distance on numerical INS codes, because edit distance 1
+ * maps 621 to 622, 627, or 631 which are completely different additives!
  */
 export class FuzzyMatcher {
   /**
@@ -220,6 +222,7 @@ export class FuzzyMatcher {
 
   /**
    * Returns similarity score between 0.0 (completely distinct) and 1.0 (exact match).
+   * For ingredient & additive text names only.
    */
   static similarity(a, b) {
     const s1 = (a || '').toLowerCase().trim();
@@ -243,6 +246,86 @@ export class FuzzyMatcher {
     }
 
     return bestMatch ? { item: bestMatch, distance: bestDist } : null;
+  }
+}
+
+/**
+ * 3b. INSNormalizer & OCR Confusion Resolver
+ * Solves correctness bug where Levenshtein mapped 621 to 622, 627, or 631.
+ * Applies optical confusion substitutions ONLY to code digit sequences:
+ * I / l / | -> 1
+ * O / o / D / Q -> 0
+ * S / s / $ -> 5
+ * B -> 8
+ * Z / z -> 2
+ * Normalizes prefixes (INS, E, e) and suffixes (e.g. 150d, 160a(i), E 322, INS-621).
+ */
+export class INSNormalizer {
+  static OCR_DIGIT_CONFUSIONS = {
+    'i': '1', 'I': '1', 'l': '1', '|': '1',
+    'o': '0', 'O': '0',
+    's': '5', 'S': '5', '$': '5',
+    'b': '8', 'B': '8'
+  };
+
+  /**
+   * Normalizes an INS or E-code string using OCR character confusion rules.
+   */
+  static normalizeCode(raw) {
+    if (!raw || typeof raw !== 'string') return { number: '', canonical: '', eCode: '' };
+    let str = raw.trim();
+
+    // Strip common prefixes: "INS-", "INS ", "INS", "E-", "E ", "E"
+    const prefixMatch = str.match(/^(?:INS[-:\s]*|E[-:\s]*)(.*)$/i);
+    let body = prefixMatch ? prefixMatch[1].trim() : str;
+
+    // Match leading digits/confused characters, followed by valid suffix like "d", "a(i)", "(ii)", etc.
+    const codeMatch = body.match(/^([0-9Il|OoSs$bB]{3,4})([\(\)a-zA-Z0-9]*)$/);
+    if (codeMatch) {
+      let numPart = codeMatch[1];
+      let suffixPart = codeMatch[2] || '';
+
+      // Apply OCR digit confusion map to numeric prefix part
+      let correctedNum = '';
+      for (const ch of numPart) {
+        correctedNum += this.OCR_DIGIT_CONFUSIONS[ch] || ch;
+      }
+
+      const canonicalNum = correctedNum + suffixPart.toLowerCase();
+      return {
+        number: canonicalNum,
+        canonical: `INS ${canonicalNum}`,
+        eCode: `E ${canonicalNum}`
+      };
+    }
+
+    // Direct match for standard digits + optional suffix
+    const generalMatch = body.match(/^(\d+)([\(\)a-z0-9]*)/i);
+    if (generalMatch) {
+      const code = generalMatch[1] + generalMatch[2].toLowerCase();
+      return {
+        number: code,
+        canonical: `INS ${code}`,
+        eCode: `E ${code}`
+      };
+    }
+
+    const clean = body.toLowerCase().replace(/\s+/g, '');
+    return {
+      number: clean,
+      canonical: `INS ${clean}`,
+      eCode: `E ${clean}`
+    };
+  }
+
+  /**
+   * Strict exact match verification for INS codes.
+   * NEVER uses Levenshtein edit distance on numbers because 621 != 622 != 627 != 631!
+   */
+  static matchCode(query, targetCode) {
+    const qNorm = this.normalizeCode(query);
+    const tNorm = this.normalizeCode(targetCode);
+    return qNorm.number.toLowerCase() === tNorm.number.toLowerCase();
   }
 }
 
@@ -292,5 +375,6 @@ export default {
   Trie,
   LRUCache,
   FuzzyMatcher,
+  INSNormalizer,
   CircularBuffer,
 };

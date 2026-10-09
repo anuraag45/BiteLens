@@ -3,201 +3,232 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Download BiteLens Mobile App for Android (Direct APK). Blinkit-speed food barcode scanner & FSSAI nutritional telemetry.">
-  <title>Download BiteLens Mobile App (Android APK v2.4.0)</title>
-  <link rel="icon" type="image/png" href="/images/favicon.png">
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CSS -->
-  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
-
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #F8FAF7;
-      color: #0F172A;
-    }
-    .font-display {
-      font-family: 'Space Grotesk', sans-serif;
-    }
-    .hero-glow {
-      background: radial-gradient(circle at 50% 30%, rgba(59, 122, 87, 0.12) 0%, transparent 70%);
-    }
-  </style>
+  <title>Download & Install BiteLens — Android APK & Offline PWA</title>
+  <meta name="description" content="Download BiteLens for Android (Direct Signed APK v2.4.0) or install the offline Progressive Web App (PWA). High-speed grocery label scanning & FSSAI nutritional telemetry.">
+  <link rel="stylesheet" href="./styles/main.css">
 </head>
-<body class="min-h-screen flex flex-col antialiased">
+<body>
 
-  <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="index.html" class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-extrabold text-sm shadow-xs">
-          BL
-        </div>
-        <div>
-          <span class="font-display font-bold text-base text-slate-900 tracking-tight">BiteLens</span>
-          <span class="text-[10px] bg-emerald-100 text-emerald-800 font-extrabold px-1.5 py-0.5 rounded-full uppercase ml-1.5">Mobile</span>
-        </div>
-      </a>
+  <div id="site-header-container"></div>
 
-      <div class="flex items-center gap-3">
-        <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition hidden sm:inline-block">
-          Web App
-        </a>
-        <a href="app.html" class="text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl transition">
-          Launch Web Scanner ➔
-        </a>
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" style="padding: 3.5rem 0 2rem 0;">
+      <div class="container hero-content" style="text-align: center;">
+        <div class="hero-pill" style="margin-bottom: 1rem;">
+          <i data-lucide="smartphone"></i> Mobile Distribution Center
+        </div>
+        <h1 class="hero-title">Get BiteLens for Your Device</h1>
+        <p class="hero-subtitle" style="max-width: 650px; margin: 0 auto;">
+          Choose between our direct native Android APK (standalone offline build) or install the Progressive Web App (PWA) directly to your home screen with zero app store delays.
+        </p>
       </div>
-    </div>
-  </header>
+    </section>
 
-  <!-- Hero Section -->
-  <main class="flex-1 hero-glow">
-    <div class="max-w-4xl mx-auto px-4 py-12 sm:py-16 text-center">
-      
-      <!-- Tech Stack Badge -->
-      <div class="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-full text-xs font-bold text-emerald-900 mb-6 shadow-2xs">
-        <span>⚡ Built with React Native & Go (Golang)</span>
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-        <span class="text-emerald-700 font-medium">Blinkit Architecture</span>
-      </div>
+    <!-- Distribution Options Grid -->
+    <section class="section" style="padding-top: 1rem;">
+      <div class="container" style="max-width: 1040px;">
+        
+        <div class="grid-2" style="gap: 2rem; margin-bottom: 3.5rem;">
+          
+          <!-- OPTION 1: Standalone Android APK -->
+          <div class="card hud-card" style="padding: 2rem; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+                <div>
+                  <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--color-primary); letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">Direct Sideload Build</span>
+                  <h2 style="font-size: 1.5rem; margin: 0;">Android APK</h2>
+                  <span style="font-size: 0.8rem; color: #166534; font-weight: 700;">v2.4.0 Universal Release</span>
+                </div>
+                <div class="icon-badge" style="width: 48px; height: 48px; font-size: 1.5rem; margin: 0;">
+                  🤖
+                </div>
+              </div>
 
-      <h1 class="font-display font-extrabold text-3xl sm:text-5xl text-slate-900 tracking-tight leading-tight max-w-2xl mx-auto">
-        Install BiteLens on Your Android Device
-      </h1>
+              <p style="font-size: 0.9rem; color: var(--color-text-main); margin-bottom: 1.5rem;">
+                Official native Android application package containing complete offline OCR models, the full FSSAI additive index, and hardware camera barcode stream integration.
+              </p>
 
-      <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto mt-4 leading-relaxed">
-        Decode hidden chemical additives, discover instant clean swaps, and track your daily snack budget right inside grocery aisles with blinkit-speed 10-second scans.
-      </p>
-
-      <!-- Primary Download CTA Box -->
-      <div class="mt-8 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl max-w-lg mx-auto">
-        <div class="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
-          <div class="text-left">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Official Release</span>
-            <h4 class="font-display font-bold text-lg text-slate-900">BiteLens for Android</h4>
-            <span class="text-xs text-emerald-700 font-semibold">Version 2.4.0 (Universal APK)</span>
-          </div>
-          <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-2xl select-none">
-            📱
-          </div>
-        </div>
-
-        <!-- Direct Download Button -->
-        <a 
-          href="/downloads/bitelens.apk" 
-          download="bitelens.apk"
-          class="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-98 text-white font-extrabold py-4 px-6 rounded-2xl shadow-lg shadow-emerald-700/25 transition flex items-center justify-center gap-2.5 text-sm sm:text-base group"
-        >
-          <svg class="w-5 h-5 group-hover:translate-y-0.5 transition" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          <span>Download Android APK (Direct Install)</span>
-        </a>
-
-        <!-- Specs Subtitle -->
-        <div class="flex items-center justify-center gap-4 text-[11px] text-slate-500 font-medium mt-3">
-          <span>📦 Size: ~0.7 MB</span>
-          <span>•</span>
-          <span>Android 8.0+ (API 26+)</span>
-          <span>•</span>
-          <span class="text-emerald-700 font-semibold">✓ Signed & Verified</span>
-        </div>
-      </div>
-
-      <!-- 3-Step Sideloading Instructions -->
-      <div class="mt-14 max-w-2xl mx-auto text-left">
-        <h3 class="font-display font-bold text-lg text-slate-900 mb-4 text-center">
-          How to Install in 3 Easy Steps
-        </h3>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
-            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-sm flex items-center justify-center mb-2.5">
-              1
+              <!-- APK Specs Table -->
+              <div style="background: #FAF8F5; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.82rem;">
+                <div style="display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--color-text-muted);">Package Size:</span>
+                  <strong style="color: var(--color-text-main);">1.31 MB (1,376,841 bytes)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--color-text-muted);">Compatibility:</span>
+                  <strong style="color: var(--color-text-main);">Android 8.0+ (API 26+)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--color-text-muted);">Architecture:</span>
+                  <strong style="color: var(--color-text-main);">Universal (ARM64 / ARMv7 / x86_64)</strong>
+                </div>
+                <div style="padding: 0.35rem 0 0 0;">
+                  <span style="color: var(--color-text-muted); display: block; margin-bottom: 0.2rem;">SHA-256 Integrity Verification:</span>
+                  <code style="display: block; font-size: 0.72rem; word-break: break-all; background: #FFFFFF; padding: 0.35rem; border: 1px solid var(--color-border); border-radius: 4px; color: #166534; font-family: var(--font-family-mono);">
+                    619183514F12018BF38B685B69B727965CFB5A4E1F41417577A6D30FD148F33A
+                  </code>
+                </div>
+              </div>
             </div>
-            <h5 class="font-bold text-xs text-slate-900">Download APK</h5>
-            <p class="text-[11px] text-slate-500 mt-1 leading-snug">
-              Tap the download button above. If Chrome warns "File might be harmful", tap <strong>Download anyway</strong>.
+
+            <div>
+              <a 
+                href="/downloads/bitelens.apk" 
+                download="bitelens.apk" 
+                class="btn btn-primary" 
+                style="width: 100%; justify-content: center; padding: 0.85rem 1.25rem; font-size: 1rem;"
+              >
+                <i data-lucide="download"></i> Download Android APK (1.31 MB)
+              </a>
+              <div style="text-align: center; font-size: 0.74rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                ✓ Debug signed • Sideload package for testing/demo
+              </div>
+            </div>
+          </div>
+
+          <!-- OPTION 2: Progressive Web App (PWA) -->
+          <div class="card hud-card" style="padding: 2rem; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+                <div>
+                  <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--color-secondary); letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">Browser Instant Install</span>
+                  <h2 style="font-size: 1.5rem; margin: 0;">Progressive Web App</h2>
+                  <span style="font-size: 0.8rem; color: #0284C7; font-weight: 700;">Works on iOS, Android & Desktop</span>
+                </div>
+                <div class="icon-badge" style="width: 48px; height: 48px; font-size: 1.5rem; margin: 0; background: rgba(2, 132, 199, 0.1); color: var(--color-secondary); border-color: rgba(2, 132, 199, 0.25);">
+                  🌐
+                </div>
+              </div>
+
+              <p style="font-size: 0.9rem; color: var(--color-text-main); margin-bottom: 1.5rem;">
+                Install BiteLens straight from your current mobile or desktop browser without downloading executable APK binaries. Powered by Service Worker caching for instant offline boot.
+              </p>
+
+              <!-- PWA Specs Table -->
+              <div style="background: #FAF8F5; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.82rem;">
+                <div style="display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--color-text-muted);">Install Footprint:</span>
+                  <strong style="color: var(--color-text-main);">&lt; 500 KB (Zero disk bloat)</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--color-text-muted);">Offline Engine:</span>
+                  <strong style="color: var(--color-text-main);">CacheStorage + ServiceWorker</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <span style="color: var(--color-text-muted);">Cross-Platform:</span>
+                  <strong style="color: var(--color-text-main);">iOS Safari, Android Chrome, Windows, Mac</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 0.35rem 0;">
+                  <span style="color: var(--color-text-muted);">Auto-Updates:</span>
+                  <strong style="color: #166534;">Always latest version on launch</strong>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <a 
+                href="scan.html" 
+                class="btn btn-outline" 
+                style="width: 100%; justify-content: center; padding: 0.85rem 1.25rem; font-size: 1rem;"
+              >
+                <i data-lucide="zap"></i> Launch Web App & Add to Home Screen
+              </a>
+              <div style="text-align: center; font-size: 0.74rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                Use browser menu ➔ "Add to Home Screen"
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- How to Install & Sideload Guide -->
+        <div class="card hud-card" style="padding: 2.25rem; margin-bottom: 3.5rem;">
+          <h2 style="font-size: 1.35rem; margin-bottom: 1.5rem; text-align: center;">
+            Installation Instructions
+          </h2>
+
+          <div class="grid-2" style="gap: 2rem;">
+            <!-- Android Sideloading Instructions -->
+            <div>
+              <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: var(--color-primary); display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="smartphone"></i> How to Sideload Android APK
+              </h3>
+              <ol style="font-size: 0.88rem; line-height: 1.6; color: var(--color-text-main); margin-left: 1.25rem;">
+                <li style="margin-bottom: 0.5rem;">
+                  <strong>Tap "Download Android APK"</strong> above. If Google Chrome shows a prompt stating <em>"File might be harmful"</em>, tap <strong>Download anyway</strong> (standard notice for apps downloaded outside Google Play).
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                  <strong>Open the downloaded file</strong> from your device's notification tray or Downloads folder.
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                  <strong>Allow Unknown Sources:</strong> If prompted by Android Settings, toggle <em>"Allow from this source"</em> to grant your browser permission to install APK packages.
+                </li>
+                <li>
+                  <strong>Tap "Install":</strong> BiteLens will install instantly without root requirements or special permissions.
+                </li>
+              </ol>
+            </div>
+
+            <!-- PWA Add to Home Screen Instructions -->
+            <div>
+              <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: var(--color-secondary); display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="plus-circle"></i> How to Install PWA to Home Screen
+              </h3>
+              <ul style="font-size: 0.88rem; line-height: 1.6; color: var(--color-text-main); margin-left: 1.25rem;">
+                <li style="margin-bottom: 0.5rem;">
+                  <strong>On Android (Chrome / Brave / Firefox):</strong> Open <a href="scan.html" style="color: var(--color-primary); font-weight: 700; text-decoration: underline;">BiteLens</a>, tap the browser menu (three dots in top-right), and select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong>.
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                  <strong>On iPhone / iPad (Apple Safari):</strong> Open BiteLens in Safari, tap the <strong>Share</strong> icon (square with upward arrow at bottom), scroll down, and tap <strong>"Add to Home Screen"</strong>.
+                </li>
+                <li>
+                  <strong>On Desktop (Chrome / Edge):</strong> Click the <strong>Install</strong> icon located at the right side of the URL address bar to install BiteLens as a standalone desktop window.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hardware & Security Features -->
+        <div class="grid-3" style="margin-bottom: 2rem;">
+          <div class="card hud-card" style="padding: 1.25rem;">
+            <div class="icon-badge">
+              <i data-lucide="wifi-off"></i>
+            </div>
+            <h4>100% Offline Capability</h4>
+            <p style="font-size: 0.84rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+              The complete FSSAI additive dictionary and OCR recognition algorithms run locally. Scan products inside supermarket basements even with zero cellular signal.
             </p>
           </div>
 
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
-            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-sm flex items-center justify-center mb-2.5">
-              2
+          <div class="card hud-card" style="padding: 1.25rem;">
+            <div class="icon-badge">
+              <i data-lucide="shield-check"></i>
             </div>
-            <h5 class="font-bold text-xs text-slate-900">Open File</h5>
-            <p class="text-[11px] text-slate-500 mt-1 leading-snug">
-              Tap the downloaded file notification or find <strong>bitelens.apk</strong> in your device's Downloads folder.
+            <h4>Zero Permissions Bloat</h4>
+            <p style="font-size: 0.84rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+              Requires only standard camera access for scanning. No contacts, no GPS location tracking, no microphone, and zero background data collection.
             </p>
           </div>
 
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
-            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-sm flex items-center justify-center mb-2.5">
-              3
+          <div class="card hud-card" style="padding: 1.25rem;">
+            <div class="icon-badge">
+              <i data-lucide="zap"></i>
             </div>
-            <h5 class="font-bold text-xs text-slate-900">Allow & Install</h5>
-            <p class="text-[11px] text-slate-500 mt-1 leading-snug">
-              If prompted, allow installation from this source in Settings, then tap <strong>Install</strong> to launch BiteLens.
+            <h4>Instant Startup Speed</h4>
+            <p style="font-size: 0.84rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+              Engineered with optimized assets and zero third-party tracking scripts for sub-second launch and immediate viewfinder readiness.
             </p>
           </div>
         </div>
+
       </div>
-
-      <!-- Feature Grid -->
-      <div class="mt-16 max-w-3xl mx-auto">
-        <h3 class="font-display font-bold text-lg text-slate-900 mb-6">
-          Everything You Need in Your Pocket
-        </h3>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-left">
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80">
-            <span class="text-2xl mb-1 block">⚡</span>
-            <h5 class="font-bold text-xs text-slate-900">10s Barcode Scanner</h5>
-            <p class="text-[10px] text-slate-500 mt-0.5">Camera HUD with audio beep & haptics</p>
-          </div>
-
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80">
-            <span class="text-2xl mb-1 block">🌿</span>
-            <h5 class="font-bold text-xs text-slate-900">Dietary Radar</h5>
-            <p class="text-[10px] text-slate-500 mt-0.5">Vegetarian, diabetic & low-sodium shields</p>
-          </div>
-
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80">
-            <span class="text-2xl mb-1 block">🧪</span>
-            <h5 class="font-bold text-xs text-slate-900">50+ INS Decoder</h5>
-            <p class="text-[10px] text-slate-500 mt-0.5">Searchable FSSAI additive database</p>
-          </div>
-
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80">
-            <span class="text-2xl mb-1 block">🎯</span>
-            <h5 class="font-bold text-xs text-slate-900">Snack Budget Meter</h5>
-            <p class="text-[10px] text-slate-500 mt-0.5">Track calories, sugars & sodium daily</p>
-          </div>
-
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80">
-            <span class="text-2xl mb-1 block">📊</span>
-            <h5 class="font-bold text-xs text-slate-900">Health Calculators</h5>
-            <p class="text-[10px] text-slate-500 mt-0.5">BMR, TDEE & Asian BMI formulas</p>
-          </div>
-
-          <div class="bg-white p-4 rounded-2xl border border-slate-200/80">
-            <span class="text-2xl mb-1 block">⚖️</span>
-            <h5 class="font-bold text-xs text-slate-900">Compare Arena</h5>
-            <p class="text-[10px] text-slate-500 mt-0.5">Side-by-side nutritional showdowns</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-500">
-    <p>© 2026 BiteLens. Engineered with React Native, TypeScript, and Go.</p>
-  </footer>
+  <div id="site-footer-container"></div>
 
+  <script type="module" src="./js/components.js"></script>
 </body>
 </html>
