@@ -14,45 +14,79 @@
   <div id="site-header-container"></div>
 
   <main>
-    <!-- Hero Section -->
-    <section class="section hero" style="padding-top: 3rem; padding-bottom: 2rem;">
-      <div class="container hero-wrapper">
+    <!-- Hero Section: Clean, Centered, Perfectly Fitted to Screen -->
+    <section class="section hero" style="padding-top: 3.5rem; padding-bottom: 2.5rem;">
+      <div class="container hero-container-centered" style="max-width: 920px; text-align: center; margin: 0 auto;">
         
-        <!-- Hero Text & Value Proposition -->
-        <div class="hero-left">
-          <div id="hero-onboarding-chip" style="margin-bottom: 0.75rem;">
-            <div class="hero-pill">
-              <i data-lucide="sparkles"></i> 100% On-Device • Zero Sign-Up Required
-            </div>
-          </div>
-
-          <h1 class="hero-title">Decode what’s actually in your food, in plain language.</h1>
-          <p class="hero-subtitle">
-            BiteLens translates complex INS additive codes and nutrition labels into simple insights while evaluating foods against your personal dietary targets.
-          </p>
-
-          <div class="hero-ctas" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <a href="scan.html" class="btn btn-primary" style="height: 44px; padding: 0 1.25rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-              <i data-lucide="camera"></i> Launch Label Scanner
-            </a>
-            <a href="additives.html" class="btn btn-secondary" style="height: 44px; padding: 0 1.1rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-              <i data-lucide="search"></i> Search INS Directory
-            </a>
-            <a href="health-calculator.html" class="btn btn-outline" style="height: 44px; padding: 0 1.1rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
-              <i data-lucide="activity"></i> Personalize for You
-            </a>
-          </div>
-
-          <div style="margin-top: 1.5rem; display: flex; gap: 1.5rem; font-size: 0.82rem; color: var(--color-text-muted);">
-            <span>✓ FSSAI 2011 Verified</span>
-            <span>✓ NOVA Classification</span>
-            <span>✓ Real Client-Side OCR</span>
+        <div id="hero-onboarding-chip" style="margin-bottom: 1rem;">
+          <div class="hero-pill" style="margin: 0 auto;">
+            <i data-lucide="sparkles"></i> 100% On-Device • Zero Sign-Up Required
           </div>
         </div>
 
-        <!-- Interactive Hero Showcase Phone Mockup -->
-        <div class="hero-right" id="hero-scanner-container">
-          <!-- Populated dynamically via hero-scanner.js -->
+        <h1 class="hero-title" style="font-size: clamp(2.1rem, 4.5vw, 3.4rem); line-height: 1.18; margin-bottom: 1.25rem; letter-spacing: -0.02em;">
+          Decode what’s actually in your food, in plain language.
+        </h1>
+        
+        <p class="hero-subtitle" style="font-size: clamp(1rem, 1.8vw, 1.18rem); max-width: 680px; margin: 0 auto 2.25rem auto; color: var(--color-text-muted); line-height: 1.6;">
+          BiteLens translates complex INS additive codes and nutrition labels into simple insights while evaluating foods against your personal dietary targets.
+        </p>
+
+        <!-- Primary Action Navigation Buttons -->
+        <div class="hero-ctas" style="display: flex; gap: 0.85rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+          <a href="scan.html" class="btn btn-primary" style="height: 48px; padding: 0 1.5rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border-radius: var(--radius-pill);">
+            <i data-lucide="camera"></i> Launch Label Scanner
+          </a>
+          <a href="additives.html" class="btn btn-secondary" style="height: 48px; padding: 0 1.35rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border-radius: var(--radius-pill);">
+            <i data-lucide="search"></i> Search Additives
+          </a>
+          <a href="compare.html" class="btn btn-outline" style="height: 48px; padding: 0 1.35rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border-radius: var(--radius-pill);">
+            <i data-lucide="scale"></i> Compare Foods
+          </a>
+          <a href="health-calculator.html" class="btn btn-outline" style="height: 48px; padding: 0 1.35rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border-radius: var(--radius-pill);">
+            <i data-lucide="activity"></i> Personal Profile
+          </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; font-size: 0.85rem; color: var(--color-text-muted); font-weight: 600; margin-bottom: 2.5rem;">
+          <span>✓ FSSAI 2011 Verified</span>
+          <span>✓ 4-Tier NOVA Classification</span>
+          <span>✓ 100% On-Device Privacy</span>
+          <span>✓ Client-Side OCR</span>
+        </div>
+
+        <!-- Quick Platform Telemetry Metrics Highlights -->
+        <div class="hero-metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; text-align: left;">
+          <div class="card hud-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 122, 87, 0.12); color: var(--color-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i data-lucide="database"></i>
+            </div>
+            <div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: var(--color-text-main); font-family: var(--font-family-display);">150+ Codes</div>
+              <div style="font-size: 0.78rem; color: var(--color-text-muted);">FSSAI additives, preservatives & colors</div>
+            </div>
+          </div>
+
+          <div class="card hud-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(2, 132, 199, 0.12); color: var(--color-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i data-lucide="pie-chart"></i>
+            </div>
+            <div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: var(--color-text-main); font-family: var(--font-family-display);">4 NOVA Tiers</div>
+              <div style="font-size: 0.78rem; color: var(--color-text-muted);">Objective industrial processing classification</div>
+            </div>
+          </div>
+
+          <div class="card hud-card" style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.12); color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <div>
+              <div style="font-size: 1.25rem; font-weight: 800; color: var(--color-text-main); font-family: var(--font-family-display);">Zero Logins</div>
+              <div style="font-size: 0.78rem; color: var(--color-text-muted);">100% on-device local privacy ledger</div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -175,7 +209,7 @@
       <div class="container" style="max-width: 960px;">
         
         <div class="card hud-card" style="padding: 2.5rem 2rem; background: #FFFFFF; border-color: var(--color-border);">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center;">
+          <div class="grid-2" style="gap: 2.5rem; align-items: center;">
             
             <div>
               <div class="hero-pill" style="margin-bottom: 0.75rem;">
@@ -274,7 +308,6 @@
   <div id="site-footer-container"></div>
 
   <script type="module" src="./js/components.js"></script>
-  <script type="module" src="./js/hero-scanner.js"></script>
   <script type="module" src="./js/landing.js"></script>
 </body>
 </html>

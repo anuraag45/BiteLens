@@ -66,6 +66,9 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 body {
@@ -79,7 +82,24 @@ body {
   flex-direction: column;
   position: relative;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+table, pre, code {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+pre {
+  overflow-x: auto;
 }
 
 /* Base Button Reset to Override Browser Defaults */
@@ -583,13 +603,47 @@ a:hover {
   gap: 1.5rem;
 }
 
-/* Hero Section */
+/* Hero Section: Centered & Screen-Fitting */
 .hero-wrapper {
-  padding: 4.5rem 0 3.5rem 0;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 3.5rem;
+  padding: 3.5rem 0 2.5rem 0;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.hero-container-centered {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.hero-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.calc-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 540px) {
+  .calc-grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
 }
 
 .hero-pill {
@@ -609,21 +663,28 @@ a:hover {
 }
 
 .hero-title {
-  font-size: 3.25rem;
+  font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+  line-height: 1.18;
   margin-bottom: 1.25rem;
   color: var(--color-text-main);
+  letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
-  font-size: 1.15rem;
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
   color: var(--color-text-muted);
   margin-bottom: 2rem;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
 
 .hero-ctas {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  gap: 0.85rem;
   flex-wrap: wrap;
 }
 
@@ -1636,8 +1697,10 @@ body.mobile-drawer-open {
   .stepper-grid, .grid-4 {
     grid-template-columns: repeat(2, 1fr);
   }
-  .telemetry-stepper-header, .hud-controls-grid, .comparison-card-grid, .nova-gauge-grid, .dual-meters-grid {
-    grid-template-columns: 1fr;
+  .telemetry-stepper-header, .hud-controls-grid, .comparison-card-grid, .nova-gauge-grid, .dual-meters-grid,
+  .comparison-arena-grid, .scanner-studio-grid, .dashboard-main-grid, .decode-pinned-grid, .grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
   }
 }
 
@@ -1704,10 +1767,22 @@ body.mobile-drawer-open {
     font-size: 0.95rem;
   }
 
+  .toggle-group {
+    flex-wrap: wrap;
+  }
+
   .toggle-btn {
-    min-height: 44px;
-    font-size: 0.85rem;
-    padding: 0.5rem 0.75rem;
+    min-height: 38px;
+    font-size: 0.82rem;
+    padding: 0.4rem 0.6rem;
+    flex: 1 1 auto;
+    min-width: calc(50% - 6px);
+  }
+
+  .decode-label-sticky {
+    position: static !important;
+    top: auto !important;
+    margin-bottom: 1.5rem;
   }
 
   .hud-status-bar {
@@ -1725,19 +1800,18 @@ body.mobile-drawer-open {
     font-size: 1.35rem;
   }
 
-  /* Phone Mockup on Mobile (locked static sizing within viewport) */
   .phone-mockup {
-    max-width: 390px;
-    height: 580px;
-    min-height: 580px;
-    max-height: 580px;
+    max-width: 100%;
+    height: auto;
+    min-height: auto;
+    max-height: none;
     padding: 12px;
-    border-radius: 36px;
+    border-radius: 28px;
   }
 
   .phone-screen {
     padding: 1rem 1rem 0.85rem 1rem;
-    border-radius: 26px;
+    border-radius: 20px;
   }
 
   .phone-notch {
@@ -1748,8 +1822,8 @@ body.mobile-drawer-open {
 
   #hero-ins-list {
     min-height: 110px;
-    height: 110px;
-    max-height: 110px;
+    max-height: 200px;
+    overflow-y: auto;
   }
 
   .cute-popover-card {
@@ -1790,16 +1864,16 @@ body.mobile-drawer-open {
 
   .phone-mockup {
     max-width: 100%;
-    height: 560px;
-    min-height: 560px;
-    max-height: 560px;
-    padding: 10px;
-    border-radius: 32px;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    padding: 8px;
+    border-radius: 24px;
   }
 
   .phone-screen {
-    padding: 0.85rem;
-    border-radius: 22px;
+    padding: 0.75rem;
+    border-radius: 18px;
   }
 
   .phone-notch {
