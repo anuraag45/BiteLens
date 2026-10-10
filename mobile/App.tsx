@@ -185,6 +185,7 @@ export default function App() {
           <HomeScreen
             onOpenScanner={() => setScannerVisible(true)}
             onSelectProduct={setActiveProduct}
+            onDecodeBarcode={handleBarcodeScanned}
             onOpenTool={tool => {
               if (tool === 'decoder') setActiveTab('decoder');
               else if (tool === 'budget') setActiveTab('budget');

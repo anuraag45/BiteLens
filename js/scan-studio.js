@@ -26,12 +26,75 @@ export function initScanStudio() {
   bindModeToggles();
   bindImageUpload();
   bindCameraCapture();
+  bindManualBarcodeEntry();
   bindPresetChips();
   bindLanguageSelector();
   bindGuidedLab();
 
   // Load initial preset (Kurkure or Oats)
   loadSampleProduct('kurkure-masala-munch');
+}
+
+/**
+ * Handle manual barcode submit and trigger analysis dossier
+ */
+function bindManualBarcodeEntry() {
+  const barcodeInput = document.getElementById('manual-barcode-input');
+  const decodeBtn = document.getElementById('manual-barcode-decode-btn');
+
+  async function handleManualDecode() {
+    if (!barcodeInput) return;
+    const code = barcodeInput.value.trim();
+    if (!code) {
+      alert('Please enter a barcode number.');
+      return;
+    }
+
+    if (decodeBtn) {
+      decodeBtn.disabled = true;
+      decodeBtn.textContent = 'Decoding...';
+    }
+
+    try {
+      const result = await lookupBarcodeTelemetry(code);
+      if (result) {
+        renderAnalysisDossier({
+          name: result.product.name,
+          brand: result.product.brand,
+          category: result.product.category,
+          icon: result.product.icon,
+          ingredientsRaw: result.product.ingredientsRaw,
+          detectedAdditives: result.product.detectedAdditives,
+          scoreData: result.scoreData,
+          swaps: defaultSwapsEngine.getSwapsForProduct(result.product)
+        });
+        barcodeInput.value = '';
+      } else {
+        alert(`Barcode "${code}" could not be found in local FSSAI database or Open Food Facts.`);
+      }
+    } catch (e) {
+      console.warn("Manual barcode decode failed:", e);
+      alert(`Error decoding barcode "${code}".`);
+    } finally {
+      if (decodeBtn) {
+        decodeBtn.disabled = false;
+        decodeBtn.textContent = 'Decode';
+      }
+    }
+  }
+
+  if (decodeBtn) {
+    decodeBtn.onclick = handleManualDecode;
+  }
+
+  if (barcodeInput) {
+    barcodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleManualDecode();
+      }
+    });
+  }
 }
 
 /**

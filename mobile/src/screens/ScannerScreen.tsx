@@ -122,14 +122,21 @@ export const ScannerScreen: React.FC<ScannerScreenProps> = ({ onClose, onBarcode
             keyboardType="numeric"
             value={manualCode}
             onChangeText={setManualCode}
+            onSubmitEditing={handleManualSubmit}
+            returnKeyType="done"
           />
-          <TouchableOpacity style={styles.decodeButton} onPress={handleManualSubmit}>
+          <TouchableOpacity
+            style={styles.decodeButton}
+            onPress={handleManualSubmit}
+            accessibilityRole="button"
+            accessibilityLabel="Decode entered barcode"
+          >
             <Text style={styles.decodeButtonText}>Decode</Text>
           </TouchableOpacity>
         </View>
 
         {/* 1-Tap Sample Barcodes */}
-        <Text style={styles.samplesHeader}>Tap to Test Verified Indian Grocery Items:</Text>
+        <Text style={styles.samplesHeader}>Tap to test verified Indian grocery items:</Text>
         <View style={styles.samplesGrid}>
           {sampleBarcodes.map(item => (
             <TouchableOpacity

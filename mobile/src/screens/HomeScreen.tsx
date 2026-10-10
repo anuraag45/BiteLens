@@ -17,6 +17,7 @@ import { INDIAN_PRODUCTS_CATALOG } from '../data/catalog';
 interface HomeScreenProps {
   onOpenScanner: () => void;
   onSelectProduct: (product: Product) => void;
+  onDecodeBarcode?: (barcode: string) => void;
   onOpenTool: (tool: 'decoder' | 'budget' | 'calculators' | 'compare' | 'profile' | 'dietary') => void;
   activeGuardrailCount: number;
 }
@@ -24,6 +25,7 @@ interface HomeScreenProps {
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenScanner,
   onSelectProduct,
+  onDecodeBarcode,
   onOpenTool,
   activeGuardrailCount
 }) => {
@@ -50,74 +52,135 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     return matchesCat && matchesSearch;
   });
 
+  const handleSearchSubmit = () => {
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+
+    // Check if user entered a barcode number or exact code
+    if (/^\d{4,14}$/.test(trimmed)) {
+      if (onDecodeBarcode) {
+        onDecodeBarcode(trimmed);
+      } else {
+        const found = INDIAN_PRODUCTS_CATALOG.find(
+          p => p.barcode === trimmed || trimmed.endsWith(p.barcode) || p.barcode.endsWith(trimmed)
+        );
+        if (found) {
+          onSelectProduct(found);
+        } else {
+          onOpenScanner();
+        }
+      }
+      return;
+    }
+
+    // If query matches any product directly
+    if (filteredProducts.length > 0) {
+      onSelectProduct(filteredProducts[0]);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      {/* Top Blinkit-Style Brand & Speed Header */}
+      {/* Top Header */}
       <View style={styles.header}>
         <View style={styles.headerTopRow}>
           <View>
             <View style={styles.brandRow}>
               <Text style={styles.brandTitle}>BiteLens</Text>
               <View style={styles.speedBadge}>
-                <Text style={styles.speedBadgeText}>⚡ 10s SCAN</Text>
+                <Text style={styles.speedBadgeText}>Instant scanner</Text>
               </View>
             </View>
-            <Text style={styles.brandSubtitle}>FSSAI Food Radar • Instant Telemetry</Text>
+            <Text style={styles.brandSubtitle}>Food radar and label decoder</Text>
           </View>
 
-          <TouchableOpacity style={styles.profileAvatar} onPress={() => onOpenTool('profile')}>
+          <TouchableOpacity
+            style={styles.profileAvatar}
+            onPress={() => onOpenTool('profile')}
+            accessibilityRole="button"
+            accessibilityLabel="Open user profile and history"
+          >
             <Text style={styles.avatarText}>BL</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Search Bar with Embedded Scan Trigger */}
+        {/* Search Bar with Direct Decode Action & Scan Trigger */}
         <View style={styles.searchBarContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder='Search "Makhana", "Oats", "INS 621"...'
+            placeholder='Search name or enter barcode digits...'
             placeholderTextColor={Colors.textLight}
             value={searchQuery}
             onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearchSubmit}
+            returnKeyType="search"
           />
-          <TouchableOpacity style={styles.searchScanButton} onPress={onOpenScanner}>
+          {searchQuery.trim().length > 0 && (
+            <TouchableOpacity
+              style={styles.searchDecodeButton}
+              onPress={handleSearchSubmit}
+              accessibilityRole="button"
+              accessibilityLabel="Decode entered search or barcode"
+            >
+              <Text style={styles.searchDecodeText}>Decode</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={styles.searchScanButton}
+            onPress={onOpenScanner}
+            accessibilityRole="button"
+            accessibilityLabel="Open camera scanner"
+          >
             <Text style={styles.searchScanText}>📷 Scan</Text>
           </TouchableOpacity>
         </View>
 
         {/* Quick Guardrail & Tools Strip */}
         <View style={styles.quickAccessStrip}>
-          <TouchableOpacity style={styles.guardrailPill} onPress={() => onOpenTool('dietary')}>
+          <TouchableOpacity
+            style={styles.guardrailPill}
+            onPress={() => onOpenTool('dietary')}
+            accessibilityRole="button"
+          >
             <Text style={styles.pillEmoji}>🌿</Text>
             <Text style={styles.guardrailPillText}>
-              {activeGuardrailCount > 0 ? `${activeGuardrailCount} Guardrails Active` : 'Dietary Guardrails'}
+              {activeGuardrailCount > 0 ? `${activeGuardrailCount} guardrails active` : 'Dietary guardrails'}
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.historyPill} onPress={() => onOpenTool('profile')}>
+          <TouchableOpacity
+            style={styles.historyPill}
+            onPress={() => onOpenTool('profile')}
+            accessibilityRole="button"
+          >
             <Text style={styles.pillEmoji}>🕒</Text>
-            <Text style={styles.historyPillText}>Scan History</Text>
+            <Text style={styles.historyPillText}>Scan history</Text>
           </TouchableOpacity>
         </View>
       </View>
 
       <ScrollView style={styles.scrollArea} showsVerticalScrollIndicator={false}>
-        {/* Blinkit Quick Commerce Hero Card */}
+        {/* Hero Section */}
         <View style={styles.heroCard}>
           <View style={styles.heroTextContainer}>
             <View style={styles.heroTag}>
-              <Text style={styles.heroTagText}>INSTANT FOOD RADAR</Text>
+              <Text style={styles.heroTagText}>Food radar</Text>
             </View>
-            <Text style={styles.heroTitle}>Point camera at any packaged food</Text>
+            <Text style={styles.heroTitle}>Scan or enter any barcode</Text>
             <Text style={styles.heroSubtitle}>
-              Decode hidden chemicals, NOVA processing group & nutritional traps in seconds.
+              Decode additives, NOVA processing tiers, and nutritional trade-offs instantly.
             </Text>
-            <TouchableOpacity style={styles.heroButton} onPress={onOpenScanner}>
-              <Text style={styles.heroButtonText}>Launch Live Scanner ➔</Text>
+            <TouchableOpacity
+              style={styles.heroButton}
+              onPress={onOpenScanner}
+              accessibilityRole="button"
+              accessibilityLabel="Launch live camera scanner"
+            >
+              <Text style={styles.heroButtonText}>Launch live scanner ➔</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.heroEmoji}>📦🔍</Text>
         </View>
 
         {/* Blinkit Action Hub Tool Cards Grid */}
@@ -297,6 +360,18 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     paddingVertical: 8
   },
+  searchDecodeButton: {
+    backgroundColor: '#059669',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginRight: 6
+  },
+  searchDecodeText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700'
+  },
   searchScanButton: {
     backgroundColor: Colors.primary,
     paddingHorizontal: 10,
@@ -354,17 +429,17 @@ const styles = StyleSheet.create({
     flex: 1
   },
   heroCard: {
-    margin: 14,
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 14,
     backgroundColor: Colors.primaryDark,
-    borderRadius: 20,
+    borderRadius: 16,
     padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: 'column',
     overflow: 'hidden'
   },
   heroTextContainer: {
-    maxWidth: '75%'
+    width: '100%'
   },
   heroTag: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
